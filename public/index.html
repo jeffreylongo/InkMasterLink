@@ -1,37 +1,43 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>InkMasterLink - Tattoo Shop Directory</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>InkMasterLink - Home</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <h1>Ink Master Link</h1>
     <nav>
       <a href="index.html">Home</a>
       <a href="shops.html">Shops</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
+
   <main>
-    <h2>Featured Shops</h2>
-    <div id="featuredShops" class="shop-grid"></div>
+    <h1>Featured Tattoo Shops</h1>
+    <div id="homeResults" class="card-container"></div>
+    <div class="view-more">
+      <a href="shops.html" class="button">View All Shops</a>
+    </div>
   </main>
+
   <script>
     fetch("tattoo_shops.json")
       .then(res => res.json())
       .then(data => {
-        const container = document.getElementById("featuredShops");
-        const shops = data.slice(0, 9);
-        shops.forEach(shop => {
+        const container = document.getElementById("homeResults");
+        const sample = data.slice(0, 9);
+        sample.forEach(shop => {
           const div = document.createElement("div");
           div.className = "shop-card";
           div.innerHTML = `
             <h3>${shop.name}</h3>
             <p>${shop.address}</p>
-            ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
-            ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
+            <p>${shop.phone || ""}</p>
+            ${shop.website ? `<p><a href="\${shop.website}" target="_blank">Website</a></p>` : ""}
+            ${shop.email ? `<p>Email: <a href="mailto:\${shop.email}">\${shop.email}</a></p>` : ""}
           `;
           container.appendChild(div);
         });
