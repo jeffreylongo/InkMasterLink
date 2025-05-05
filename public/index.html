@@ -1,706 +1,100 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Ink Master Link - Tattoo Artist & Shop Directory</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: "Poppins", sans-serif;
-        background-color: #121212;
-        color: #f1f1f1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-        text-align: center;
-        padding: 20px;
-        background-image: linear-gradient(
-            rgba(0, 0, 0, 0.8),
-            rgba(0, 0, 0, 0.8)
-          ),
-          url("https://images.unsplash.com/photo-1542382257-80dedb725088?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRhdHRvb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=1600&q=80");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-      }
-      .logo-container {
-        position: relative;
-        margin-bottom: 30px;
-      }
-      .logo {
-        font-family: "Permanent Marker", cursive;
-        font-size: 4.5em;
-        margin-bottom: 10px;
-        color: #ffffff;
-        text-shadow:
-          0 0 10px #ff0099,
-          0 0 20px #ff0099,
-          0 0 30px #ff0099;
-        animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0% {
-          text-shadow:
-            0 0 10px #ff0099,
-            0 0 20px #ff0099;
-        }
-        50% {
-          text-shadow:
-            0 0 15px #ff0099,
-            0 0 30px #ff0099,
-            0 0 40px #ff0099;
-        }
-        100% {
-          text-shadow:
-            0 0 10px #ff0099,
-            0 0 20px #ff0099;
-        }
-      }
-      .tagline {
-        font-size: 1.5em;
-        margin-bottom: 50px;
-        color: #cccccc;
-        font-weight: 300;
-        letter-spacing: 1px;
-      }
-      .features {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 25px;
-        margin-bottom: 40px;
-        max-width: 1100px;
-      }
-      .feature {
-        background-color: rgba(30, 30, 30, 0.85);
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        width: 280px;
-        text-align: left;
-        border-left: 4px solid #ff0099;
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease,
-          border-color 0.3s ease;
-        text-decoration: none;
-        display: block;
-        position: relative;
-        cursor: pointer;
-      }
-      .feature::after {
-        content: "→";
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-        color: #ff0099;
-        font-size: 20px;
-        opacity: 0;
-        transform: translateX(-10px);
-        transition:
-          opacity 0.3s ease,
-          transform 0.3s ease;
-      }
-      .feature:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 25px rgba(255, 0, 153, 0.2);
-        border-color: #ff6a00;
-      }
-      .feature:hover::after {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      .feature h3 {
-        margin-top: 0;
-        color: #ff0099;
-        font-weight: 600;
-        font-size: 1.4em;
-      }
-      .feature p {
-        color: #dddddd;
-        line-height: 1.6;
-        margin-bottom: 25px;
-      }
-      .button-container {
-        margin-top: 20px;
-      }
-      .button {
-        background: linear-gradient(135deg, #ff0099, #ff6a00);
-        color: white;
-        padding: 12px 26px;
-        text-decoration: none;
-        border-radius: 30px;
-        font-weight: 600;
-        margin: 10px;
-        display: inline-block;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(255, 0, 153, 0.3);
-        transition:
-          transform 0.3s,
-          box-shadow 0.3s;
-        border: none;
-      }
-      .button:hover {
-        background: linear-gradient(135deg, #ff0099, #ff3366);
-        transform: translateY(-3px);
-        box-shadow: 0 7px 20px rgba(255, 0, 153, 0.4);
-      }
-      .button:active {
-        transform: translateY(1px);
-      }
-      .featured-section,
-      .random-shops-section {
-        margin-top: 60px;
-        max-width: 1200px;
-        width: 100%;
-        padding: 0 20px;
-      }
-      .section-title {
-        font-size: 2em;
-        margin-bottom: 30px;
-        color: #ffffff;
-        text-align: center;
-        font-weight: 600;
-        letter-spacing: 1px;
-      }
-      .featured-cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 30px;
-      }
-      .featured-card {
-        background-color: rgba(30, 30, 30, 0.8);
-        border-radius: 15px;
-        width: 350px;
-        overflow: hidden;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        transition:
-          transform 0.4s ease,
-          box-shadow 0.4s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .featured-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(255, 0, 153, 0.25);
-        border-color: rgba(255, 0, 153, 0.3);
-      }
-      .artist-feature .featured-header {
-        background: linear-gradient(135deg, #ff0099, #ff6a00);
-      }
-      .shop-feature .featured-header {
-        background: linear-gradient(135deg, #614385, #516395);
-      }
-      .featured-header {
-        padding: 15px 20px;
-        text-align: center;
-      }
-      .featured-header h3 {
-        margin: 0;
-        color: white;
-        font-size: 1.3em;
-        font-weight: 600;
-        letter-spacing: 1px;
-      }
-      .featured-content {
-        padding: 20px;
-        text-align: center;
-      }
-      .featured-image {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        margin: 0 auto 15px;
-        background-color: #2a2a2a;
-        background-size: cover;
-        background-position: center;
-        border: 3px solid rgba(255, 255, 255, 0.2);
-      }
-      .artist-feature .featured-image {
-        border-color: rgba(255, 0, 153, 0.4);
-      }
-      .shop-feature .featured-image {
-        border-color: rgba(97, 67, 133, 0.4);
-      }
-      .featured-content h4 {
-        margin: 0 0 5px;
-        font-size: 1.5em;
-        color: #ffffff;
-      }
-      .featured-content p {
-        margin: 5px 0 10px;
-        color: #dddddd;
-        font-size: 0.95em;
-      }
-      .featured-location {
-        color: #aaaaaa;
-        font-size: 0.9em;
-        margin-bottom: 15px;
-      }
-      .featured-rating {
-        color: #ffcc00;
-        font-weight: bold;
-        font-size: 1.2em;
-        margin-bottom: 15px;
-        display: inline-block;
-      }
-      .featured-button {
-        display: inline-block;
-        padding: 8px 25px;
-        border-radius: 25px;
-        text-decoration: none;
-        color: white;
-        font-weight: 500;
-        transition: all 0.3s ease;
-      }
-      .artist-feature .featured-button {
-        background: linear-gradient(135deg, #ff0099, #ff6a00);
-        box-shadow: 0 4px 15px rgba(255, 0, 153, 0.2);
-      }
-      .artist-feature .featured-button:hover {
-        background: linear-gradient(135deg, #ff0099, #ff3366);
-        transform: translateY(-3px);
-        box-shadow: 0 7px 20px rgba(255, 0, 153, 0.3);
-      }
-      .shop-feature .featured-button {
-        background: linear-gradient(135deg, #614385, #516395);
-        box-shadow: 0 4px 15px rgba(97, 67, 133, 0.2);
-      }
-      .shop-feature .featured-button:hover {
-        background: linear-gradient(135deg, #516395, #614385);
-        transform: translateY(-3px);
-        box-shadow: 0 7px 20px rgba(97, 67, 133, 0.3);
-      }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>InkMasterLink - Tattoo Shop Directory</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1c1c1e;
+      color: #fff;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #ff4c60;
+    }
+    input {
+      padding: 10px;
+      margin: 6px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      width: 200px;
+    }
+    .filter-container {
+      margin-bottom: 1.5rem;
+    }
+    .shop {
+      background: #2c2c2e;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(255, 76, 96, 0.4);
+    }
+    .shop a {
+      color: #ff4c60;
+      text-decoration: none;
+    }
+    .shop a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>🖋️ Tattoo Shop Directory</h1>
+  <div class="filter-container">
+    <input id="filterName" placeholder="Search name..." />
+    <input id="filterZip" placeholder="Search ZIP..." />
+    <input id="filterCity" placeholder="Search city..." />
+    <input id="filterState" placeholder="Search state..." />
+  </div>
+  <div id="results"></div>
+  <script>
+    let allShops = [];
 
-      /* Random Shops Section */
-      .random-shops-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 25px;
-        margin-top: 30px;
-      }
-      .random-shop-card {
-        background-color: rgba(30, 30, 30, 0.8);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
-      .random-shop-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(151, 64, 238, 0.25);
-        border-color: rgba(151, 64, 238, 0.3);
-      }
-      .random-shop-image {
-        height: 160px;
-        background-color: #333;
-        background-size: cover;
-        background-position: center;
-        position: relative;
-      }
-      .random-shop-content {
-        padding: 15px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-      }
-      .random-shop-name {
-        font-size: 1.2em;
-        font-weight: 600;
-        margin: 0 0 8px;
-        color: #ffffff;
-      }
-      .random-shop-location {
-        color: #aaaaaa;
-        font-size: 0.85em;
-        margin-bottom: 8px;
-      }
-      .random-shop-rating {
-        color: #ffcc00;
-        font-size: 1em;
-        margin-bottom: 15px;
-      }
-      .random-shop-link {
-        margin-top: auto;
-        align-self: flex-start;
-        display: inline-block;
-        padding: 6px 18px;
-        border-radius: 20px;
-        text-decoration: none;
-        color: white;
-        font-weight: 500;
-        font-size: 0.9em;
-        background: linear-gradient(135deg, #9740ee, #6c3df4);
-        box-shadow: 0 4px 10px rgba(151, 64, 238, 0.2);
-        transition: all 0.3s ease;
-      }
-      .random-shop-link:hover {
-        background: linear-gradient(135deg, #6c3df4, #9740ee);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(151, 64, 238, 0.3);
-      }
+    function filterShops() {
+      const name = document.getElementById("filterName").value.toLowerCase();
+      const zip = document.getElementById("filterZip").value.trim();
+      const city = document.getElementById("filterCity").value.toLowerCase();
+      const state = document.getElementById("filterState").value.toLowerCase();
 
-      .loading-indicator,
-      .no-shops-message,
-      .error-message {
-        text-align: center;
-        color: #aaaaaa;
-        padding: 20px;
-        font-style: italic;
-        grid-column: 1 / -1;
-      }
+      const filtered = allShops.filter(shop => {
+        const [ , , cityPart = "", stateZip = ""] = shop.address.split(",");
+        const shopCity = cityPart.trim().toLowerCase();
+        const shopState = stateZip.trim().split(" ")[0].toLowerCase();
 
-      .error-message {
-        color: #ff6b6b;
-      }
+        return (!name || shop.name.toLowerCase().includes(name)) &&
+               (!zip || shop.zip === zip) &&
+               (!city || shopCity.includes(city)) &&
+               (!state || shopState.includes(state));
+      });
 
-      .view-more-container {
-        text-align: center;
-        margin-top: 40px;
-      }
-      .view-more-button {
-        display: inline-block;
-        padding: 10px 30px;
-        border-radius: 30px;
-        text-decoration: none;
-        color: white;
-        font-weight: 600;
-        font-size: 1em;
-        background: linear-gradient(135deg, #ff0099, #9740ee);
-        box-shadow: 0 5px 15px rgba(255, 0, 153, 0.2);
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-      }
-      .view-more-button:hover {
-        background: linear-gradient(135deg, #9740ee, #ff0099);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255, 0, 153, 0.3);
-      }
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+      filtered.forEach(shop => {
+        const div = document.createElement("div");
+        div.className = "shop";
+        div.innerHTML = `
+          <strong>${shop.name}</strong><br/>
+          ${shop.address}<br/>
+          ${shop.phone || ""}<br/>
+          ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
+          ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
 
-      footer {
-        margin-top: 60px;
-        color: #999999;
-        font-size: 0.9em;
-        letter-spacing: 1px;
-      }
-
-      /* Responsive styles for mobile */
-      /* adding comment to trigger a new build */
-      @media (max-width: 768px) {
-        .logo {
-          font-size: 3em;
-        }
-        .tagline {
-          font-size: 1.2em;
-          margin-bottom: 30px;
-        }
-        .features {
-          gap: 15px;
-        }
-        .feature {
-          width: 100%;
-          margin-bottom: 15px;
-        }
-        .button-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .button {
-          width: 80%;
-          margin: 5px 0;
-        }
-        .featured-cards {
-          flex-direction: column;
-          align-items: center;
-        }
-        .featured-card {
-          width: 100%;
-          max-width: 350px;
-          margin-bottom: 20px;
-        }
-
-        .random-shops-grid {
-          grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-        }
-
-        .random-shop-card {
-          margin-bottom: 15px;
-        }
-
-        .view-more-button {
-          width: 80%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="logo">Ink Master Link</div>
-    <div class="tagline">
-      Connecting Tattoo Artists, Shops and Canvases throughout the United States
-    </div>
-
-    <div class="features">
-      <a href="guestspots.html" class="feature">
-        <h3>Find Guest Spots</h3>
-        <p>
-          Artists can discover and book guest spots at tattoo shops around the
-          world.
-        </p>
-      </a>
-      <a href="artists.html" class="feature">
-        <h3>Artist Directory</h3>
-        <p>
-          Browse profiles of talented tattoo artists and view their portfolios.
-        </p>
-      </a>
-      <a href="shops.html" class="feature">
-        <h3>Shop Showcase</h3>
-        <p>
-          Discover top-rated tattoo shops with detailed information and reviews.
-        </p>
-      </a>
-    </div>
-
-    <div class="button-container">
-      <a href="artists.html" class="button">Browse Artists</a>
-      <a href="shops.html" class="button">Find Shops</a>
-      <a href="guestspots.html" class="button">Guest Spots</a>
-      <a href="contact.html" class="button">Contact Us</a>
-    </div>
-
-    <div class="featured-section">
-      <h2 class="section-title">Connect with the Community</h2>
-
-      <div class="featured-cards">
-        <div class="featured-card artist-feature">
-          <div class="featured-header">
-            <h3>Featured Artist</h3>
-          </div>
-          <div class="featured-content">
-            <div class="featured-image" id="featuredArtistImage"></div>
-            <h4 id="featuredArtistName">Loading...</h4>
-            <p id="featuredArtistSpecialty"></p>
-            <div id="featuredArtistLocation" class="featured-location"></div>
-            <a href="#" id="featuredArtistLink" class="featured-button"
-              >View Profile</a
-            >
-          </div>
-        </div>
-
-        <div class="featured-card shop-feature">
-          <div class="featured-header">
-            <h3>Featured Shop</h3>
-          </div>
-          <div class="featured-content">
-            <div class="featured-image" id="featuredShopImage"></div>
-            <h4 id="featuredShopName">Loading...</h4>
-            <div id="featuredShopLocation" class="featured-location"></div>
-            <div id="featuredShopRating" class="featured-rating"></div>
-            <a href="#" id="featuredShopLink" class="featured-button"
-              >View Shop</a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="random-shops-section">
-      <h2 class="section-title">Discover Random Shops</h2>
-
-      <div class="random-shops-grid" id="randomShopsGrid">
-        <!-- Random shops will be populated here by JavaScript -->
-        <div class="loading-indicator">Loading shops...</div>
-      </div>
-
-      <div class="view-more-container">
-        <a href="shops.html" class="view-more-button">View All Shops</a>
-      </div>
-    </div>
-
-    <footer>
-      &copy; 2025 Ink Master Link - Tattoo Artist & Shop Directory
-    </footer>
-
-    <script>
-      // Fetch featured artist - use Netlify functions path
-      fetch("/.netlify/functions/parlors/artists")
-        .then((response) => response.json())
-        .then((data) => {
-          // Check if response is in the new API format with data property
-          const artists = data.data || data;
-
-          const featuredArtists = artists.filter((artist) => artist.featured);
-          if (featuredArtists.length > 0) {
-            const artist = featuredArtists[0];
-            document.getElementById("featuredArtistName").textContent =
-              artist.name;
-
-            // Handle specialty field which might be an array or string
-            if (artist.specialty) {
-              const specialtyText = Array.isArray(artist.specialty)
-                ? artist.specialty.join(", ")
-                : artist.specialty;
-              document.getElementById("featuredArtistSpecialty").textContent =
-                specialtyText;
-            }
-
-            document.getElementById("featuredArtistLocation").textContent =
-              `${artist.location.city}, ${artist.location.state}`;
-            document.getElementById(
-              "featuredArtistImage",
-            ).style.backgroundImage =
-              `url('${artist.profileImage || "images/artist.webp"}')`;
-
-            // Update the view profile link - no leading slash for Netlify
-            document.querySelector(".artist-feature .featured-button").href =
-              `artist-detail.html?id=${artist.id}`;
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching featured artist:", error);
-          document.getElementById("featuredArtistName").textContent =
-            "Artist data coming soon";
-        });
-
-      // Fetch featured shop from our new PostgreSQL database - use Netlify functions path
-      fetch("/.netlify/functions/parlors/featured?limit=1")
-        .then((response) => response.json())
-        .then((data) => {
-          // Check if we have data in the new API format
-          if (data.success && data.data && data.data.length > 0) {
-            const shop = data.data[0];
-            document.getElementById("featuredShopName").textContent = shop.name;
-            document.getElementById("featuredShopLocation").textContent =
-              `${shop.location.city}, ${shop.location.state}`;
-
-            // Our database stores ratings as integers from 0-50 (e.g., 4.5 stars becomes 45)
-            const displayRating = (shop.rating / 10).toFixed(1);
-            document.getElementById("featuredShopRating").textContent =
-              `★ ${displayRating}`;
-
-            // Use real shop image as per client request
-            document.getElementById("featuredShopImage").style.backgroundImage =
-              `url('${shop.image || "images/shop.jpeg"}')`;
-
-            // Update the view shop link - remove leading slash for Netlify compatibility
-            document.querySelector(".shop-feature .featured-button").href =
-              `shop-detail.html?id=${shop.id}`;
-          } else {
-            // Fallback to the old API endpoint - use Netlify functions path
-            return fetch("/.netlify/functions/parlors/shops");
-          }
-        })
-        .then((response) => {
-          if (response) return response.json();
-        })
-        .then((shops) => {
-          if (shops && !shops.success) {
-            const featuredShops = shops.filter((shop) => shop.featured);
-            if (featuredShops && featuredShops.length > 0) {
-              const shop = featuredShops[0];
-              document.getElementById("featuredShopName").textContent =
-                shop.name;
-              document.getElementById("featuredShopLocation").textContent =
-                `${shop.location.city}, ${shop.location.state}`;
-              // Handle fallback rating conversion from 0-50 scale
-              const ratingDisplay =
-                shop.rating >= 5
-                  ? (shop.rating / 10).toFixed(1)
-                  : shop.rating.toFixed(1);
-              document.getElementById("featuredShopRating").textContent =
-                `★ ${ratingDisplay}`;
-              // Use real shop image as per client request
-              document.getElementById(
-                "featuredShopImage",
-              ).style.backgroundImage = "url('images/shop.jpeg')";
-
-              // Update the view shop link - no leading slash for Netlify
-              document.querySelector(".shop-feature .featured-button").href =
-                `shop-detail.html?id=${shop.id}`;
-            }
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching featured shop:", error);
-          document.getElementById("featuredShopName").textContent =
-            "Shop data coming soon";
-        });
-
-      // Fetch random shops (9 shops per client request) - use Netlify functions path
-      fetch("/.netlify/functions/parlors/random?limit=9")
-        .then((response) => response.json())
-        .then((data) => {
-          // Remove loading indicator
-          document.querySelector(".loading-indicator").remove();
-
-          if (data.success && data.data && data.data.length > 0) {
-            const randomShopsGrid = document.getElementById("randomShopsGrid");
-
-            // Create a card for each random shop
-            data.data.forEach((shop) => {
-              const shopCard = document.createElement("div");
-              shopCard.className = "random-shop-card";
-
-              // Use real shop image as per client request
-              const imageUrl = shop.image || "images/shop.jpeg";
-
-              // Format rating for display (convert from 0-50 scale to 0-5)
-              const displayRating = shop.rating
-                ? (shop.rating / 10).toFixed(1)
-                : "Not rated";
-              const ratingDisplay = shop.rating
-                ? `★ ${displayRating}`
-                : "No ratings yet";
-
-              // Location formatting
-              const locationDisplay =
-                shop.location && shop.location.city && shop.location.state
-                  ? `${shop.location.city}, ${shop.location.state}`
-                  : "Location not specified";
-
-              // Card HTML
-              shopCard.innerHTML = `
-              <div class="random-shop-image" style="background-image: url('${imageUrl}')"></div>
-              <div class="random-shop-content">
-                <h3 class="random-shop-name">${shop.name}</h3>
-                <div class="random-shop-location">${locationDisplay}</div>
-                <div class="random-shop-rating">${ratingDisplay}</div>
-                <a href="shop-detail.html?id=${shop.id}" class="random-shop-link">View Details</a>
-              </div>
-            `;
-
-              randomShopsGrid.appendChild(shopCard);
-            });
-          } else {
-            const randomShopsGrid = document.getElementById("randomShopsGrid");
-            randomShopsGrid.innerHTML =
-              '<div class="no-shops-message">No shops found at this time.</div>';
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching random shops:", error);
-          const randomShopsGrid = document.getElementById("randomShopsGrid");
-          randomShopsGrid.innerHTML =
-            '<div class="error-message">Unable to load shops. Please try again later.</div>';
-        });
-    </script>
-  </body>
+    fetch("tattoo_shops.json")
+      .then(res => res.json())
+      .then(data => {
+        allShops = data;
+        filterShops();
+        document.querySelectorAll("input").forEach(input =>
+          input.addEventListener("input", filterShops));
+      });
+  </script>
+</body>
 </html>

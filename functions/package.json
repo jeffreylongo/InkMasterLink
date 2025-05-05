@@ -1,7 +1,0 @@
-{
-  "name": "ink-master-link-functions",
-  "version": "1.0.0",
-  "description": "Netlify Functions for Ink Master Link",
-  "main": "parlors.js",
-  "dependencies": {}
-}
