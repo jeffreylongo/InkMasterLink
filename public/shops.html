@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>InkMasterLink - Shops</title>
+</head>
+<body>
+  <h1>All Tattoo Shops</h1>
+  <div id="results">Filtered shops will be shown here.</div>
+  <script>
+    fetch("tattoo_shops.json")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("results");
+        container.innerHTML = "";
+        data.forEach(shop => {
+          const div = document.createElement("div");
+          div.innerHTML = `<strong>${shop.name}</strong><br/>${shop.address}<br/>${shop.phone}<br/><br/>`;
+          container.appendChild(div);
+        });
+      });
+  </script>
+</body>
+</html>

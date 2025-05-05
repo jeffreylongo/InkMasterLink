@@ -2,99 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>InkMasterLink - Tattoo Shop Directory</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1c1c1e;
-      color: #fff;
-      margin: 0;
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      color: #ff4c60;
-    }
-    input {
-      padding: 10px;
-      margin: 6px;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      width: 200px;
-    }
-    .filter-container {
-      margin-bottom: 1.5rem;
-    }
-    .shop {
-      background: #2c2c2e;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(255, 76, 96, 0.4);
-    }
-    .shop a {
-      color: #ff4c60;
-      text-decoration: none;
-    }
-    .shop a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <title>InkMasterLink - Home</title>
 </head>
 <body>
-  <h1>🖋️ Tattoo Shop Directory</h1>
-  <div class="filter-container">
-    <input id="filterName" placeholder="Search name..." />
-    <input id="filterZip" placeholder="Search ZIP..." />
-    <input id="filterCity" placeholder="Search city..." />
-    <input id="filterState" placeholder="Search state..." />
-  </div>
-  <div id="results"></div>
-  <script>
-    let allShops = [];
-
-    function filterShops() {
-      const name = document.getElementById("filterName").value.toLowerCase();
-      const zip = document.getElementById("filterZip").value.trim();
-      const city = document.getElementById("filterCity").value.toLowerCase();
-      const state = document.getElementById("filterState").value.toLowerCase();
-
-      const filtered = allShops.filter(shop => {
-        const [ , , cityPart = "", stateZip = ""] = shop.address.split(",");
-        const shopCity = cityPart.trim().toLowerCase();
-        const shopState = stateZip.trim().split(" ")[0].toLowerCase();
-
-        return (!name || shop.name.toLowerCase().includes(name)) &&
-               (!zip || shop.zip === zip) &&
-               (!city || shopCity.includes(city)) &&
-               (!state || shopState.includes(state));
-      });
-
-      const container = document.getElementById("results");
-      container.innerHTML = "";
-      filtered.forEach(shop => {
-        const div = document.createElement("div");
-        div.className = "shop";
-        div.innerHTML = `
-          <strong>${shop.name}</strong><br/>
-          ${shop.address}<br/>
-          ${shop.phone || ""}<br/>
-          ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
-          ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    fetch("tattoo_shops.json")
-      .then(res => res.json())
-      .then(data => {
-        allShops = data;
-        filterShops();
-        document.querySelectorAll("input").forEach(input =>
-          input.addEventListener("input", filterShops));
-      });
-  </script>
+  <h1>InkMasterLink - Home</h1>
+  <p>This is a placeholder homepage with 9 tattoo shops. Filtering and full list available on the Shops page.</p>
+  <a href="shops.html">View All Shops</a> | <a href="contact.html">Contact</a>
 </body>
 </html>
