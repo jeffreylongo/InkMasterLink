@@ -1,9 +1,1 @@
-# Netlify redirects file
-# API endpoints
-/api/parlors/featured*    /.netlify/functions/api/parlors/featured:splat    200
-/api/parlors/random*      /.netlify/functions/api/parlors/random:splat      200
-/api/artists*             /.netlify/functions/api/artists:splat             200
-/api/parlors/:id          /.netlify/functions/shop/:id                      200
-
-# SPA fallback
 /*    /index.html   200

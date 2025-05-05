@@ -18,14 +18,63 @@ exports.handler = async function(event, context) {
 
   try {
     // Get the path and query parameters from the event
-    const path = event.path.replace('/.netlify/functions/api', '');
+    const path = event.path.replace('/.netlify/functions/parlors', '');
+    const pathSegments = path.split('/').filter(Boolean);
     const queryParams = event.queryStringParameters || {};
     const limit = queryParams.limit ? parseInt(queryParams.limit) : 10;
     
     console.log(`API Request: ${event.httpMethod} ${path} with params:`, queryParams);
     
+    // Check if this is a specific parlor ID request
+    if (pathSegments.length === 1 && !isNaN(parseInt(pathSegments[0]))) {
+      const parlorId = parseInt(pathSegments[0]);
+      
+      // Shop details endpoint
+      return {
+        statusCode: 200,
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: parlorId,
+          name: `Tattoo Shop ${parlorId}`,
+          address: `${123 + parlorId} Ink Avenue`,
+          city: "New York",
+          state: "NY",
+          zip: "10001",
+          phone: "555-123-4567",
+          email: "contact@tattooshop.com",
+          website: "https://www.tattooshop.com",
+          rating: 47,
+          images: ["/images/shop.jpeg", "/images/shop.jpeg", "/images/shop.jpeg"],
+          description: "A premier tattoo shop featuring talented artists specializing in various styles from traditional to modern designs.",
+          hours: {
+            monday: "10:00 AM - 8:00 PM",
+            tuesday: "10:00 AM - 8:00 PM",
+            wednesday: "10:00 AM - 8:00 PM",
+            thursday: "10:00 AM - 8:00 PM",
+            friday: "10:00 AM - 10:00 PM",
+            saturday: "12:00 PM - 10:00 PM",
+            sunday: "Closed"
+          },
+          artists: [
+            {
+              id: 1,
+              name: "Jane Smith",
+              specialties: ["Traditional", "Japanese"],
+              image: "/images/artist.webp"
+            },
+            {
+              id: 2, 
+              name: "John Doe",
+              specialties: ["Realism", "Portraits"],
+              image: "/images/artist.webp"
+            }
+          ]
+        })
+      };
+    }
+    
     // Featured parlors endpoint
-    if (path === '/parlors/featured') {
+    if (pathSegments.length === 1 && pathSegments[0] === 'featured') {
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -64,7 +113,7 @@ exports.handler = async function(event, context) {
     }
     
     // Random parlors endpoint
-    if (path === '/parlors/random') {
+    if (pathSegments.length === 1 && pathSegments[0] === 'random') {
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -157,7 +206,7 @@ exports.handler = async function(event, context) {
     }
     
     // Artists endpoint
-    if (path === '/artists') {
+    if (path.startsWith('/artists')) {
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },

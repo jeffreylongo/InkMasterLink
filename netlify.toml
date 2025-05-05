@@ -1,38 +1,6 @@
 [build]
-  command = "./build.sh"
-  publish = "public"
-
-# Disable any auto-detected plugins
-[plugins]
-  auto-install = false
+command = "exit 0"
+publish = "public"
 
 [functions]
-  directory = "functions"
-
-[[redirects]]
-  from = "/api/parlors/featured*"
-  to = "/.netlify/functions/api/parlors/featured:splat"
-  status = 200
-
-[[redirects]]
-  from = "/api/parlors/random*"
-  to = "/.netlify/functions/api/parlors/random:splat"
-  status = 200
-  
-[[redirects]]
-  from = "/api/artists*"
-  to = "/.netlify/functions/api/artists:splat"
-  status = 200
-  
-[[redirects]]
-  from = "/api/parlors/:id"
-  to = "/.netlify/functions/shop/:id"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  
-[build.environment]
-  NODE_VERSION = "16"
+directory = "functions"
