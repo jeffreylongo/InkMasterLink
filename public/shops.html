@@ -360,11 +360,11 @@
   <header>
     <div class="logo">Ink Master Link</div>
     <nav>
-      <a href="/">Home</a>
-      <a href="/artists.html">Artists</a>
-      <a href="/shops.html">Shops</a>
-      <a href="/guestspots.html">Guest Spots</a>
-      <a href="/contact.html">Contact</a>
+      <a href="index.html">Home</a>
+      <a href="artists.html">Artists</a>
+      <a href="shops.html">Shops</a>
+      <a href="guestspots.html">Guest Spots</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
 
@@ -458,7 +458,8 @@
       shopCard.className = 'shop-card';
       
       // Use real shop image as per client request
-      const imageUrl = '/images/shop.jpeg';
+      // Always use absolute paths without leading slash for Netlify deployment
+      const imageUrl = 'images/shop.jpeg';
       
       // Handle null/undefined ratings and convert from 0-50 scale to 0-5 scale if needed
       let displayRating = '0.0';
@@ -479,7 +480,7 @@
             ${shop.sponsored ? '<span class="sponsored-badge">Sponsored</span>' : ''}
           </div>
           <div class="action-buttons">
-            <a href="/shop-detail.html?id=${shop.id}" class="view-button">View Shop</a>
+            <a href="shop-detail.html?id=${shop.id}" class="view-button">View Shop</a>
             <div class="social-share">
               <button class="share-btn" onclick="shareShop('${shop.name.replace(/'/g, "\\'")}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -522,8 +523,8 @@
     function populateStatesFilter(shops) {
       const stateFilter = document.getElementById('stateFilter');
       
-      // Try to get the states from API first
-      fetch('/api/parlors/states')
+      // Try to get the states from API first - use proper Netlify function path
+      fetch('/.netlify/functions/parlors/states')
         .then(response => response.json())
         .then(result => {
           let states = [];
@@ -675,15 +676,15 @@
       }
       // If we have state or search selected, use the DB filtering which is much more efficient
       else if (stateValue || searchValue) {
-        let apiUrl = '/api/parlors';
+        let apiUrl = '/.netlify/functions/parlors';
         
         // Use specific endpoints for state filtering
         if (stateValue) {
           // Use state endpoint and then filter by city client-side if needed
-          apiUrl = `/api/parlors?state=${encodeURIComponent(stateValue)}`;
+          apiUrl = `/.netlify/functions/parlors?state=${encodeURIComponent(stateValue)}`;
         } else if (searchValue) {
           // If we have a search term
-          apiUrl = `/api/parlors/search?q=${encodeURIComponent(searchValue)}`;
+          apiUrl = `/.netlify/functions/parlors/search?q=${encodeURIComponent(searchValue)}`;
         }
         
         // High limit to get all shops matching the criteria
@@ -876,7 +877,7 @@
       showLoading();
       
       // First, fetch the list of states to populate the filter dropdown
-      fetch('/api/parlors/states')
+      fetch('/.netlify/functions/parlors/states')
         .then(response => response.json())
         .then(statesResult => {
           // Get the states array
@@ -902,7 +903,7 @@
           });
           
           // Load featured/sponsored shops for initial display - much faster than loading ALL shops
-          return fetch('/api/parlors/featured?limit=100');
+          return fetch('/.netlify/functions/parlors/featured?limit=100');
         })
         .then(response => {
           if (!response.ok) {

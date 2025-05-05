@@ -457,20 +457,20 @@
     </div>
 
     <div class="features">
-      <a href="/guestspots.html" class="feature">
+      <a href="guestspots.html" class="feature">
         <h3>Find Guest Spots</h3>
         <p>
           Artists can discover and book guest spots at tattoo shops around the
           world.
         </p>
       </a>
-      <a href="/artists.html" class="feature">
+      <a href="artists.html" class="feature">
         <h3>Artist Directory</h3>
         <p>
           Browse profiles of talented tattoo artists and view their portfolios.
         </p>
       </a>
-      <a href="/shops.html" class="feature">
+      <a href="shops.html" class="feature">
         <h3>Shop Showcase</h3>
         <p>
           Discover top-rated tattoo shops with detailed information and reviews.
@@ -479,10 +479,10 @@
     </div>
 
     <div class="button-container">
-      <a href="/artists.html" class="button">Browse Artists</a>
-      <a href="/shops.html" class="button">Find Shops</a>
-      <a href="/guestspots.html" class="button">Guest Spots</a>
-      <a href="/contact.html" class="button">Contact Us</a>
+      <a href="artists.html" class="button">Browse Artists</a>
+      <a href="shops.html" class="button">Find Shops</a>
+      <a href="guestspots.html" class="button">Guest Spots</a>
+      <a href="contact.html" class="button">Contact Us</a>
     </div>
 
     <div class="featured-section">
@@ -530,7 +530,7 @@
       </div>
 
       <div class="view-more-container">
-        <a href="/shops.html" class="view-more-button">View All Shops</a>
+        <a href="shops.html" class="view-more-button">View All Shops</a>
       </div>
     </div>
 
@@ -539,8 +539,8 @@
     </footer>
 
     <script>
-      // Fetch featured artist
-      fetch("/api/artists")
+      // Fetch featured artist - use Netlify functions path
+      fetch("/.netlify/functions/parlors/artists")
         .then((response) => response.json())
         .then((data) => {
           // Check if response is in the new API format with data property
@@ -568,9 +568,9 @@
             ).style.backgroundImage =
               `url('${artist.profileImage || "images/artist.webp"}')`;
 
-            // Update the view profile link
+            // Update the view profile link - no leading slash for Netlify
             document.querySelector(".artist-feature .featured-button").href =
-              `/artist-detail.html?id=${artist.id}`;
+              `artist-detail.html?id=${artist.id}`;
           }
         })
         .catch((error) => {
@@ -579,8 +579,8 @@
             "Artist data coming soon";
         });
 
-      // Fetch featured shop from our new PostgreSQL database
-      fetch("/api/parlors/featured?limit=1")
+      // Fetch featured shop from our new PostgreSQL database - use Netlify functions path
+      fetch("/.netlify/functions/parlors/featured?limit=1")
         .then((response) => response.json())
         .then((data) => {
           // Check if we have data in the new API format
@@ -599,12 +599,12 @@
             document.getElementById("featuredShopImage").style.backgroundImage =
               `url('${shop.image || "images/shop.jpeg"}')`;
 
-            // Update the view shop link
+            // Update the view shop link - remove leading slash for Netlify compatibility
             document.querySelector(".shop-feature .featured-button").href =
-              `/shop-detail.html?id=${shop.id}`;
+              `shop-detail.html?id=${shop.id}`;
           } else {
-            // Fallback to the old API endpoint
-            return fetch("/api/shops");
+            // Fallback to the old API endpoint - use Netlify functions path
+            return fetch("/.netlify/functions/parlors/shops");
           }
         })
         .then((response) => {
@@ -631,9 +631,9 @@
                 "featuredShopImage",
               ).style.backgroundImage = "url('images/shop.jpeg')";
 
-              // Update the view shop link
+              // Update the view shop link - no leading slash for Netlify
               document.querySelector(".shop-feature .featured-button").href =
-                `/shop-detail.html?id=${shop.id}`;
+                `shop-detail.html?id=${shop.id}`;
             }
           }
         })
@@ -643,8 +643,8 @@
             "Shop data coming soon";
         });
 
-      // Fetch random shops (9 shops per client request)
-      fetch("/api/parlors/random?limit=9")
+      // Fetch random shops (9 shops per client request) - use Netlify functions path
+      fetch("/.netlify/functions/parlors/random?limit=9")
         .then((response) => response.json())
         .then((data) => {
           // Remove loading indicator
@@ -682,7 +682,7 @@
                 <h3 class="random-shop-name">${shop.name}</h3>
                 <div class="random-shop-location">${locationDisplay}</div>
                 <div class="random-shop-rating">${ratingDisplay}</div>
-                <a href="/shop-detail.html?id=${shop.id}" class="random-shop-link">View Details</a>
+                <a href="shop-detail.html?id=${shop.id}" class="random-shop-link">View Details</a>
               </div>
             `;
 

@@ -1,4 +1,14 @@
 // Netlify serverless function to handle API requests
+const { Pool } = require('pg');
+
+// Create PostgreSQL connection pool using environment variable from Netlify
+const pool = new Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  max: 5,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+});
+
 exports.handler = async function(event, context) {
   // CORS headers
   const headers = {
@@ -22,6 +32,7 @@ exports.handler = async function(event, context) {
     const pathSegments = path.split('/').filter(Boolean);
     const queryParams = event.queryStringParameters || {};
     const limit = queryParams.limit ? parseInt(queryParams.limit) : 10;
+    const offset = queryParams.offset ? parseInt(queryParams.offset) : 0;
     
     console.log(`API Request: ${event.httpMethod} ${path} with params:`, queryParams);
     
@@ -29,196 +40,55 @@ exports.handler = async function(event, context) {
     if (pathSegments.length === 1 && !isNaN(parseInt(pathSegments[0]))) {
       const parlorId = parseInt(pathSegments[0]);
       
-      // Shop details endpoint
+      const { rows } = await pool.query('SELECT * FROM parlors WHERE id = $1', [parlorId]);
+      
+      if (rows.length === 0) {
+        return {
+          statusCode: 404,
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            success: false, 
+            message: 'Shop not found' 
+          })
+        };
+      }
+      
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: parlorId,
-          name: `Tattoo Shop ${parlorId}`,
-          address: `${123 + parlorId} Ink Avenue`,
-          city: "New York",
-          state: "NY",
-          zip: "10001",
-          phone: "555-123-4567",
-          email: "contact@tattooshop.com",
-          website: "https://www.tattooshop.com",
-          rating: 47,
-          images: ["images/shop.jpeg", "images/shop.jpeg", "images/shop.jpeg"],
-          description: "A premier tattoo shop featuring talented artists specializing in various styles from traditional to modern designs.",
-          hours: {
-            monday: "10:00 AM - 8:00 PM",
-            tuesday: "10:00 AM - 8:00 PM",
-            wednesday: "10:00 AM - 8:00 PM",
-            thursday: "10:00 AM - 8:00 PM",
-            friday: "10:00 AM - 10:00 PM",
-            saturday: "12:00 PM - 10:00 PM",
-            sunday: "Closed"
-          },
-          artists: [
-            {
-              id: 1,
-              name: "Jane Smith",
-              specialties: ["Traditional", "Japanese"],
-              image: "images/artist.webp"
-            },
-            {
-              id: 2, 
-              name: "John Doe",
-              specialties: ["Realism", "Portraits"],
-              image: "images/artist.webp"
-            }
-          ]
-        })
+        body: JSON.stringify(rows[0])
       };
     }
     
     // Featured parlors endpoint
     if (pathSegments.length === 1 && pathSegments[0] === 'featured') {
+      const { rows } = await pool.query(
+        'SELECT * FROM parlors WHERE featured = true ORDER BY rating DESC NULLS LAST LIMIT $1', 
+        [limit]
+      );
+      
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           success: true,
-          data: [
-            {
-              id: 1,
-              name: "Ink Master Studio",
-              address: "123 Tattoo Ave",
-              city: "New York",
-              state: "NY",
-              location: {
-                city: "New York",
-                state: "NY"
-              },
-              rating: 48,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 4,
-              name: "Color Canvas Tattoo",
-              address: "567 Ink Blvd",
-              city: "Chicago",
-              state: "IL", 
-              location: {
-                city: "Chicago",
-                state: "IL"
-              },
-              rating: 47,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 7,
-              name: "Precision Ink",
-              address: "789 Needle St",
-              city: "Boston",
-              state: "MA",
-              location: {
-                city: "Boston",
-                state: "MA"
-              },
-              rating: 49,
-              image: "images/shop.jpeg"
-            }
-          ].slice(0, limit)
+          count: rows.length,
+          data: rows
         })
       };
     }
     
     // Random parlors endpoint
     if (pathSegments.length === 1 && pathSegments[0] === 'random') {
+      const { rows } = await pool.query('SELECT * FROM parlors ORDER BY RANDOM() LIMIT $1', [limit]);
+      
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           success: true,
-          data: [
-            {
-              id: 2,
-              name: "Artistic Ink",
-              address: "456 Design Blvd",
-              city: "Los Angeles",
-              state: "CA",
-              location: {
-                city: "Los Angeles",
-                state: "CA"
-              },
-              rating: 45,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 3,
-              name: "Tattoo Paradise",
-              address: "789 Color St",
-              city: "Miami",
-              state: "FL",
-              rating: 47,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 5,
-              name: "Electric Needle",
-              address: "321 Flash Dr",
-              city: "Austin",
-              state: "TX",
-              rating: 46,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 6,
-              name: "Black Ink Gallery",
-              address: "555 Tattoo Ln",
-              city: "Portland",
-              state: "OR",
-              rating: 48,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 8,
-              name: "Inked Dreams",
-              address: "111 Artist Way",
-              city: "Seattle",
-              state: "WA",
-              rating: 43,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 9,
-              name: "Phoenix Tattoo",
-              address: "222 Fire Rd",
-              city: "Phoenix",
-              state: "AZ",
-              rating: 44,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 10,
-              name: "Steel City Ink",
-              address: "333 Metal St",
-              city: "Pittsburgh",
-              state: "PA",
-              rating: 42,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 11,
-              name: "Mile High Tattoo",
-              address: "444 Mountain Rd",
-              city: "Denver",
-              state: "CO",
-              rating: 46,
-              image: "images/shop.jpeg"
-            },
-            {
-              id: 12,
-              name: "Golden Gate Ink",
-              address: "777 Bridge Blvd",
-              city: "San Francisco",
-              state: "CA",
-              rating: 49,
-              image: "images/shop.jpeg"
-            }
-          ].slice(0, limit)
+          count: rows.length,
+          data: rows
         })
       };
     }
@@ -229,7 +99,100 @@ exports.handler = async function(event, context) {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
+          success: true,
           message: "Coming Soon - Artists functionality is under development" 
+        })
+      };
+    }
+    
+    // States endpoint for shop filtering
+    if (pathSegments.length === 1 && pathSegments[0] === 'states') {
+      const { rows } = await pool.query(
+        `SELECT DISTINCT location->>'state' as state 
+         FROM parlors 
+         WHERE location->>'state' IS NOT NULL 
+         ORDER BY state`
+      );
+      
+      const states = rows.map(row => row.state);
+      
+      return {
+        statusCode: 200,
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          success: true,
+          count: states.length,
+          data: states
+        })
+      };
+    }
+    
+    // Get cities by state
+    if (pathSegments.length === 2 && pathSegments[0] === 'cities') {
+      const state = pathSegments[1];
+      
+      const { rows } = await pool.query(
+        `SELECT DISTINCT location->>'city' as city 
+         FROM parlors 
+         WHERE location->>'state' = $1 AND location->>'city' IS NOT NULL 
+         ORDER BY city`, 
+        [state]
+      );
+      
+      const cities = rows.map(row => row.city);
+      
+      return {
+        statusCode: 200,
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          success: true,
+          count: cities.length,
+          data: cities
+        })
+      };
+    }
+    
+    // Get parlors by state
+    if (queryParams.state) {
+      const state = queryParams.state;
+      
+      console.log(`Filtering shops by state: ${state}, limit: ${limit}, offset: ${offset}`);
+      
+      const { rows } = await pool.query(
+        `SELECT * FROM parlors 
+         WHERE location->>'state' = $1 
+         ORDER BY rating DESC NULLS LAST 
+         LIMIT $2 OFFSET $3`, 
+        [state, limit, offset]
+      );
+      
+      console.log(`Found ${rows.length} shops in state ${state}`);
+      
+      return {
+        statusCode: 200,
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          success: true,
+          count: rows.length,
+          data: rows
+        })
+      };
+    }
+    
+    // Default to getting all parlors with pagination
+    if (path === '' || path === '/') {
+      const { rows } = await pool.query(
+        'SELECT * FROM parlors ORDER BY rating DESC NULLS LAST LIMIT $1 OFFSET $2', 
+        [limit, offset]
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          success: true,
+          count: rows.length,
+          data: rows
         })
       };
     }
@@ -238,14 +201,21 @@ exports.handler = async function(event, context) {
     return {
       statusCode: 404,
       headers: { ...headers, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'API endpoint not found' })
+      body: JSON.stringify({ 
+        success: false,
+        message: 'API endpoint not found' 
+      })
     };
   } catch (error) {
     console.error('Error:', error);
     return {
       statusCode: 500,
       headers: { ...headers, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Internal Server Error', error: error.toString() })
+      body: JSON.stringify({ 
+        success: false,
+        message: 'Internal Server Error', 
+        error: error.toString() 
+      })
     };
   }
 };

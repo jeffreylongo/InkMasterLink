@@ -700,11 +700,11 @@
   <header>
     <div class="logo">Ink Link</div>
     <nav>
-      <a href="/">Home</a>
-      <a href="/artists.html">Artists</a>
-      <a href="/shops.html">Shops</a>
-      <a href="/guestspots.html">Guest Spots</a>
-      <a href="/contact.html">Contact</a>
+      <a href="index.html">Home</a>
+      <a href="artists.html">Artists</a>
+      <a href="shops.html">Shops</a>
+      <a href="guestspots.html">Guest Spots</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
   
@@ -770,7 +770,7 @@
     
     // If no shop ID is provided, redirect to shops list
     if (!shopId) {
-      window.location.href = '/shops.html';
+      window.location.href = 'shops.html';
     }
     
     // Tab functionality
@@ -850,7 +850,7 @@
         title: title,
         content: content,
         userDisplayName: 'You',
-        userAvatar: '/images/artist.webp',
+        userAvatar: 'images/artist.webp',
         created: new Date()
       });
     });
@@ -882,7 +882,7 @@
       reviewCard.innerHTML = `
         <div class="review-header">
           <div class="reviewer-info">
-            <div class="reviewer-avatar" style="background-image: url('${review.userAvatar || '/images/artist.webp'}');"></div>
+            <div class="reviewer-avatar" style="background-image: url('${review.userAvatar || 'images/artist.webp'}');"></div>
             <div>
               <div class="reviewer-name">${review.userDisplayName}</div>
               <div class="review-date">${formattedDate}</div>
@@ -903,14 +903,14 @@
     }
     
     // Fetch shop data from the API
-    fetch(`/api/parlors/${shopId}`)
+    fetch(`/.netlify/functions/parlors?id=${shopId}`)
       .then(response => response.json())
       .then(result => {
         // Handle both formats (direct shop object or {success, data})
         const shop = result.success && result.data ? result.data : result;
         
         if (!shop) {
-          window.location.href = '/shops.html';
+          window.location.href = 'shops.html';
           return;
         }
         
@@ -922,7 +922,7 @@
         
         shopHeader.innerHTML = `
           <div class="shop-gallery">
-            <div class="shop-image" style="background-image: url('/images/shop.jpeg');"></div>
+            <div class="shop-image" style="background-image: url('images/shop.jpeg');"></div>
             <div class="gallery-nav">
               <div class="gallery-dot active"></div>
               ${shop.images ? shop.images.map((_, index) => `<div class="gallery-dot"></div>`).join('') : ''}
@@ -1001,9 +1001,9 @@
         
         // Use real shop image as requested
         const shopImages = [
-          '/images/shop.jpeg',
-          '/images/shop.jpeg',
-          '/images/shop.jpeg'
+          'images/shop.jpeg',
+          'images/shop.jpeg',
+          'images/shop.jpeg'
         ];
         
         galleryDots.forEach((dot, index) => {
@@ -1022,11 +1022,11 @@
       .catch(error => {
         console.error('Error fetching shop:', error);
         alert('Error loading shop details. Please try again later.');
-        window.location.href = '/shops.html';
+        window.location.href = 'shops.html';
       });
     
     // Fetch artists for this shop
-    fetch('/api/artists')
+    fetch('/.netlify/functions/artists')
       .then(response => response.json())
       .then(result => {
         // Handle both formats (direct array or {success, data})
@@ -1046,7 +1046,7 @@
           
           // Create HTML content for the artist card
           artistCard.innerHTML = `
-            <div class="artist-image" style="background-image: url('/images/artist.webp');"></div>
+            <div class="artist-image" style="background-image: url('images/artist.webp');"></div>
             <div class="artist-info">
               <h3 class="artist-name">${artist.name}</h3>
               <div class="artist-specialty">
@@ -1054,7 +1054,7 @@
                     artist.specialty.map(spec => `<span class="specialty-tag">${spec}</span>`).join('') : 
                     '<span class="specialty-tag">Tattoo Artist</span>'}
               </div>
-              <a href="/artist-detail.html?id=${artist.id}" class="view-profile-btn">View Profile</a>
+              <a href="artist-detail.html?id=${artist.id}" class="view-profile-btn">View Profile</a>
             </div>
           `;
           
@@ -1071,7 +1071,7 @@
     reviewList.innerHTML = '<div class="no-items">No reviews yet. Be the first to leave one!</div>';
     
     // Fetch guest spots for this shop
-    fetch('/api/guestspots')
+    fetch('/.netlify/functions/guestspots')
       .then(response => response.json())
       .then(result => {
         // Handle both formats (direct array or {success, data})
