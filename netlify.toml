@@ -1,45 +1,26 @@
-# Basic build settings
 [build]
-command = "chmod +x ./build.sh && ./build.sh"
-publish = "public"
+  command = "chmod +x ./build.sh && ./build.sh"
+  publish = "public"
 
-# Serverless functions configuration
 [functions]
-directory = "functions"
+  directory = "functions"
 
-# API redirects
 [[redirects]]
-from = "/api/*"
-to = "/.netlify/functions/parlors/:splat"
-status = 200
+  from = "/api/*"
+  to = "/.netlify/functions/parlors/:splat"
+  status = 200
 
-# SPA redirects
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
-# Build environment
 [build.environment]
-NODE_VERSION = "18"
+  NODE_VERSION = "18"
 
-# Explicitly disable plugins
+# This empty plugins section disables auto-detection
 [plugins]
 
-# Disable asset optimization
+# Disable asset optimization and processing
 [build.processing]
-skip_processing = true
-
-# Headers for caching and security
-[[headers]]
-for = "/*"
-[headers.values]
-X-Frame-Options = "DENY"
-X-XSS-Protection = "1; mode=block"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "same-origin"
-
-[[headers]]
-for = "/images/*"
-[headers.values]
-Cache-Control = "public, max-age=31536000"
+  skip_processing = true

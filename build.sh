@@ -41,4 +41,17 @@ EOL
   echo "✅ Created _headers file"
 fi
 
+# Create a dummy package.json to indicate this is not an Angular app
+if [ ! -f "package.json" ]; then
+  cat > package.json << EOL
+{
+  "name": "ink-master-link",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static site with Netlify functions"
+}
+EOL
+  echo "✅ Created package.json to prevent framework detection"
+fi
+
 echo "✅ Build completed successfully"
