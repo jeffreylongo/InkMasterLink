@@ -1,0 +1,22 @@
+[
+  {
+    "zip": "01002",
+    "name": "Wanderlust Tattoo & Piercing",
+    "address": "Lower Level, 71 N Pleasant St, Amherst, MA 01002",
+    "phone": "(413) 835-0912",
+    "rating": "4.7",
+    "reviews": "",
+    "website": "https://www.wanderlusttattoos.com/",
+    "email": "wanderlust.tattoos@gmail.com"
+  },
+  {
+    "zip": "01013",
+    "name": "I'Nkd By Coleman",
+    "address": "470 Springfield St, Chicopee, MA 01013",
+    "phone": "(413) 593-6092",
+    "rating": "4.9",
+    "reviews": "",
+    "website": "http://www.inkdbycoleman.com/",
+    "email": "scott@inkdbycoleman.com"
+  }
+]
