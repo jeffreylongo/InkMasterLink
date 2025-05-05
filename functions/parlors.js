@@ -44,7 +44,7 @@ exports.handler = async function(event, context) {
           email: "contact@tattooshop.com",
           website: "https://www.tattooshop.com",
           rating: 47,
-          images: ["/images/shop.jpeg", "/images/shop.jpeg", "/images/shop.jpeg"],
+          images: ["images/shop.jpeg", "images/shop.jpeg", "images/shop.jpeg"],
           description: "A premier tattoo shop featuring talented artists specializing in various styles from traditional to modern designs.",
           hours: {
             monday: "10:00 AM - 8:00 PM",
@@ -60,13 +60,13 @@ exports.handler = async function(event, context) {
               id: 1,
               name: "Jane Smith",
               specialties: ["Traditional", "Japanese"],
-              image: "/images/artist.webp"
+              image: "images/artist.webp"
             },
             {
               id: 2, 
               name: "John Doe",
               specialties: ["Realism", "Portraits"],
-              image: "/images/artist.webp"
+              image: "images/artist.webp"
             }
           ]
         })
@@ -79,15 +79,20 @@ exports.handler = async function(event, context) {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          parlors: [
+          success: true,
+          data: [
             {
               id: 1,
               name: "Ink Master Studio",
               address: "123 Tattoo Ave",
               city: "New York",
               state: "NY",
+              location: {
+                city: "New York",
+                state: "NY"
+              },
               rating: 48,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 4,
@@ -95,8 +100,12 @@ exports.handler = async function(event, context) {
               address: "567 Ink Blvd",
               city: "Chicago",
               state: "IL", 
+              location: {
+                city: "Chicago",
+                state: "IL"
+              },
               rating: 47,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 7,
@@ -104,8 +113,12 @@ exports.handler = async function(event, context) {
               address: "789 Needle St",
               city: "Boston",
               state: "MA",
+              location: {
+                city: "Boston",
+                state: "MA"
+              },
               rating: 49,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             }
           ].slice(0, limit)
         })
@@ -118,15 +131,20 @@ exports.handler = async function(event, context) {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          parlors: [
+          success: true,
+          data: [
             {
               id: 2,
               name: "Artistic Ink",
               address: "456 Design Blvd",
               city: "Los Angeles",
               state: "CA",
+              location: {
+                city: "Los Angeles",
+                state: "CA"
+              },
               rating: 45,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 3,
@@ -135,7 +153,7 @@ exports.handler = async function(event, context) {
               city: "Miami",
               state: "FL",
               rating: 47,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 5,
@@ -144,7 +162,7 @@ exports.handler = async function(event, context) {
               city: "Austin",
               state: "TX",
               rating: 46,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 6,
@@ -153,7 +171,7 @@ exports.handler = async function(event, context) {
               city: "Portland",
               state: "OR",
               rating: 48,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 8,
@@ -162,7 +180,7 @@ exports.handler = async function(event, context) {
               city: "Seattle",
               state: "WA",
               rating: 43,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 9,
@@ -171,7 +189,7 @@ exports.handler = async function(event, context) {
               city: "Phoenix",
               state: "AZ",
               rating: 44,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 10,
@@ -180,7 +198,7 @@ exports.handler = async function(event, context) {
               city: "Pittsburgh",
               state: "PA",
               rating: 42,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 11,
@@ -189,7 +207,7 @@ exports.handler = async function(event, context) {
               city: "Denver",
               state: "CO",
               rating: 46,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             },
             {
               id: 12,
@@ -198,7 +216,7 @@ exports.handler = async function(event, context) {
               city: "San Francisco",
               state: "CA",
               rating: 49,
-              image: "/images/shop.jpeg"
+              image: "images/shop.jpeg"
             }
           ].slice(0, limit)
         })

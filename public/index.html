@@ -566,7 +566,7 @@
             document.getElementById(
               "featuredArtistImage",
             ).style.backgroundImage =
-              `url('${artist.profileImage || "/images/artist.webp"}')`;
+              `url('${artist.profileImage || "images/artist.webp"}')`;
 
             // Update the view profile link
             document.querySelector(".artist-feature .featured-button").href =
@@ -595,9 +595,9 @@
             document.getElementById("featuredShopRating").textContent =
               `★ ${displayRating}`;
 
-            // Use real artist image as per client request
+            // Use real shop image as per client request
             document.getElementById("featuredShopImage").style.backgroundImage =
-              "url('/images/shop.jpeg')";
+              `url('${shop.image || "images/shop.jpeg"}')`;
 
             // Update the view shop link
             document.querySelector(".shop-feature .featured-button").href =
@@ -626,10 +626,10 @@
                   : shop.rating.toFixed(1);
               document.getElementById("featuredShopRating").textContent =
                 `★ ${ratingDisplay}`;
-              // Use real artist image as per client request
+              // Use real shop image as per client request
               document.getElementById(
                 "featuredShopImage",
-              ).style.backgroundImage = "url('/images/shop.jpeg')";
+              ).style.backgroundImage = "url('images/shop.jpeg')";
 
               // Update the view shop link
               document.querySelector(".shop-feature .featured-button").href =
@@ -659,7 +659,7 @@
               shopCard.className = "random-shop-card";
 
               // Use real shop image as per client request
-              const imageUrl = "/images/shop.jpeg";
+              const imageUrl = shop.image || "images/shop.jpeg";
 
               // Format rating for display (convert from 0-50 scale to 0-5)
               const displayRating = shop.rating
