@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tattoo Shops - Ink Master Link</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('https://images.unsplash.com/photo-1585070824263-5733950f10d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+      position: relative;
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px #ff0099,
+        0 0 20px #ff0099;
+    }
+    .page-header {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+    .page-title {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #ffffff;
+      text-shadow: 0 0 15px rgba(255, 0, 153, 0.5);
+    }
+    .page-description {
+      color: #cccccc;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      max-width: 1400px;
+      margin: 0 auto 30px;
+      padding: 15px 20px;
+      background-color: rgba(30, 30, 30, 0.7);
+      border-radius: 10px;
+    }
+    .filter-label {
+      color: #ffffff;
+      font-weight: 500;
+    }
+    .filter-select {
+      background-color: rgba(50, 50, 50, 0.8);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      padding: 8px 15px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+    }
+    .filter-select:focus {
+      border-color: #ff0099;
+      box-shadow: 0 0 5px rgba(255, 0, 153, 0.5);
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background-color: rgba(50, 50, 50, 0.8);
+      border-radius: 30px;
+      padding: 0 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      width: 250px;
+    }
+    .search-box input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px 5px;
+      color: #ffffff;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+    }
+    .search-box svg {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .search-box:focus-within {
+      border-color: #ff0099;
+      box-shadow: 0 0 5px rgba(255, 0, 153, 0.5);
+    }
+    .search-box:focus-within svg {
+      color: #ff0099;
+    }
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .shop-count {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #cccccc;
+      font-size: 0.95em;
+    }
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: #cccccc;
+    }
+    .loading-state p {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 0, 153, 0.3);
+      border-top: 3px solid #ff0099;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: #cccccc;
+      text-align: center;
+    }
+    .error-state svg {
+      color: #ff0099;
+      margin-bottom: 20px;
+    }
+    .error-state h3 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    .error-state p {
+      margin-bottom: 25px;
+      max-width: 500px;
+    }
+    .retry-button {
+      background: linear-gradient(135deg, #ff0099, #493240);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    .retry-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 0, 153, 0.3);
+    }
+    .shop-card {
+      background-color: rgba(30, 30, 30, 0.75);
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .shop-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(255, 0, 153, 0.3);
+      border-color: rgba(255, 0, 153, 0.3);
+    }
+    .shop-image {
+      width: 100%;
+      height: 230px;
+      background-color: #2a2a2a;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .shop-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to top, rgba(30, 30, 30, 1), transparent);
+    }
+    .shop-info {
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .shop-name {
+      margin: 0 0 15px 0;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+    .shop-location {
+      color: #cccccc;
+      margin-bottom: 15px;
+      font-size: 1em;
+    }
+    .shop-rating {
+      color: #ffcc00;
+      font-weight: bold;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+    }
+    .shop-rating::before {
+      content: '★ ';
+      margin-right: 5px;
+    }
+    .badge-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .featured-badge {
+      background: linear-gradient(135deg, #ff0099, #9b36b6);
+      color: white;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 500;
+      display: inline-block;
+      box-shadow: 0 3px 10px rgba(255, 0, 153, 0.2);
+    }
+    .sponsored-badge {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 500;
+      display: inline-block;
+      box-shadow: 0 3px 10px rgba(0, 114, 255, 0.2);
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      margin: 0 15px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1em;
+      position: relative;
+      transition: all 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #ff0099;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: #ff0099;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    .view-button {
+      margin-top: 20px;
+      background: linear-gradient(135deg, #614385, #516395);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+    }
+    .view-button:hover {
+      background: linear-gradient(135deg, #516395, #614385);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(97, 67, 133, 0.4);
+    }
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .social-share {
+      display: inline-flex;
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background-color: rgba(50, 50, 50, 0.9);
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .share-btn:hover {
+      background-color: rgba(70, 70, 70, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .share-btn svg {
+      color: #ff0099;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Ink Master Link</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/artists.html">Artists</a>
+      <a href="/shops.html">Shops</a>
+      <a href="/guestspots.html">Guest Spots</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1 class="page-title">Discover Tattoo Shops</h1>
+    <p class="page-description">Browse our comprehensive directory of tattoo shops across the country. Find shops by location, style, or reviews to connect with the perfect place for your next tattoo.</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Filter by:</span>
+      <select class="filter-select" id="stateFilter">
+        <option value="">All States</option>
+        <!-- States will be populated by JavaScript -->
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <select class="filter-select" id="cityFilter">
+        <option value="">All Cities</option>
+        <!-- Cities will be populated by JavaScript based on state selection -->
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <select class="filter-select" id="ratingFilter">
+        <option value="">Any Rating</option>
+        <option value="4.5">4.5+ Stars</option>
+        <option value="4">4+ Stars</option>
+        <option value="3.5">3.5+ Stars</option>
+        <option value="3">3+ Stars</option>
+      </select>
+    </div>
+    
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search name, city, amenities..." />
+    </div>
+  </div>
+
+  <div class="shop-count" id="shopCount">Loading shops...</div>
+  
+  <div id="loadingState" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading tattoo shops...</p>
+  </div>
+
+  <div id="errorState" class="error-state" style="display: none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <h3>Oops! Something went wrong</h3>
+    <p>We couldn't load the shop directory. Please try again later.</p>
+    <button id="retryButton" class="retry-button">Try Again</button>
+  </div>
+
+  <div class="shop-grid" id="shopGrid" style="display: none;">
+    <!-- Shop cards will be populated here -->
+  </div>
+
+  <script>
+    // Share shop function
+    function shareShop(shopName) {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Check out this tattoo shop on Ink Master Link',
+          text: `I found ${shopName} on Ink Master Link, the tattoo artist & shop directory!`,
+          url: window.location.href,
+        })
+        .then(() => console.log('Share successful'))
+        .catch((error) => console.log('Error sharing:', error));
+      } else {
+        // Fallback for browsers that don't support the Web Share API
+        alert(`Share this shop: ${window.location.href}`);
+      }
+    }
+    
+    // Global shops variables to store shops data
+    let allShops = [];
+    let filteredShops = [];
+    let allStateShops = [];
+    
+    // Function to create a shop card with support for both old and new data formats
+    function createShopCard(shop) {
+      const shopCard = document.createElement('div');
+      shopCard.className = 'shop-card';
+      
+      // Use real shop image as per client request
+      const imageUrl = '/images/shop.jpeg';
+      
+      // Handle null/undefined ratings and convert from 0-50 scale to 0-5 scale if needed
+      let displayRating = '0.0';
+      if (shop.rating !== null && shop.rating !== undefined) {
+        // Our database stores ratings as integers from 0-50 (e.g., 4.5 stars becomes 45)
+        displayRating = (shop.rating / 10).toFixed(1);
+      }
+      
+      // Create HTML content for the shop card
+      shopCard.innerHTML = `
+        <div class="shop-image" style="background-image: url('${imageUrl}');"></div>
+        <div class="shop-info">
+          <h3 class="shop-name">${shop.name}</h3>
+          <div class="shop-location">${shop.location.city || 'Unknown City'}, ${shop.location.state || 'Unknown State'}, ${shop.location.country || 'USA'}</div>
+          <div class="shop-rating">${displayRating}</div>
+          <div class="badge-container">
+            ${shop.featured ? '<span class="featured-badge">Featured</span>' : ''}
+            ${shop.sponsored ? '<span class="sponsored-badge">Sponsored</span>' : ''}
+          </div>
+          <div class="action-buttons">
+            <a href="/shop-detail.html?id=${shop.id}" class="view-button">View Shop</a>
+            <div class="social-share">
+              <button class="share-btn" onclick="shareShop('${shop.name.replace(/'/g, "\\'")}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      return shopCard;
+    }
+    
+    // Function to populate the shops grid
+    function populateShopsGrid(shops) {
+      const shopGrid = document.getElementById('shopGrid');
+      shopGrid.innerHTML = ''; // Clear existing content
+      
+      if (shops.length === 0) {
+        shopGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; margin: 50px 0; color: #cccccc;">No tattoo shops found matching your criteria. Try adjusting your filters.</p>';
+        return;
+      }
+      
+      // Update the shop count
+      document.getElementById('shopCount').textContent = `Showing ${shops.length} ${shops.length === 1 ? 'shop' : 'shops'}`;
+      
+      // Add the shops to the grid
+      shops.forEach(shop => {
+        shopGrid.appendChild(createShopCard(shop));
+      });
+    }
+    
+    // Function to populate the states filter using the API
+    function populateStatesFilter(shops) {
+      const stateFilter = document.getElementById('stateFilter');
+      
+      // Try to get the states from API first
+      fetch('/api/parlors/states')
+        .then(response => response.json())
+        .then(result => {
+          let states = [];
+          if (result.success && Array.isArray(result.data)) {
+            states = result.data;
+            console.log(`Loaded ${states.length} states from API`);
+          } else if (Array.isArray(result)) {
+            states = result;
+          } else {
+            // Fallback to extracting states from shops data
+            states = [...new Set(shops.map(shop => shop.location.state).filter(Boolean))].sort();
+          }
+          
+          // Clear existing options except the first one
+          while (stateFilter.options.length > 1) {
+            stateFilter.remove(1);
+          }
+          
+          // Add states to the dropdown
+          states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateFilter.appendChild(option);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching states:', error);
+          // Fallback to extracting states from shops data
+          const states = [...new Set(shops.map(shop => shop.location.state).filter(Boolean))].sort();
+          
+          states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateFilter.appendChild(option);
+          });
+        });
+    }
+    
+    // Function to populate the cities filter based on selected state
+    function populateCitiesFilter(shops, stateValue) {
+      const cityFilter = document.getElementById('cityFilter');
+      
+      // Clear existing options except the first one
+      while (cityFilter.options.length > 1) {
+        cityFilter.remove(1);
+      }
+      
+      // If no state is selected, disable the city filter
+      if (!stateValue) {
+        const cities = [...new Set(shops.map(shop => shop.location.city).filter(Boolean))].sort();
+        
+        // Only add top cities to avoid an extremely long dropdown
+        const topCitiesCount = 30;
+        const topCities = cities.slice(0, topCitiesCount);
+        
+        topCities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          cityFilter.appendChild(option);
+        });
+        
+        return;
+      }
+      
+      // Get cities for the selected state
+      const stateShops = shops.filter(shop => shop.location.state === stateValue);
+      const cities = [...new Set(stateShops.map(shop => shop.location.city).filter(Boolean))].sort();
+      
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        cityFilter.appendChild(option);
+      });
+    }
+    
+    // Function to filter shops using the database API for state and city
+    function filterShops() {
+      showLoading();
+      
+      const stateValue = document.getElementById('stateFilter').value;
+      const cityValue = document.getElementById('cityFilter').value;
+      const ratingValue = parseFloat(document.getElementById('ratingFilter').value || 0);
+      const searchValue = document.getElementById('searchInput').value.toLowerCase();
+      
+      // Update the shop count with info about which filters are applied
+      const appliedFilters = [];
+      if (stateValue) appliedFilters.push(`state: ${stateValue}`);
+      if (cityValue) appliedFilters.push(`city: ${cityValue}`);
+      if (ratingValue > 0) appliedFilters.push(`rating: ${ratingValue}+`);
+      if (searchValue) appliedFilters.push(`search: "${searchValue}"`);
+      
+      // Special case: If we have a state selected AND a city selected, use the cached state shops
+      if (stateValue && cityValue && !searchValue && allStateShops.length > 0) {
+        console.log(`Using cached shops for state ${stateValue} and filtering by city: ${cityValue}`);
+        
+        // Use the cached state shops and filter by city
+        filteredShops = allStateShops.filter(shop => 
+          shop.location && shop.location.city && 
+          shop.location.city.toLowerCase() === cityValue.toLowerCase()
+        );
+        
+        console.log(`Filtered to ${filteredShops.length} shops after applying city filter: ${cityValue}`);
+        
+        // Apply rating filter if needed
+        if (ratingValue > 0) {
+          filteredShops = filteredShops.filter(shop => {
+            // Handle null/undefined ratings
+            if (shop.rating === null || shop.rating === undefined) return false;
+            
+            // Convert rating from 0-50 scale to 0-5 scale
+            const normalizedRating = shop.rating / 10;
+            return normalizedRating >= ratingValue;
+          });
+          console.log(`Filtered to ${filteredShops.length} shops after applying rating filter: ${ratingValue}+`);
+        }
+        
+        // Sort the shops by rating, with sponsored/featured still prioritized
+        filteredShops.sort((a, b) => {
+          // First, sort by featured & sponsored status
+          if (a.featured && a.sponsored && (!b.featured || !b.sponsored)) return -1;
+          if (b.featured && b.sponsored && (!a.featured || !a.sponsored)) return 1;
+          
+          // Then by featured status
+          if (a.featured && !b.featured) return -1;
+          if (b.featured && !a.featured) return 1;
+          
+          // Then by sponsored status
+          if (a.sponsored && !b.sponsored) return -1;
+          if (b.sponsored && !a.sponsored) return 1;
+          
+          // Handle null/undefined ratings for comparison
+          const aRating = a.rating === null || a.rating === undefined ? 0 : a.rating;
+          const bRating = b.rating === null || b.rating === undefined ? 0 : b.rating;
+          
+          // Finally by rating (higher ratings first)
+          return bRating - aRating;
+        });
+        
+        // Update shop count
+        document.getElementById('shopCount').textContent = 
+          `Showing ${filteredShops.length} shops with filters: ${appliedFilters.join(', ')}`;
+        
+        populateShopsGrid(filteredShops);
+        showShops();
+      }
+      // If we have state or search selected, use the DB filtering which is much more efficient
+      else if (stateValue || searchValue) {
+        let apiUrl = '/api/parlors';
+        
+        // Use specific endpoints for state filtering
+        if (stateValue) {
+          // Use state endpoint and then filter by city client-side if needed
+          apiUrl = `/api/parlors?state=${encodeURIComponent(stateValue)}`;
+        } else if (searchValue) {
+          // If we have a search term
+          apiUrl = `/api/parlors/search?q=${encodeURIComponent(searchValue)}`;
+        }
+        
+        // High limit to get all shops matching the criteria
+        apiUrl += apiUrl.includes('?') ? '&limit=20000' : '?limit=20000';
+        
+        // Fetch filtered data from the API
+        fetch(apiUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(result => {
+            let shops;
+            
+            if (result.success && Array.isArray(result.data)) {
+              shops = result.data;
+              console.log(`Loaded ${shops.length} shops from API with filters: [${appliedFilters.join(', ')}]`);
+            } else if (Array.isArray(result)) {
+              shops = result;
+            } else {
+              console.error('Invalid data format received:', result);
+              showError();
+              return;
+            }
+            
+            // Store all the shops for this state to help with city filtering
+            if (stateValue && !cityValue && !searchValue) {
+              // Save this state's full shop list for faster filtering
+              allStateShops = [...shops];
+              
+              // Update the cities dropdown with cities from this state
+              populateCitiesFilter(allStateShops, stateValue);
+            }
+            
+            // Set filtered shops from API result
+            filteredShops = [...shops]; // Create a new copy to avoid modifying original
+            
+            // Apply additional client-side filtering for city if selected
+            if (cityValue) {
+              filteredShops = filteredShops.filter(shop => 
+                shop.location && shop.location.city && 
+                shop.location.city.toLowerCase() === cityValue.toLowerCase()
+              );
+              console.log(`Filtered to ${filteredShops.length} shops after applying city filter: ${cityValue}`);
+            }
+            
+            // Apply additional client-side filtering for rating
+            if (ratingValue > 0) {
+              filteredShops = filteredShops.filter(shop => {
+                // Handle null/undefined ratings
+                if (shop.rating === null || shop.rating === undefined) return false;
+                
+                // Convert rating from 0-50 scale to 0-5 scale
+                const normalizedRating = shop.rating / 10;
+                return normalizedRating >= ratingValue;
+              });
+              console.log(`Filtered to ${filteredShops.length} shops after applying rating filter: ${ratingValue}+`);
+            }
+            
+            // Sort the shops by rating, with sponsored/featured still prioritized
+            filteredShops.sort((a, b) => {
+              // First, sort by featured & sponsored status
+              if (a.featured && a.sponsored && (!b.featured || !b.sponsored)) return -1;
+              if (b.featured && b.sponsored && (!a.featured || !a.sponsored)) return 1;
+              
+              // Then by featured status
+              if (a.featured && !b.featured) return -1;
+              if (b.featured && !a.featured) return 1;
+              
+              // Then by sponsored status
+              if (a.sponsored && !b.sponsored) return -1;
+              if (b.sponsored && !a.sponsored) return 1;
+              
+              // Handle null/undefined ratings for comparison
+              const aRating = a.rating === null || a.rating === undefined ? 0 : a.rating;
+              const bRating = b.rating === null || b.rating === undefined ? 0 : b.rating;
+              
+              // Finally by rating (higher ratings first)
+              return bRating - aRating;
+            });
+            
+            // Update shop count
+            document.getElementById('shopCount').textContent = 
+              appliedFilters.length > 0 
+                ? `Showing ${filteredShops.length} shops with filters: ${appliedFilters.join(', ')}`
+                : `Showing ${filteredShops.length} featured shops`;
+            
+            populateShopsGrid(filteredShops);
+            showShops();
+          })
+          .catch(error => {
+            console.error('Error fetching filtered shops:', error);
+            showError();
+          });
+      } else {
+        // Client-side filtering for other cases
+        filteredShops = [...allShops]; // Create a copy to avoid modifying original
+        
+        // Apply rating filter
+        if (ratingValue > 0) {
+          filteredShops = filteredShops.filter(shop => {
+            // Handle null/undefined ratings
+            if (shop.rating === null || shop.rating === undefined) return false;
+            
+            // Our database stores ratings as integers from 0-50 (e.g., 4.5 stars becomes 45)
+            const normalizedRating = shop.rating / 10;
+            return normalizedRating >= ratingValue;
+          });
+          console.log(`Filtered to ${filteredShops.length} shops after applying rating filter: ${ratingValue}+`);
+        }
+        
+        // Apply city filter (if applicable)
+        if (cityValue) {
+          filteredShops = filteredShops.filter(shop => 
+            shop.location && shop.location.city && 
+            shop.location.city.toLowerCase() === cityValue.toLowerCase()
+          );
+          console.log(`Filtered to ${filteredShops.length} shops after applying city filter: ${cityValue}`);
+        }
+        
+        // Update shop count
+        document.getElementById('shopCount').textContent = 
+          appliedFilters.length > 0 
+            ? `Showing ${filteredShops.length} shops with filters: ${appliedFilters.join(', ')}`
+            : `Showing ${filteredShops.length} featured shops`;
+        
+        populateShopsGrid(filteredShops);
+        showShops();
+      }
+    }
+    
+    // Add event listeners to filters
+    function setupFilterListeners() {
+      // State filter change updates city dropdown and filters shops
+      document.getElementById('stateFilter').addEventListener('change', (e) => {
+        const stateValue = e.target.value;
+        
+        // Clear city filter when state changes
+        document.getElementById('cityFilter').value = '';
+        
+        // If state is selected, we need to fetch data for that state first
+        if (stateValue) {
+          // After fetching state data in filterShops(), the populateCitiesFilter will be called with allStateShops
+          filterShops();
+        } else {
+          // If no state is selected, populate from all shops
+          populateCitiesFilter(allShops, stateValue);
+          filterShops();
+        }
+      });
+      
+      // City filter
+      document.getElementById('cityFilter').addEventListener('change', filterShops);
+      
+      // Rating filter
+      document.getElementById('ratingFilter').addEventListener('change', filterShops);
+      
+      // Debounce search input to avoid excessive filtering
+      let searchTimeout;
+      document.getElementById('searchInput').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(filterShops, 300);
+      });
+    }
+  
+    // Loading and Error UI management
+    function showLoading() {
+      document.getElementById('loadingState').style.display = 'flex';
+      document.getElementById('errorState').style.display = 'none';
+      document.getElementById('shopGrid').style.display = 'none';
+    }
+    
+    function showError() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'flex';
+      document.getElementById('shopGrid').style.display = 'none';
+      document.getElementById('shopCount').textContent = 'Error loading shops';
+    }
+    
+    function showShops() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'none';
+      document.getElementById('shopGrid').style.display = 'grid';
+    }
+    
+    // Fetch shops from the PostgreSQL-based API with optimized initial load
+    function fetchShops() {
+      showLoading();
+      
+      // First, fetch the list of states to populate the filter dropdown
+      fetch('/api/parlors/states')
+        .then(response => response.json())
+        .then(statesResult => {
+          // Get the states array
+          let states = [];
+          if (statesResult.success && Array.isArray(statesResult.data)) {
+            states = statesResult.data;
+            console.log(`Loaded ${states.length} states for filtering`);
+          } else if (Array.isArray(statesResult)) {
+            states = statesResult;
+          }
+          
+          // Populate the state filter with all available states
+          const stateFilter = document.getElementById('stateFilter');
+          while (stateFilter.options.length > 1) {
+            stateFilter.remove(1);
+          }
+          
+          states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateFilter.appendChild(option);
+          });
+          
+          // Load featured/sponsored shops for initial display - much faster than loading ALL shops
+          return fetch('/api/parlors/featured?limit=100');
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(result => {
+          // Check if we have the new API format (with success and data fields)
+          let shops;
+          if (result.success && Array.isArray(result.data)) {
+            shops = result.data;
+            console.log(`Loaded ${shops.length} featured tattoo shops from PostgreSQL database`);
+          } else if (Array.isArray(result)) {
+            // Fallback to old format if needed
+            shops = result;
+          } else {
+            console.error('Invalid data format received:', result);
+            showError();
+            return;
+          }
+          
+          if (shops.length === 0) {
+            console.error('Empty shops data received');
+            showError();
+            return;
+          }
+          
+          // Update page with message that we're showing featured shops
+          document.getElementById('shopCount').textContent = 
+            `Showing ${shops.length} featured shops. Select a state or search to see more of our ${
+              document.getElementById('stateFilter').options.length > 1 
+                ? (document.getElementById('stateFilter').options.length - 1) * 350  // Approximate shops per state
+                : "19,000+"
+            } shops`;
+          
+          // Store the featured shops
+          allShops = shops;
+          filteredShops = [...shops];
+          
+          // Sort shops: featured & sponsored first, then by rating
+          filteredShops.sort((a, b) => {
+            // First, sort by featured & sponsored status
+            if (a.featured && a.sponsored && (!b.featured || !b.sponsored)) return -1;
+            if (b.featured && b.sponsored && (!a.featured || !a.sponsored)) return 1;
+            
+            // Then by featured status
+            if (a.featured && !b.featured) return -1;
+            if (b.featured && !a.featured) return 1;
+            
+            // Then by sponsored status
+            if (a.sponsored && !b.sponsored) return -1;
+            if (b.sponsored && !a.sponsored) return 1;
+            
+            // Handle null/undefined ratings for comparison
+            const aRating = a.rating === null || a.rating === undefined ? 0 : a.rating;
+            const bRating = b.rating === null || b.rating === undefined ? 0 : b.rating;
+            
+            // Finally by rating (higher ratings first)
+            return bRating - aRating;
+          });
+          
+          // Initialize
+          populateCitiesFilter(shops, ''); // Initialize city filter with all states
+          populateShopsGrid(filteredShops);
+          setupFilterListeners();
+          showShops();
+        })
+        .catch(error => {
+          console.error('Error fetching shops:', error);
+          showError();
+        });
+    }
+    
+    // Add retry functionality
+    document.getElementById('retryButton').addEventListener('click', fetchShops);
+    
+    // Initial fetch
+    fetchShops();
+  </script>
+</body>
+</html>

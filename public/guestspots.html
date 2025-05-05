@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guest Spots - Ink Link</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('https://images.unsplash.com/photo-1598971861077-67a649437286?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+      position: relative;
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px #ff0099,
+        0 0 20px #ff0099;
+    }
+    .page-title {
+      font-size: 2em;
+      margin: 30px 0;
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    }
+    .guestspot-list {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .guestspot-card {
+      background-color: rgba(25, 25, 25, 0.85);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      margin-bottom: 30px;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .guestspot-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(255, 0, 153, 0.2);
+      border-color: rgba(255, 0, 153, 0.3);
+    }
+    .guestspot-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(to bottom, #ff0099, #ff0066);
+      z-index: 1;
+    }
+    .guestspot-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .shop-name {
+      font-size: 1.6em;
+      margin: 0;
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .shop-location {
+      color: #cccccc;
+      margin: 8px 0;
+      font-size: 1.05em;
+    }
+    .dates {
+      background: linear-gradient(135deg, #614385, #516395);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      min-width: 140px;
+      box-shadow: 0 5px 15px rgba(97, 67, 133, 0.3);
+    }
+    .date-range {
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+    .status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-top: 12px;
+      font-size: 0.85em;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .status-open {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+      box-shadow: 0 4px 10px rgba(17, 153, 142, 0.3);
+    }
+    .status-confirmed {
+      background: linear-gradient(135deg, #2193b0, #6dd5ed);
+      color: white;
+      box-shadow: 0 4px 10px rgba(33, 147, 176, 0.3);
+    }
+    .status-completed {
+      background: linear-gradient(135deg, #757F9A, #D7DDE8);
+      color: white;
+      box-shadow: 0 4px 10px rgba(117, 127, 154, 0.3);
+    }
+    .guestspot-description {
+      color: #dddddd;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      font-size: 1.05em;
+    }
+    .apply-btn {
+      background: linear-gradient(135deg, #ff0099, #ff6a00);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1em;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: block;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(255, 0, 153, 0.3);
+    }
+    .apply-btn:hover {
+      background: linear-gradient(135deg, #ff0099, #ff3366);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 0, 153, 0.4);
+    }
+    .apply-btn:disabled {
+      background: linear-gradient(135deg, #757F9A, #D7DDE8);
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.7;
+    }
+    .featured-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff0099, #9b36b6);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 600;
+      margin-left: 12px;
+      box-shadow: 0 3px 10px rgba(255, 0, 153, 0.2);
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      margin: 0 15px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1em;
+      position: relative;
+      transition: all 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #ff0099;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: #ff0099;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    .no-results {
+      text-align: center;
+      background-color: rgba(30, 30, 30, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      font-size: 1.2em;
+      margin: 40px auto;
+      max-width: 600px;
+      color: #cccccc;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Ink Link</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/artists.html">Artists</a>
+      <a href="/shops.html">Shops</a>
+      <a href="/guestspots.html">Guest Spots</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <div class="coming-soon">
+    <div class="coming-soon-content">
+      <h1>Coming Soon</h1>
+      <p>The Guest Spots section is currently under development and will be available soon!</p>
+      <p>This feature will allow artists to find temporary spots at tattoo shops around the country.</p>
+      <p>Shop owners will be able to post available guest spots for traveling artists.</p>
+      <a href="/" class="view-button">Return to Home</a>
+    </div>
+  </div>
+
+  <style>
+    .coming-soon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60vh;
+      margin-top: 20px;
+    }
+    
+    .coming-soon-content {
+      background-color: rgba(30, 30, 30, 0.8);
+      border-radius: 15px;
+      padding: 40px;
+      text-align: center;
+      max-width: 600px;
+      border: 1px solid rgba(255, 0, 153, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .coming-soon-content h1 {
+      font-size: 2.5em;
+      color: #ff0099;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 0, 153, 0.5);
+    }
+    
+    .coming-soon-content p {
+      font-size: 1.1em;
+      color: #cccccc;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    .view-button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 25px;
+      background: linear-gradient(135deg, #614385, #516395);
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-size: 1em;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(97, 67, 133, 0.2);
+      text-align: center;
+    }
+    
+    .view-button:hover {
+      background: linear-gradient(135deg, #516395, #614385);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(97, 67, 133, 0.3);
+    }
+  </style>
+
+  <script>
+    // No need to fetch guestspots data for now
+    console.log('Guest spots section coming soon!');
+  </script>
+</body>
+</html>

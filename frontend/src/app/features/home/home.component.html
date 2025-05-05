@@ -1,0 +1,175 @@
+<div class="home-container">
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1>Find the Best Tattoo Artists & Parlors</h1>
+      <p>Connect with talented artists and top-rated tattoo studios worldwide</p>
+      <div class="search-box">
+        <mat-form-field appearance="outline" class="search-input">
+          <input matInput placeholder="Search artists, styles, or locations" [(ngModel)]="searchTerm">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="onSearch()">Search</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="featured-section">
+    <div class="section-header">
+      <h2>Featured Artists</h2>
+      <a routerLink="/artists" class="view-all">View All</a>
+    </div>
+    <div class="featured-grid">
+      <!-- Show loading placeholders -->
+      <ng-container *ngIf="loading.artists">
+        <div class="placeholder-card" *ngFor="let i of [1, 2, 3]">
+          <div class="placeholder-image"></div>
+          <div class="placeholder-content">
+            <div class="placeholder-line-large"></div>
+            <div class="placeholder-line-small"></div>
+          </div>
+        </div>
+      </ng-container>
+      
+      <!-- Show actual artist data -->
+      <ng-container *ngIf="!loading.artists">
+        <mat-card *ngFor="let artist of featuredArtists" class="artist-card" [routerLink]="['/artists', artist.id]">
+          <img mat-card-image [src]="artist.profileImage || 'assets/images/placeholder-artist.jpg'" alt="{{ artist.name }}">
+          <mat-card-content>
+            <h3>{{ artist.name }}</h3>
+            <div class="card-details">
+              <div class="location">
+                <mat-icon>place</mat-icon>
+                <span>{{ artist.location.city }}, {{ artist.location.state }}</span>
+              </div>
+              <div class="specialty-tags">
+                <span class="specialty-tag" *ngFor="let specialty of artist.specialty.slice(0, 2)">
+                  {{ specialty }}
+                </span>
+                <span class="specialty-tag" *ngIf="artist.specialty.length > 2">+{{ artist.specialty.length - 2 }}</span>
+              </div>
+              <div class="rating" *ngIf="artist.rating > 0">
+                <mat-icon class="star-icon">star</mat-icon>
+                <span>{{ artist.rating | number:'1.1-1' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Show empty state if no artists -->
+        <div class="empty-state" *ngIf="featuredArtists.length === 0">
+          <mat-icon>person_search</mat-icon>
+          <p>No featured artists available at the moment.</p>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="featured-section">
+    <div class="section-header">
+      <h2>Top Tattoo Parlors</h2>
+      <a routerLink="/parlors" class="view-all">View All</a>
+    </div>
+    <div class="featured-grid">
+      <!-- Show loading placeholders -->
+      <ng-container *ngIf="loading.parlors">
+        <div class="placeholder-card" *ngFor="let i of [1, 2, 3]">
+          <div class="placeholder-image"></div>
+          <div class="placeholder-content">
+            <div class="placeholder-line-large"></div>
+            <div class="placeholder-line-small"></div>
+          </div>
+        </div>
+      </ng-container>
+      
+      <!-- Show actual parlor data -->
+      <ng-container *ngIf="!loading.parlors">
+        <mat-card *ngFor="let parlor of featuredParlors" class="parlor-card" [routerLink]="['/parlors', parlor.id]">
+          <img mat-card-image [src]="parlor.featuredImage || 'assets/images/placeholder-parlor.jpg'" alt="{{ parlor.name }}">
+          <mat-card-content>
+            <h3>{{ parlor.name }}</h3>
+            <div class="card-details">
+              <div class="location">
+                <mat-icon>place</mat-icon>
+                <span>{{ parlor.location.city }}, {{ parlor.location.state }}</span>
+              </div>
+              <div class="rating" *ngIf="parlor.rating > 0">
+                <mat-icon class="star-icon">star</mat-icon>
+                <span>{{ parlor.rating | number:'1.1-1' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Show empty state if no parlors -->
+        <div class="empty-state" *ngIf="featuredParlors.length === 0">
+          <mat-icon>store_mall_directory</mat-icon>
+          <p>No featured parlors available at the moment.</p>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="guestspot-section">
+    <div class="section-header">
+      <h2>Latest Guest Spots</h2>
+      <a routerLink="/guestspots" class="view-all">View All</a>
+    </div>
+    <div class="featured-grid">
+      <!-- Show loading placeholders -->
+      <ng-container *ngIf="loading.guestspots">
+        <div class="placeholder-card" *ngFor="let i of [1, 2, 3]">
+          <div class="placeholder-image"></div>
+          <div class="placeholder-content">
+            <div class="placeholder-line-large"></div>
+            <div class="placeholder-line-small"></div>
+            <div class="placeholder-line-small"></div>
+          </div>
+        </div>
+      </ng-container>
+      
+      <!-- Show actual guestspot data -->
+      <ng-container *ngIf="!loading.guestspots">
+        <mat-card *ngFor="let spot of upcomingGuestspots" class="guestspot-card" [routerLink]="['/guestspots', spot.id]">
+          <div class="status-badge" [ngClass]="spot.status">{{ spot.status }}</div>
+          
+          <mat-card-content>
+            <h3 *ngIf="spot.artistName">{{ spot.artistName }} at {{ spot.parlorName }}</h3>
+            <h3 *ngIf="!spot.artistName">Guest Spot at {{ spot.parlorName }}</h3>
+            
+            <div class="card-details">
+              <div class="location">
+                <mat-icon>place</mat-icon>
+                <span>{{ spot.parlorLocation.city }}, {{ spot.parlorLocation.state }}</span>
+              </div>
+              
+              <div class="dates">
+                <mat-icon>date_range</mat-icon>
+                <span>{{ spot.dateStart | date:'MMM d' }} - {{ spot.dateEnd | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Show empty state if no guestspots -->
+        <div class="empty-state" *ngIf="upcomingGuestspots.length === 0">
+          <mat-icon>event_busy</mat-icon>
+          <p>No upcoming guest spots available at the moment.</p>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-card artist-cta">
+      <h3>Are you a Tattoo Artist?</h3>
+      <p>Create your profile, showcase your work, and book guest spots at parlors worldwide.</p>
+      <button mat-raised-button color="primary" routerLink="/auth/register">Join as Artist</button>
+    </div>
+    
+    <div class="cta-card parlor-cta">
+      <h3>Own a Tattoo Parlor?</h3>
+      <p>List your shop, find talented artists, and promote your guest spots opportunities.</p>
+      <button mat-raised-button color="primary" routerLink="/auth/register">Register Your Parlor</button>
+    </div>
+  </section>
+</div>

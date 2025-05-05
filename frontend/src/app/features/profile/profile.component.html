@@ -1,0 +1,454 @@
+<div class="profile-container">
+  <div class="container">
+    <!-- Loading State -->
+    <div *ngIf="loading.user" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading your profile...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error.user" class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>Failed to load your profile. Please try again later.</p>
+      <button mat-stroked-button color="primary" (click)="loadUserProfile()">Retry</button>
+    </div>
+
+    <!-- Profile Content -->
+    <div *ngIf="currentUser && !loading.user && !error.user" class="profile-content">
+      <div class="page-header">
+        <h1 *ngIf="!isNewUser">My Profile</h1>
+        <h1 *ngIf="isNewUser">Complete Your Profile</h1>
+        <p *ngIf="isNewUser">Set up your profile to get the most out of InkLink</p>
+      </div>
+
+      <!-- Profile Tabs -->
+      <mat-card class="profile-card">
+        <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="selectTab($event)">
+          <!-- Basic Profile Info Tab -->
+          <mat-tab label="Basic Info">
+            <div class="tab-content">
+              <form [formGroup]="profileForm" (ngSubmit)="saveUserProfile()" class="profile-form">
+                <h2>Basic Information</h2>
+                
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Full Name</mat-label>
+                  <input matInput formControlName="name" placeholder="Your name or artist name" required>
+                  <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+                    Name is required
+                  </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Bio</mat-label>
+                  <textarea matInput formControlName="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                </mat-form-field>
+                
+                <h3>Location</h3>
+                <div formGroupName="location" class="form-row">
+                  <mat-form-field appearance="outline">
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="city" placeholder="Your city">
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>State/Province</mat-label>
+                    <input matInput formControlName="state" placeholder="Your state/province">
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Country</mat-label>
+                    <input matInput formControlName="country" placeholder="Your country">
+                  </mat-form-field>
+                </div>
+                
+                <h3>Social Media</h3>
+                <div formGroupName="social" class="form-row">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Instagram Username</mat-label>
+                    <input matInput formControlName="instagram" placeholder="Username without @">
+                    <mat-icon matSuffix>photo_camera</mat-icon>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Website</mat-label>
+                    <input matInput formControlName="website" placeholder="https://your-website.com">
+                    <mat-icon matSuffix>language</mat-icon>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Facebook</mat-label>
+                    <input matInput formControlName="facebook" placeholder="Facebook page URL">
+                    <mat-icon matSuffix>facebook</mat-icon>
+                  </mat-form-field>
+                </div>
+                
+                <div class="instagram-connect">
+                  <h3>Connect Instagram</h3>
+                  <p>Connect your Instagram account to display your posts on your profile</p>
+                  
+                  <button 
+                    type="button"
+                    mat-flat-button 
+                    color="accent" 
+                    (click)="connectInstagram()" 
+                    *ngIf="!instagramConnected"
+                    [disabled]="loading.instagram">
+                    <mat-icon>add_link</mat-icon>
+                    Connect Instagram
+                  </button>
+                  
+                  <button 
+                    type="button"
+                    mat-stroked-button 
+                    color="warn" 
+                    (click)="disconnectInstagram()" 
+                    *ngIf="instagramConnected"
+                    [disabled]="loading.instagram">
+                    <mat-icon>link_off</mat-icon>
+                    Disconnect Instagram
+                  </button>
+                </div>
+                
+                <div class="form-actions">
+                  <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid || loading.saving">
+                    <mat-spinner *ngIf="loading.saving" diameter="20" class="spinner-button"></mat-spinner>
+                    <span *ngIf="!loading.saving">Save Basic Info</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          
+          <!-- Artist Profile Tab -->
+          <mat-tab label="Artist Profile" *ngIf="currentUser?.role === 'artist'">
+            <div class="tab-content">
+              <!-- Loading State -->
+              <div *ngIf="loading.artist" class="loading-container small">
+                <mat-spinner diameter="30"></mat-spinner>
+                <p>Loading artist profile...</p>
+              </div>
+              
+              <!-- Artist Profile Form -->
+              <form *ngIf="!loading.artist && artistForm" [formGroup]="artistForm" (ngSubmit)="saveArtistProfile()" class="profile-form">
+                <h2>Artist Information</h2>
+                
+                <div class="form-section">
+                  <h3>Specialty</h3>
+                  <p class="helper-text">Select the tattoo styles you specialize in</p>
+                  
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Specialties</mat-label>
+                    <mat-select multiple formControlName="specialty" (selectionChange)="onSpecialtyChange($event.value)">
+                      <mat-option *ngFor="let style of specialties" [value]="style">
+                        {{style}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <div class="selected-tags">
+                    <mat-chip-list aria-label="Selected specialties">
+                      <mat-chip *ngFor="let specialty of selectedSpecialties" color="primary" selected>
+                        {{specialty}}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </div>
+                
+                <div class="form-section">
+                  <h3>Experience</h3>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Years of Experience</mat-label>
+                    <input matInput type="number" formControlName="experienceYears" min="0" required>
+                    <mat-error *ngIf="artistForm.get('experienceYears')?.hasError('required')">
+                      Years of experience is required
+                    </mat-error>
+                    <mat-error *ngIf="artistForm.get('experienceYears')?.hasError('min')">
+                      Cannot be negative
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="form-section" formGroupName="availability">
+                  <h3>Travel Preferences</h3>
+                  
+                  <mat-slide-toggle formControlName="travelWilling" color="primary">
+                    I am willing to travel for guest spots
+                  </mat-slide-toggle>
+                  
+                  <div *ngIf="artistForm.get('availability.travelWilling')?.value" formGroupName="travelPreferences" class="travel-preferences">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Maximum Travel Distance (miles)</mat-label>
+                      <input matInput type="number" formControlName="distance" min="0">
+                      <mat-hint>Leave at 0 for unlimited distance</mat-hint>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Preferred Cities</mat-label>
+                      <mat-chip-list #citiesList aria-label="Preferred cities">
+                        <mat-chip *ngFor="let city of artistForm.get('availability.travelPreferences.cities')?.value || []">
+                          {{city}}
+                        </mat-chip>
+                        <input placeholder="Add city..."
+                              [matChipInputFor]="citiesList"
+                              (matChipInputTokenEnd)="artistForm.get('availability.travelPreferences.cities')?.value.push($event.value); $event.input.value = ''">
+                      </mat-chip-list>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Preferred States/Provinces</mat-label>
+                      <mat-chip-list #statesList aria-label="Preferred states">
+                        <mat-chip *ngFor="let state of artistForm.get('availability.travelPreferences.states')?.value || []">
+                          {{state}}
+                        </mat-chip>
+                        <input placeholder="Add state..."
+                              [matChipInputFor]="statesList"
+                              (matChipInputTokenEnd)="artistForm.get('availability.travelPreferences.states')?.value.push($event.value); $event.input.value = ''">
+                      </mat-chip-list>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Preferred Countries</mat-label>
+                      <mat-chip-list #countriesList aria-label="Preferred countries">
+                        <mat-chip *ngFor="let country of artistForm.get('availability.travelPreferences.countries')?.value || []">
+                          {{country}}
+                        </mat-chip>
+                        <input placeholder="Add country..."
+                              [matChipInputFor]="countriesList"
+                              (matChipInputTokenEnd)="artistForm.get('availability.travelPreferences.countries')?.value.push($event.value); $event.input.value = ''">
+                      </mat-chip-list>
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button mat-flat-button color="primary" type="submit" [disabled]="artistForm.invalid || loading.saving">
+                    <mat-spinner *ngIf="loading.saving" diameter="20" class="spinner-button"></mat-spinner>
+                    <span *ngIf="!loading.saving">Save Artist Profile</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          
+          <!-- Parlor Profiles Tab -->
+          <mat-tab label="My Parlors" *ngIf="currentUser?.role === 'parlor_owner'">
+            <div class="tab-content">
+              <!-- Loading State -->
+              <div *ngIf="loading.parlors" class="loading-container small">
+                <mat-spinner diameter="30"></mat-spinner>
+                <p>Loading your parlors...</p>
+              </div>
+              
+              <!-- Existing Parlors -->
+              <div *ngIf="!loading.parlors && parlors.length > 0" class="existing-parlors">
+                <h2>Your Tattoo Parlors</h2>
+                
+                <div class="parlors-grid">
+                  <mat-card *ngFor="let parlor of parlors" class="parlor-card">
+                    <mat-card-content>
+                      <h3>{{parlor.name}}</h3>
+                      <p class="parlor-location">
+                        <mat-icon>location_on</mat-icon>
+                        {{parlor.location.city}}, {{parlor.location.state}}
+                      </p>
+                      
+                      <div class="parlor-actions">
+                        <button mat-stroked-button color="primary" [routerLink]="['/parlors', parlor.id]">
+                          <mat-icon>visibility</mat-icon>
+                          View Parlor
+                        </button>
+                        <button mat-stroked-button color="accent" [routerLink]="['/guestspots/create']" [queryParams]="{parlorId: parlor.id}">
+                          <mat-icon>add_circle</mat-icon>
+                          Create Guest Spot
+                        </button>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+              
+              <div *ngIf="!loading.parlors && parlors.length === 0" class="no-parlors">
+                <mat-icon>store</mat-icon>
+                <p>You haven't added any parlors yet</p>
+              </div>
+              
+              <!-- Add New Parlor Form -->
+              <form *ngIf="!loading.parlors && parlorForm" [formGroup]="parlorForm" (ngSubmit)="createParlor()" class="profile-form parlor-form">
+                <h2>Add a New Parlor</h2>
+                
+                <div class="form-section">
+                  <h3>Parlor Information</h3>
+                  
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Parlor Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter parlor name" required>
+                    <mat-error *ngIf="parlorForm.get('name')?.hasError('required')">
+                      Parlor name is required
+                    </mat-error>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" rows="4" placeholder="Describe your tattoo parlor..." required></textarea>
+                    <mat-error *ngIf="parlorForm.get('description')?.hasError('required')">
+                      Description is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                
+                <div class="form-section" formGroupName="location">
+                  <h3>Location</h3>
+                  
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Street Address</mat-label>
+                    <input matInput formControlName="address" placeholder="Enter street address" required>
+                    <mat-error *ngIf="parlorForm.get('location.address')?.hasError('required')">
+                      Address is required
+                    </mat-error>
+                  </mat-form-field>
+                  
+                  <div class="form-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>City</mat-label>
+                      <input matInput formControlName="city" placeholder="City" required>
+                      <mat-error *ngIf="parlorForm.get('location.city')?.hasError('required')">
+                        City is required
+                      </mat-error>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>State/Province</mat-label>
+                      <input matInput formControlName="state" placeholder="State/Province" required>
+                      <mat-error *ngIf="parlorForm.get('location.state')?.hasError('required')">
+                        State is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="form-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Country</mat-label>
+                      <input matInput formControlName="country" placeholder="Country" required>
+                      <mat-error *ngIf="parlorForm.get('location.country')?.hasError('required')">
+                        Country is required
+                      </mat-error>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Postal Code</mat-label>
+                      <input matInput formControlName="postalCode" placeholder="Postal Code" required>
+                      <mat-error *ngIf="parlorForm.get('location.postalCode')?.hasError('required')">
+                        Postal code is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                <div class="form-section" formGroupName="contact">
+                  <h3>Contact Information</h3>
+                  
+                  <div class="form-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Phone</mat-label>
+                      <input matInput formControlName="phone" placeholder="Phone number" required>
+                      <mat-error *ngIf="parlorForm.get('contact.phone')?.hasError('required')">
+                        Phone is required
+                      </mat-error>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Email</mat-label>
+                      <input matInput formControlName="email" placeholder="Contact email" required>
+                      <mat-error *ngIf="parlorForm.get('contact.email')?.hasError('required')">
+                        Email is required
+                      </mat-error>
+                      <mat-error *ngIf="parlorForm.get('contact.email')?.hasError('email')">
+                        Please enter a valid email
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Website</mat-label>
+                    <input matInput formControlName="website" placeholder="https://your-website.com">
+                  </mat-form-field>
+                </div>
+                
+                <div class="form-section" formGroupName="hours">
+                  <h3>Business Hours</h3>
+                  
+                  <div class="hours-grid">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Monday</mat-label>
+                      <input matInput formControlName="monday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Tuesday</mat-label>
+                      <input matInput formControlName="tuesday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Wednesday</mat-label>
+                      <input matInput formControlName="wednesday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Thursday</mat-label>
+                      <input matInput formControlName="thursday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Friday</mat-label>
+                      <input matInput formControlName="friday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Saturday</mat-label>
+                      <input matInput formControlName="saturday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Sunday</mat-label>
+                      <input matInput formControlName="sunday" placeholder="e.g. 9AM-5PM or Closed">
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                <div class="form-section">
+                  <h3>Amenities</h3>
+                  <p class="helper-text">Select the amenities available at your parlor</p>
+                  
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Amenities</mat-label>
+                    <mat-select multiple formControlName="amenities" (selectionChange)="onAmenityChange($event.value)">
+                      <mat-option *ngFor="let amenity of amenities" [value]="amenity">
+                        {{amenity}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <div class="selected-tags">
+                    <mat-chip-list aria-label="Selected amenities">
+                      <mat-chip *ngFor="let amenity of selectedAmenities" color="accent" selected>
+                        {{amenity}}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button mat-flat-button color="primary" type="submit" [disabled]="parlorForm.invalid || loading.saving">
+                    <mat-spinner *ngIf="loading.saving" diameter="20" class="spinner-button"></mat-spinner>
+                    <span *ngIf="!loading.saving">Create Parlor</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card>
+    </div>
+  </div>
+</div>

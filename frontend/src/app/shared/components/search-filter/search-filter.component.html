@@ -1,0 +1,64 @@
+<div class="search-filter-container">
+  <form [formGroup]="filterForm" class="filter-form">
+    <div class="search-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search {{ filterType === 'artist' ? 'Artists' : 'Tattoo Parlors' }}</mat-label>
+        <input matInput formControlName="searchTerm" placeholder="Enter keywords...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="location-field">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" placeholder="City, State, Country">
+        <mat-icon matSuffix>place</mat-icon>
+      </mat-form-field>
+    </div>
+    
+    <div class="filters-row">
+      <!-- Artist-specific filters -->
+      <ng-container *ngIf="filterType === 'artist'">
+        <mat-form-field appearance="outline" class="specialty-field">
+          <mat-label>Specialty</mat-label>
+          <mat-select formControlName="specialty">
+            <mat-option value="">Any Style</mat-option>
+            <mat-option *ngFor="let specialty of artistSpecialties" [value]="specialty">
+              {{ specialty }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <div class="checkbox-filters">
+          <mat-checkbox formControlName="featured" color="primary">
+            Featured Artists
+          </mat-checkbox>
+          
+          <mat-checkbox formControlName="traveling" color="primary">
+            Traveling Artists
+          </mat-checkbox>
+        </div>
+      </ng-container>
+      
+      <!-- Parlor-specific filters -->
+      <ng-container *ngIf="filterType === 'parlor'">
+        <mat-form-field appearance="outline" class="amenities-field">
+          <mat-label>Amenities</mat-label>
+          <mat-select formControlName="amenities" multiple>
+            <mat-option *ngFor="let amenity of parlorAmenities" [value]="amenity">
+              {{ amenity }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <div class="checkbox-filters">
+          <mat-checkbox formControlName="featured" color="primary">
+            Featured Parlors
+          </mat-checkbox>
+        </div>
+      </ng-container>
+      
+      <button mat-button color="warn" (click)="resetFilters()" class="reset-button">
+        <mat-icon>clear</mat-icon> Clear Filters
+      </button>
+    </div>
+  </form>
+</div>

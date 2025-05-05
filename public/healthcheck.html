@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ink Link - Health Check</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #ff6ec7;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #ff6ec7;
+    }
+    .status-panel {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #2a2a2a;
+      border-radius: 4px;
+    }
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .status-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #bb86fc;
+    }
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .status-badge.success {
+      background-color: #00b894;
+      color: white;
+    }
+    .status-badge.error {
+      background-color: #d63031;
+      color: white;
+    }
+    .status-badge.warning {
+      background-color: #fdcb6e;
+      color: #333;
+    }
+    .status-badge.pending {
+      background-color: #74b9ff;
+      color: white;
+    }
+    .status-details {
+      background-color: #333;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin-top: 10px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .test-button {
+      background-color: #6c5ce7;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .test-button:hover {
+      background-color: #5541d8;
+    }
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .api-item {
+      background-color: #333;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .api-link {
+      color: #74b9ff;
+      text-decoration: none;
+    }
+    .api-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ink Link Health Check</h1>
+    
+    <div class="status-panel">
+      <div class="status-header">
+        <span class="status-title">Server Status</span>
+        <span id="serverStatusBadge" class="status-badge pending">Checking...</span>
+      </div>
+      <button id="checkServer" class="test-button">Test Server Connection</button>
+      <div id="serverDetails" class="status-details" style="display: none;"></div>
+    </div>
+    
+    <div class="status-panel">
+      <div class="status-header">
+        <span class="status-title">API Status</span>
+        <span id="apiStatusBadge" class="status-badge pending">Checking...</span>
+      </div>
+      <button id="checkApi" class="test-button">Test API Connection</button>
+      <div id="apiDetails" class="status-details" style="display: none;"></div>
+    </div>
+    
+    <div class="status-panel">
+      <div class="status-header">
+        <span class="status-title">Endpoint Tests</span>
+      </div>
+      <div class="api-grid">
+        <div class="api-item">
+          <a href="/api" class="api-link" target="_blank">/api</a>
+        </div>
+        <div class="api-item">
+          <a href="/api/artists" class="api-link" target="_blank">/api/artists</a>
+        </div>
+        <div class="api-item">
+          <a href="/api/shops" class="api-link" target="_blank">/api/shops</a>
+        </div>
+        <div class="api-item">
+          <a href="/api/guestspots" class="api-link" target="_blank">/api/guestspots</a>
+        </div>
+        <div class="api-item">
+          <a href="/status" class="api-link" target="_blank">/status</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-panel">
+      <div class="status-header">
+        <span class="status-title">Page Tests</span>
+      </div>
+      <div class="api-grid">
+        <div class="api-item">
+          <a href="/" class="api-link" target="_blank">Home Page</a>
+        </div>
+        <div class="api-item">
+          <a href="/artists.html" class="api-link" target="_blank">Artists Page</a>
+        </div>
+        <div class="api-item">
+          <a href="/shops.html" class="api-link" target="_blank">Shops Page</a>
+        </div>
+        <div class="api-item">
+          <a href="/parlors.html" class="api-link" target="_blank">Legacy Parlors</a>
+        </div>
+        <div class="api-item">
+          <a href="/guestspots.html" class="api-link" target="_blank">Guestspots</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check server status
+      document.getElementById('checkServer').addEventListener('click', checkServerStatus);
+      
+      // Check API status
+      document.getElementById('checkApi').addEventListener('click', checkApiStatus);
+      
+      // Perform initial checks
+      checkServerStatus();
+      checkApiStatus();
+    });
+    
+    function checkServerStatus() {
+      const serverStatusBadge = document.getElementById('serverStatusBadge');
+      const serverDetails = document.getElementById('serverDetails');
+      
+      serverStatusBadge.className = 'status-badge pending';
+      serverStatusBadge.textContent = 'Checking...';
+      serverDetails.style.display = 'none';
+      
+      fetch('/status')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          serverStatusBadge.className = 'status-badge success';
+          serverStatusBadge.textContent = 'Online';
+          serverDetails.style.display = 'block';
+          serverDetails.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+          serverStatusBadge.className = 'status-badge error';
+          serverStatusBadge.textContent = 'Offline';
+          serverDetails.style.display = 'block';
+          serverDetails.textContent = `Error: ${error.message}`;
+        });
+    }
+    
+    function checkApiStatus() {
+      const apiStatusBadge = document.getElementById('apiStatusBadge');
+      const apiDetails = document.getElementById('apiDetails');
+      
+      apiStatusBadge.className = 'status-badge pending';
+      apiStatusBadge.textContent = 'Checking...';
+      apiDetails.style.display = 'none';
+      
+      fetch('/api')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          apiStatusBadge.className = 'status-badge success';
+          apiStatusBadge.textContent = 'Online';
+          apiDetails.style.display = 'block';
+          apiDetails.textContent = JSON.stringify(data, null, 2);
+          
+          // Test each endpoint
+          Promise.all(data.endpoints.map(endpoint => 
+            fetch(endpoint)
+              .then(resp => resp.ok ? `✅ ${endpoint}` : `❌ ${endpoint}: ${resp.status}`)
+              .catch(err => `❌ ${endpoint}: ${err.message}`)
+          ))
+          .then(results => {
+            apiDetails.textContent += '\n\nEndpoint Tests:\n' + results.join('\n');
+          });
+        })
+        .catch(error => {
+          apiStatusBadge.className = 'status-badge error';
+          apiStatusBadge.textContent = 'Offline';
+          apiDetails.style.display = 'block';
+          apiDetails.textContent = `Error: ${error.message}`;
+        });
+    }
+  </script>
+</body>
+</html>

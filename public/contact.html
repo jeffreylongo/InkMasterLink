@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Ink Master Link</title>
+  <style>
+    /* Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: #121212;
+      color: #f0f0f0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%23121212" width="100" height="100"/><path d="M0 0L100 100M100 0L0 100" stroke="%23222222" stroke-width="1"/></svg>');
+      background-size: 20px 20px;
+    }
+    
+    a {
+      color: #ff0099;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    a:hover {
+      color: #cc0077;
+    }
+    
+    button {
+      cursor: pointer;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: rgba(20, 20, 20, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 0, 153, 0.2);
+    }
+    
+    .logo {
+      font-family: 'Permanent Marker', cursive, sans-serif;
+      font-size: 1.8rem;
+      color: white;
+      text-shadow: 0 0 10px rgba(255, 0, 153, 0.7);
+      background: linear-gradient(135deg, #ff0099, #9000ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px rgba(255, 0, 153, 0.7);
+      }
+      to {
+        text-shadow: 0 0 20px rgba(255, 0, 153, 1), 0 0 30px rgba(144, 0, 255, 0.7);
+      }
+    }
+    
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    nav a {
+      position: relative;
+      color: #cccccc;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
+    
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, #ff0099, #9000ff);
+      transition: width 0.3s ease;
+    }
+    
+    nav a:hover {
+      color: white;
+    }
+    
+    nav a:hover::after {
+      width: 100%;
+    }
+    
+    /* Main Contact Styles */
+    .contact-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      background: linear-gradient(135deg, rgba(255, 0, 153, 0.05), rgba(144, 0, 255, 0.05));
+      border-radius: 15px;
+      border: 1px solid rgba(255, 0, 153, 0.1);
+    }
+    
+    .page-title {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(255, 0, 153, 0.5);
+    }
+    
+    .page-description {
+      font-size: 1.1rem;
+      color: #cccccc;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .contact-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    .contact-section {
+      background-color: rgba(30, 30, 30, 0.7);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 0, 153, 0.1);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .contact-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 0, 153, 0.3);
+    }
+    
+    .contact-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #ff0099;
+      text-shadow: 0 0 5px rgba(255, 0, 153, 0.3);
+    }
+    
+    .contact-section p {
+      margin-bottom: 1.5rem;
+      color: #cccccc;
+      flex-grow: 1;
+    }
+    
+    .contact-info {
+      margin-top: 1.5rem;
+    }
+    
+    .contact-email {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-email svg {
+      margin-right: 10px;
+      fill: #ff0099;
+    }
+    
+    .contact-email a {
+      color: #ffffff;
+      border-bottom: 1px dashed rgba(255, 0, 153, 0.3);
+      padding-bottom: 2px;
+    }
+    
+    .contact-email a:hover {
+      color: #ff0099;
+      border-bottom-color: #ff0099;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #ff0099, #9000ff);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: auto;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(255, 0, 153, 0.3);
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 0, 153, 0.4);
+      background: linear-gradient(135deg, #ff0099, #b700ff);
+      color: white;
+    }
+    
+    .cta-button:active {
+      transform: translateY(1px);
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .social-link {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .social-link:hover {
+      background-color: #ff0099;
+      transform: translateY(-3px);
+    }
+    
+    .social-link svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+    
+    /* Footer Styles */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+        flex-direction: column;
+      }
+      
+      nav {
+        margin-top: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .contact-sections {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-title {
+        font-size: 2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .contact-container {
+        padding: 1rem;
+      }
+      
+      .page-header {
+        padding: 1.5rem 1rem;
+      }
+      
+      .contact-section {
+        padding: 1.5rem;
+      }
+      
+      nav {
+        gap: 1rem;
+      }
+      
+      nav a {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="logo">Ink Master Link</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/artists.html">Artists</a>
+      <a href="/shops.html">Shops</a>
+      <a href="/guestspots.html">Guest Spots</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <div class="contact-container">
+    <div class="page-header">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-description">Have questions, feedback, or interested in advertising opportunities? We'd love to hear from you!</p>
+    </div>
+    
+    <div class="contact-sections">
+      <div class="contact-section">
+        <h2>General Inquiries</h2>
+        <p>For questions about our platform, feedback, or to report any issues, please reach out to our team.</p>
+        <div class="contact-info">
+          <div class="contact-email">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4Z" stroke="#FF0099" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 6L12 13L2 6" stroke="#FF0099" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <a href="mailto:TheInkMasterLink@gmail.com">TheInkMasterLink@gmail.com</a>
+          </div>
+        </div>
+        <a href="mailto:TheInkMasterLink@gmail.com" class="cta-button">Send Email</a>
+      </div>
+      
+      <div class="contact-section">
+        <h2>Advertising Opportunities</h2>
+        <p>Interested in promoting your tattoo shop or artist profile? We offer featured placements and promotional opportunities to increase your visibility.</p>
+        <p>Get in touch to learn more about our advertising packages and how we can help showcase your business to our growing community.</p>
+        <div class="contact-info">
+          <div class="contact-email">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4Z" stroke="#FF0099" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 6L12 13L2 6" stroke="#FF0099" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <a href="mailto:TheInkMasterLink@gmail.com?subject=Advertising%20Inquiry">TheInkMasterLink@gmail.com</a>
+          </div>
+        </div>
+        <a href="mailto:TheInkMasterLink@gmail.com?subject=Advertising%20Inquiry" class="cta-button">Get Featured</a>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    &copy; 2025 Ink Master Link - Tattoo Artist & Shop Directory
+  </footer>
+</body>
+</html>

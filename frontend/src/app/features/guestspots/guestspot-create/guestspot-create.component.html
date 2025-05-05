@@ -1,0 +1,142 @@
+<div class="guestspot-create-container">
+  <div class="form-header">
+    <h1>{{ isEditMode ? 'Edit' : 'Create' }} Guest Spot</h1>
+    <p class="subheading">Offer a spot for a guest artist at your tattoo parlor</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="guestspotForm" (ngSubmit)="onSubmit()">
+        <!-- Loading spinner -->
+        <div *ngIf="isLoading" class="loading-overlay">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <!-- No parlors message -->
+        <div *ngIf="userParlors.length === 0 && !isLoading" class="no-parlors-message">
+          <mat-icon color="warn">warning</mat-icon>
+          <h3>You don't have any parlors yet!</h3>
+          <p>You need to register at least one tattoo parlor before you can offer guest spots.</p>
+          <button mat-raised-button color="primary" routerLink="/profile/parlors/new">
+            Register Your Parlor
+          </button>
+        </div>
+
+        <!-- Form fields when parlors are available -->
+        <ng-container *ngIf="userParlors.length > 0">
+          <!-- Parlor selection -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select Tattoo Parlor</mat-label>
+              <mat-select formControlName="parlorId" (selectionChange)="onParlorChange()">
+                <mat-option *ngFor="let parlor of userParlors" [value]="parlor.id">
+                  {{ parlor.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="guestspotForm.get('parlorId')?.hasError('required')">
+                Please select a parlor
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Selected parlor details -->
+          <div *ngIf="selectedParlor" class="selected-parlor-info">
+            <div class="parlor-detail">
+              <mat-icon>place</mat-icon>
+              <span>{{ selectedParlor.location.city }}, {{ selectedParlor.location.state }}, {{ selectedParlor.location.country }}</span>
+            </div>
+            <div class="parlor-detail" *ngIf="selectedParlor.contact?.phone">
+              <mat-icon>phone</mat-icon>
+              <span>{{ selectedParlor.contact.phone }}</span>
+            </div>
+            <div class="parlor-detail" *ngIf="selectedParlor.contact?.email">
+              <mat-icon>email</mat-icon>
+              <span>{{ selectedParlor.contact.email }}</span>
+            </div>
+          </div>
+
+          <!-- Date range selection -->
+          <div class="form-group date-range">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="startPicker" formControlName="dateStart" [min]="minDate" [max]="maxDate">
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+              <mat-error *ngIf="guestspotForm.get('dateStart')?.hasError('required')">
+                Start date is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="endPicker" formControlName="dateEnd" [min]="minDate" [max]="maxDate">
+              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+              <mat-error *ngIf="guestspotForm.get('dateEnd')?.hasError('required')">
+                End date is required
+              </mat-error>
+              <mat-error *ngIf="guestspotForm.get('dateEnd')?.hasError('endDateInvalid')">
+                End date must be after start date
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="5" 
+                placeholder="Describe the guest spot, studio environment, equipment provided, etc."></textarea>
+              <mat-hint align="end">{{ guestspotForm.get('description')?.value?.length || 0 }}/1000</mat-hint>
+              <mat-error *ngIf="guestspotForm.get('description')?.hasError('required')">
+                Description is required
+              </mat-error>
+              <mat-error *ngIf="guestspotForm.get('description')?.hasError('minlength')">
+                Description must be at least 20 characters
+              </mat-error>
+              <mat-error *ngIf="guestspotForm.get('description')?.hasError('maxlength')">
+                Description cannot exceed 1000 characters
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Requirements -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Requirements (Optional)</mat-label>
+              <textarea matInput formControlName="requirements" rows="3" 
+                placeholder="Specific requirements for guest artists (e.g., minimum years of experience, portfolio requirements)"></textarea>
+              <mat-hint align="end">{{ guestspotForm.get('requirements')?.value?.length || 0 }}/500</mat-hint>
+              <mat-error *ngIf="guestspotForm.get('requirements')?.hasError('maxlength')">
+                Requirements cannot exceed 500 characters
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Price information -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Price Information (Optional)</mat-label>
+              <textarea matInput formControlName="priceInfo" rows="2" 
+                placeholder="Provide information about booth rental fees, commission structure, etc."></textarea>
+              <mat-hint align="end">{{ guestspotForm.get('priceInfo')?.value?.length || 0 }}/300</mat-hint>
+              <mat-error *ngIf="guestspotForm.get('priceInfo')?.hasError('maxlength')">
+                Price information cannot exceed 300 characters
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Form actions -->
+          <div class="form-actions">
+            <button type="button" mat-button routerLink="/guestspots" [disabled]="isLoading">
+              Cancel
+            </button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="isLoading || guestspotForm.invalid">
+              {{ isEditMode ? 'Update' : 'Create' }} Guest Spot
+            </button>
+          </div>
+        </ng-container>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,99 @@
+<div class="parlor-list-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>{{ showingMyParlors ? 'My Tattoo Parlors' : 'Tattoo Parlors Directory' }}</h1>
+      <p *ngIf="!showingMyParlors">Find the perfect tattoo parlor for your next piece of art</p>
+      <button *ngIf="showingMyParlors" mat-flat-button color="primary" (click)="createNewParlor()">
+        <mat-icon>add</mat-icon> Add New Parlor
+      </button>
+    </div>
+
+    <!-- Filter Section -->
+    <app-search-filter 
+      *ngIf="!showingMyParlors"
+      (filterChange)="onFilterChange($event)">
+    </app-search-filter>
+
+    <!-- Sponsored Parlors -->
+    <div *ngIf="!showingMyParlors && sponsoredParlors.length > 0" class="sponsored-section">
+      <h2>Sponsored Parlors</h2>
+      <div class="sponsored-grid">
+        <div *ngFor="let parlor of sponsoredParlors" class="parlor-card sponsored">
+          <mat-card [routerLink]="['/parlors', parlor.id]" class="clickable-card">
+            <div class="card-image-container">
+              <img mat-card-image [src]="parlor.featuredImage || 'https://images.unsplash.com/photo-1567071208639-716c1009517d'" 
+                  alt="{{parlor.name}}" class="card-image">
+              <div class="sponsored-badge">Sponsored</div>
+            </div>
+            <mat-card-content>
+              <h3>{{parlor.name}}</h3>
+              <p class="location">
+                <mat-icon>location_on</mat-icon>
+                {{parlor.location.city}}, {{parlor.location.state}}
+              </p>
+              <div class="rating">
+                <mat-icon>star</mat-icon>
+                <span>{{parlor.rating | number:'1.1-1'}}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parlors List -->
+    <div class="parlors-section">
+      <h2>{{ showingMyParlors ? 'Your Parlors' : 'All Tattoo Parlors' }}</h2>
+
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading parlors...</p>
+      </div>
+
+      <div *ngIf="error" class="error-container">
+        <mat-icon color="warn">error</mat-icon>
+        <p>Failed to load parlors. Please try again later.</p>
+      </div>
+
+      <div *ngIf="!loading && !error && parlors.length === 0" class="empty-container">
+        <mat-icon>info</mat-icon>
+        <p *ngIf="showingMyParlors">You don't have any parlors yet. Create your first parlor to get started.</p>
+        <p *ngIf="!showingMyParlors">No parlors found matching your criteria. Try adjusting your filters.</p>
+      </div>
+
+      <div *ngIf="!loading && !error && parlors.length > 0" class="parlors-grid">
+        <div *ngFor="let parlor of parlors" class="parlor-card">
+          <mat-card [routerLink]="['/parlors', parlor.id]" class="clickable-card">
+            <div class="card-image-container">
+              <img mat-card-image [src]="parlor.featuredImage || 'https://images.unsplash.com/photo-1603162610423-af7febeca563'" 
+                  alt="{{parlor.name}}" class="card-image">
+              <div *ngIf="parlor.featured" class="featured-badge">Featured</div>
+            </div>
+            <mat-card-content>
+              <h3>{{parlor.name}}</h3>
+              <p class="location">
+                <mat-icon>location_on</mat-icon>
+                {{parlor.location.city}}, {{parlor.location.state}}
+              </p>
+              <div class="rating">
+                <mat-icon>star</mat-icon>
+                <span>{{parlor.rating | number:'1.1-1'}}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator
+        *ngIf="!loading && !error && totalParlors > pageSize && !showingMyParlors"
+        [length]="totalParlors"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[12, 24, 36]"
+        [pageIndex]="currentPage"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

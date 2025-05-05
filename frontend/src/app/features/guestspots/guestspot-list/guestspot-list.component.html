@@ -1,0 +1,175 @@
+<div class="guestspot-list-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Guest Spots</h1>
+      <p class="subheading">Find and apply for guest spots at tattoo parlors worldwide</p>
+    </div>
+    
+    <div class="header-actions">
+      <button *ngIf="canCreateGuestspot()" 
+              mat-raised-button 
+              color="primary" 
+              routerLink="/guestspots/create">
+        <mat-icon>add</mat-icon>
+        Post a Guest Spot
+      </button>
+    </div>
+  </div>
+  
+  <!-- Filters section -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filter-section">
+        <div class="filter-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput [(ngModel)]="searchTerm" placeholder="Parlor or artist name">
+            <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''; applyFilters()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+              <mat-option value="all">All Statuses</mat-option>
+              <mat-option [value]="GuestspotStatus.OPEN">Open</mat-option>
+              <mat-option [value]="GuestspotStatus.CONFIRMED">Confirmed</mat-option>
+              <mat-option [value]="GuestspotStatus.COMPLETED">Completed</mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput [(ngModel)]="locationFilter" placeholder="City, State, Country">
+            <button *ngIf="locationFilter" matSuffix mat-icon-button aria-label="Clear" (click)="locationFilter=''; applyFilters()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <mat-select [(ngModel)]="dateFilter" (selectionChange)="applyFilters()">
+              <mat-option value="upcoming">Upcoming Only</mat-option>
+              <mat-option value="all">All Dates</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="filter-actions">
+          <button mat-button color="primary" (click)="applyFilters()">
+            <mat-icon>search</mat-icon>
+            Apply Filters
+          </button>
+          
+          <button mat-button color="warn" *ngIf="searchTerm || locationFilter || statusFilter !== 'all' || dateFilter !== 'upcoming'" 
+                 (click)="resetFilters()">
+            <mat-icon>clear</mat-icon>
+            Reset
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <!-- Results summary -->
+  <div class="results-summary" *ngIf="!isLoading">
+    <p *ngIf="totalSpots > 0">
+      Showing {{ startIndex + 1 }}-{{ endIndex + 1 }} of {{ totalSpots }} guest spots
+    </p>
+    <p *ngIf="totalSpots === 0">
+      No guest spots found matching your criteria.
+    </p>
+  </div>
+  
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading guest spots...</p>
+  </div>
+  
+  <!-- Error state -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <h3>Error Loading Guest Spots</h3>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadGuestspots()">Try Again</button>
+  </div>
+  
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && !error && totalSpots === 0" class="empty-state">
+    <mat-icon>event_busy</mat-icon>
+    <h3>No Guest Spots Found</h3>
+    <p>No guest spots match your current filter criteria. Try changing or clearing your filters.</p>
+    <button mat-raised-button color="primary" (click)="resetFilters()">Clear Filters</button>
+  </div>
+  
+  <!-- Guestspot grid -->
+  <div *ngIf="!isLoading && !error && totalSpots > 0" class="guestspot-grid">
+    <mat-card *ngFor="let spot of paginatedGuestspots" class="guestspot-card" [ngClass]="spot.status">
+      <div class="status-badge">{{ spot.status }}</div>
+      
+      <div class="card-content">
+        <div class="spot-header">
+          <h3 *ngIf="spot.artistName">{{ spot.artistName }} at {{ spot.parlorName }}</h3>
+          <h3 *ngIf="!spot.artistName">Guest Spot at {{ spot.parlorName }}</h3>
+        </div>
+        
+        <div class="spot-details">
+          <div class="detail-item location">
+            <mat-icon>place</mat-icon>
+            <span>{{ spot.parlorLocation.city }}, {{ spot.parlorLocation.state }}</span>
+          </div>
+          
+          <div class="detail-item dates">
+            <mat-icon>date_range</mat-icon>
+            <span>{{ spot.dateStart | date:'MMM d' }} - {{ spot.dateEnd | date:'MMM d, y' }}</span>
+          </div>
+        </div>
+        
+        <div class="card-actions">
+          <button mat-stroked-button color="primary" [routerLink]="['/guestspots', spot.id]">
+            View Details
+          </button>
+          
+          <ng-container *ngIf="spot.status === GuestspotStatus.OPEN && canApplyForGuestspot()">
+            <button mat-raised-button color="accent" (click)="openConfirmationDialog(spot.id, 'apply')">
+              Apply
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1 && !isLoading" class="pagination">
+    <button mat-icon-button 
+            [disabled]="currentPage === 1"
+            (click)="changePage(currentPage - 1)">
+      <mat-icon>navigate_before</mat-icon>
+    </button>
+    
+    <div class="page-numbers">
+      <button mat-button 
+              *ngFor="let page of [].constructor(totalPages > 5 ? 5 : totalPages); let i = index"
+              [ngClass]="(i + 1) === currentPage ? 'active' : ''"
+              (click)="changePage(i + 1)">
+        {{ i + 1 }}
+      </button>
+      
+      <span *ngIf="totalPages > 5 && currentPage <= 3">...</span>
+      <button mat-button 
+              *ngIf="totalPages > 5 && currentPage <= 3"
+              (click)="changePage(totalPages)">
+        {{ totalPages }}
+      </button>
+    </div>
+    
+    <button mat-icon-button 
+            [disabled]="currentPage === totalPages"
+            (click)="changePage(currentPage + 1)">
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+.guestspot-create-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .subheading {
+    color: #666;
+    font-size: 1.1rem;
+  }
+}
+
+.form-card {
+  position: relative;
+  
+  mat-card-content {
+    padding: 1rem;
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.date-range {
+  display: flex;
+  gap: 1rem;
+  
+  mat-form-field {
+    flex: 1;
+  }
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.selected-parlor-info {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  
+  .parlor-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    
+    mat-icon {
+      margin-right: 0.5rem;
+      color: #555;
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+    
+    span {
+      font-size: 0.9rem;
+      color: #444;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.no-parlors-message {
+  text-align: center;
+  padding: 2rem;
+  
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+  
+  button {
+    margin-top: 1rem;
+  }
+}

@@ -1,0 +1,68 @@
+<div class="review-list-container">
+  <div class="review-summary">
+    <div class="average-rating">
+      <div class="rating-number">{{ averageRating | number:'1.1-1' }}</div>
+      <div class="rating-stars">
+        <mat-icon *ngFor="let star of [1,2,3,4,5]">
+          {{ star <= averageRating ? 'star' : (star - 0.5 <= averageRating ? 'star_half' : 'star_border') }}
+        </mat-icon>
+      </div>
+      <div class="rating-count">Based on {{ reviewCount }} {{ reviewCount === 1 ? 'review' : 'reviews' }}</div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="reviews-loading" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading reviews...</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="reviews-error" *ngIf="error && !loading">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-button color="primary" (click)="loadReviews()">Try Again</button>
+  </div>
+
+  <!-- Empty state -->
+  <div class="reviews-empty" *ngIf="!loading && !error && reviews.length === 0">
+    <mat-icon>rate_review</mat-icon>
+    <p>No reviews yet. Be the first to leave a review!</p>
+  </div>
+
+  <!-- Reviews list -->
+  <div class="reviews-list" *ngIf="!loading && !error && reviews.length > 0">
+    <div class="review-item" *ngFor="let review of reviews">
+      <div class="review-header">
+        <div class="review-user">
+          <div class="user-avatar" *ngIf="review.userAvatar">
+            <img [src]="review.userAvatar" [alt]="review.userDisplayName">
+          </div>
+          <div class="user-avatar default-avatar" *ngIf="!review.userAvatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="user-name">{{ review.userDisplayName }}</div>
+        </div>
+        <div class="review-date">{{ getFormattedDate(review.created) }}</div>
+      </div>
+
+      <div class="review-rating">
+        <mat-icon *ngFor="let star of [1,2,3,4,5]">
+          {{ star <= review.rating ? 'star' : 'star_border' }}
+        </mat-icon>
+      </div>
+
+      <h4 class="review-title">{{ review.title }}</h4>
+      <p class="review-content">{{ review.content }}</p>
+
+      <div class="review-actions" *ngIf="isCurrentUserReview(review)">
+        <button mat-button color="primary" (click)="onEditReview(review)">
+          <mat-icon>edit</mat-icon> Edit
+        </button>
+        <button mat-button color="warn" (click)="onDeleteReview(review)">
+          <mat-icon>delete</mat-icon> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

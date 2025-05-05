@@ -1,0 +1,511 @@
+@import '../../../../styles/variables';
+
+.artist-detail-container {
+  min-height: 70vh;
+
+  .loading-container, .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    text-align: center;
+    
+    p {
+      margin-top: 1.5rem;
+      color: $dark-color;
+      opacity: 0.7;
+    }
+    
+    mat-icon {
+      font-size: 3rem;
+      height: 3rem;
+      width: 3rem;
+    }
+    
+    button {
+      margin-top: 1.5rem;
+    }
+    
+    &.small {
+      padding: 2rem 1rem;
+      
+      mat-icon {
+        font-size: 1.5rem;
+        height: 1.5rem;
+        width: 1.5rem;
+      }
+    }
+  }
+  
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    
+    p {
+      margin: 0.5rem 0;
+    }
+    
+    button {
+      margin-top: 1rem;
+    }
+    
+    &.small {
+      padding: 1rem;
+    }
+  }
+  
+  .artist-hero {
+    padding: 3rem 0;
+    background-color: #f5f5f5;
+    
+    .artist-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      
+      @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      
+      .artist-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        margin-bottom: 1.5rem;
+        
+        @media (min-width: 768px) {
+          margin-right: 2rem;
+          margin-bottom: 0;
+        }
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      .artist-info {
+        flex: 1;
+        
+        .badges {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          
+          .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            
+            &.featured {
+              background-color: $primary-color;
+              color: white;
+            }
+            
+            &.sponsored {
+              background-color: $accent-color;
+              color: white;
+            }
+          }
+        }
+        
+        h1 {
+          font-size: 2.5rem;
+          margin: 0 0 0.5rem 0;
+          color: $dark-color;
+        }
+        
+        .specialties {
+          font-size: 1.2rem;
+          color: $gray-color;
+          margin-bottom: 1rem;
+        }
+        
+        .location, .rating, .travel-badge {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.75rem;
+          
+          mat-icon {
+            margin-right: 0.5rem;
+          }
+        }
+        
+        .rating {
+          mat-icon {
+            color: $yellow-color;
+          }
+        }
+        
+        .travel-badge {
+          color: $accent-color;
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      
+      @media (min-width: 768px) {
+        justify-content: flex-start;
+      }
+      
+      button {
+        display: flex;
+        align-items: center;
+        
+        mat-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+  
+  .main-content {
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .section-card {
+    margin-bottom: 2rem;
+  }
+  
+  .bio {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    
+    .info-item {
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+        color: $primary-color;
+      }
+      
+      p {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        
+        mat-icon {
+          font-size: 18px;
+          height: 18px;
+          width: 18px;
+          margin-right: 0.5rem;
+        }
+      }
+      
+      .specialties-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        
+        .specialty-tag {
+          background-color: rgba($primary-color, 0.1);
+          color: $primary-color;
+          border-radius: 16px;
+          padding: 0.25rem 0.75rem;
+          font-size: 0.9rem;
+        }
+      }
+      
+      .social-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        
+        .social-link {
+          display: flex;
+          align-items: center;
+          color: $dark-color;
+          text-decoration: none;
+          
+          &:hover {
+            color: $primary-color;
+          }
+          
+          mat-icon {
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+  
+  .home-parlor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+    }
+    
+    .parlor-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      
+      @media (min-width: 768px) {
+        margin-right: 1.5rem;
+        margin-bottom: 0;
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .parlor-info {
+      flex: 1;
+      
+      h3 {
+        font-size: 1.5rem;
+        margin: 0 0 0.5rem 0;
+      }
+      
+      .location {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        justify-content: center;
+        
+        @media (min-width: 768px) {
+          justify-content: flex-start;
+        }
+        
+        mat-icon {
+          font-size: 16px;
+          height: 16px;
+          width: 16px;
+          margin-right: 0.25rem;
+        }
+      }
+      
+      .rating {
+        display: flex;
+        align-items: center;
+        color: $yellow-color;
+        margin-bottom: 1rem;
+        justify-content: center;
+        
+        @media (min-width: 768px) {
+          justify-content: flex-start;
+        }
+        
+        mat-icon {
+          font-size: 18px;
+          height: 18px;
+          width: 18px;
+          margin-right: 0.25rem;
+        }
+      }
+    }
+  }
+  
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    
+    .portfolio-item {
+      border-radius: 4px;
+      overflow: hidden;
+      height: 200px;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      position: relative;
+      
+      &::after {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 3px;
+        background-color: $primary-color;
+        margin-top: 0.5rem;
+      }
+    }
+    
+    .view-all {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: $primary-color;
+      font-weight: 500;
+      
+      mat-icon {
+        margin-left: 0.25rem;
+      }
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .guestspot-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    
+    .guestspot-item {
+      .clickable-card {
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+      }
+      
+      h3 {
+        font-size: 1.2rem;
+        margin: 0 0 1rem 0;
+      }
+      
+      .guestspot-info {
+        .dates, .location {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.5rem;
+          
+          mat-icon {
+            font-size: 16px;
+            height: 16px;
+            width: 16px;
+            margin-right: 0.5rem;
+          }
+        }
+        
+        .status-badge {
+          display: inline-block;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          margin-top: 0.5rem;
+          
+          &.open {
+            background-color: $green-color;
+            color: white;
+          }
+          
+          &.confirmed {
+            background-color: $primary-color;
+            color: white;
+          }
+          
+          &.requested {
+            background-color: $yellow-color;
+            color: black;
+          }
+          
+          &.completed {
+            background-color: $dark-color;
+            color: white;
+          }
+          
+          &.cancelled {
+            background-color: $red-color;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+  
+  .instagram-feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    
+    .instagram-post {
+      display: block;
+      overflow: hidden;
+      border-radius: 4px;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+      
+      img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .artist-detail-container {
+    .portfolio-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      
+      .portfolio-item {
+        height: 150px;
+      }
+    }
+    
+    .instagram-feed {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      
+      .instagram-post img {
+        height: 120px;
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+/* Global Styles */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Global typography */
+html, body { height: 100%; }
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+/* Custom variables */
+:root {
+  --primary: #673ab7;
+  --primary-light: #9a67ea;
+  --primary-dark: #320b86;
+  --accent: #ff4081;
+  --accent-light: #ff79b0;
+  --accent-dark: #c60055;
+  --text-light: #ffffff;
+  --text-dark: #000000;
+  --background-light: #f5f5f5;
+  --background-dark: #303030;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+}
+
+/* Global utility classes */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.section {
+  padding: 32px 0;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--primary-dark);
+}
+
+.card {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: white;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.py-32 {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+/* Star rating styles */
+.star-rating {
+  color: #ffc107;
+}
+
+.star-rating .mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
