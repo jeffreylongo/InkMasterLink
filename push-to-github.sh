@@ -1,37 +1,22 @@
 #!/bin/bash
+echo "Pushing changes to GitHub for Netlify deployment..."
 
-# Instructions for pushing to GitHub
-echo "==============================================="
-echo "  INSTRUCTIONS FOR PUSHING TO GITHUB"
-echo "==============================================="
-echo ""
-echo "Since Git operations are restricted in this environment, please:"
-echo ""
-echo "1. Open the Replit Shell Tab (not through this chat)"
-echo "2. Run the following commands:"
-echo ""
-echo "   # Configure your Git repository (if needed)"
-echo "   git config --global user.name \"Your Name\""
-echo "   git config --global user.email \"your.email@example.com\""
-echo ""
-echo "   # Add GitHub remote (replace with your repository URL if different)"
-echo "   git remote add origin https://github.com/jeffreylongo/InkMasterLink.git"
-echo "   # Or if the remote already exists:"
-echo "   git remote set-url origin https://github.com/jeffreylongo/InkMasterLink.git"
-echo ""
-echo "   # Add all files to staging"
-echo "   git add ."
-echo ""
-echo "   # Create a commit"
-echo "   git commit -m \"Added contact page and removed fake reviews\""
-echo ""
-echo "   # Push to GitHub (you'll be prompted for your GitHub username and password/token)"
-echo "   git push -u origin main"
-echo ""
-echo "   # If your branch is 'master' instead of 'main', use:"
-echo "   # git push -u origin master"
-echo ""
-echo "Note: If prompted for authentication, use your GitHub personal access token"
-echo "as the password, not your GitHub password."
-echo ""
-echo "==============================================="
+# Make the script executable
+chmod +x build.sh
+
+# Copy images to public/images for local testing
+mkdir -p public/images
+cp attached_assets/shop.jpeg public/images/ 2>/dev/null || echo "Warning: shop.jpeg not found"
+cp attached_assets/artist.webp public/images/ 2>/dev/null || echo "Warning: artist.webp not found"
+
+# Add all changes
+git add .
+
+# Commit changes
+git commit -m "Update for Netlify deployment"
+
+# Push to GitHub
+git push
+
+echo "✅ Changes pushed to GitHub. Check Netlify for deployment status."
+echo "   If there are any errors, check the Netlify logs for details."

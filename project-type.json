@@ -1,0 +1,7 @@
+{
+  "name": "ink-master-link",
+  "version": "1.0.0",
+  "type": "static-site-with-functions",
+  "description": "A comprehensive platform for tattoo artists and clients",
+  "framework": "vanilla-js"
+}

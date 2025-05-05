@@ -1,0 +1,70 @@
+The Netlify deploy errored. The relevant error log line information is:
+
+Line 0: build-image version: c38927cce92092afc316743af1f8656a643fa4a5 (noble)
+Line 1: buildbot version: 766d2c1ac7b7596f18b546cb6bf13962d157b033
+Line 2: Fetching cached dependencies
+Line 3: Failed to fetch cache, continuing with build
+Line 4: Starting to prepare the repo for build
+Line 5: No cached dependencies found. Cloning fresh repo
+Line 6: git clone --filter=blob:none https://github.com/jeffreylongo/InkMasterLink
+Line 7: Preparing Git Reference refs/heads/main
+Line 8: Custom publish path detected. Proceeding with the specified path: 'public'
+Line 9: Custom functions path detected. Proceeding with the specified path: 'functions'
+Line 10: Custom build command detected. Proceeding with the specified command: 'exit 0'
+Line 11: Starting to install dependencies
+Line 12: Python version set to 3.13.3
+Line 13: Ruby version set to 2.7.2
+Line 69: [36m[1m​[22m[39m
+Line 70: [36m[1m❯ Context[22m[39m
+Line 71:   production
+Line 72: [36m[1m​[22m[39m
+Line 73: [36m[1m❯ Installing plugins[22m[39m
+Line 74:    - @netlify/angular-runtime@2.3.1
+Line 75: [36m[1m​[22m[39m
+Line 76: [36m[1m❯ Loading plugins[22m[39m
+Line 77:    - [36m@netlify/angular-runtime[39m@2.3.1 from Netlify app
+Line 78: [91m[1m​[22m[39m
+Line 79: [91m[1mPlugin "@netlify/angular-runtime" failed                      [22m[39m
+Line 80: [91m[1m────────────────────────────────────────────────────────────────[22m[39m
+Line 81: ​
+Line 82:   [31m[1mError message[22m[39m
+Line 83:   Error: Could not locate your angular.json/nx.json at your project root or two levels above your publish directory. Make sure y
+Line 84: ​
+Line 85:   [31m[1mPlugin details[22m[39m
+Line 86:   Package:        @netlify/angular-runtime
+Line 87:   Version:        2.3.1
+Line 88:   Repository:     git+https://github.com/netlify/angular-runtime.git
+Line 89:   npm link:       https://www.npmjs.com/package/@netlify/angular-runtime
+Line 90:   Report issues:  https://github.com/netlify/angular-runtime/issues
+Line 91: ​
+Line 92:   [31m[1mError location[22m[39m
+Line 93:   In "onPreBuild" event in "@netlify/angular-runtime" from Netlify app
+Line 94: ​
+Line 95:   [31m[1mResolved config[22m[39m
+Line 96:   build:
+Line 97:     command: exit 0
+Line 98:     commandOrigin: config
+Line 99:     publish: /opt/build/repo/public
+Line 100:     publishOrigin: config
+Line 101:   functionsDirectory: /opt/build/repo/functions
+Line 102:   plugins:
+Line 103:     - inputs: {}
+Line 104:       origin: ui
+Line 105:       package: '@netlify/angular-runtime'
+Line 106:   redirects:
+Line 107: Failed during stage 'building site': Build script returned non-zero exit code: 2
+Line 108:     - from: /*
+      status: 200
+      to: /index.html
+Line 109: Build failed due to a user error: Build script returned non-zero exit code: 2
+Line 110: Failing build: Failed to build site
+Line 111: Finished processing build request in 34.658s
+
+Netlify has analyzed the error and provided the following guidance:
+
+**Diagnosis:**
+The build failure is due to a plugin error related to "@netlify/angular-runtime". The error message indicates that the plugin could not locate "angular.json" or "nx.json" at the project root or two levels above the publish directory.
+
+**Solution:**
+1. Verify that "angular.json" or "nx.json" exists at the project root or two levels above the publish directory.
+2. Make sure that the configuration files are correctly placed or adjust the plugin settings to point to the correct location of these files to resolve the issue.

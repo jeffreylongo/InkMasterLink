@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "projects": {
+    "ink-master-link": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "public",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "public",
+            "index": "public/index.html",
+            "main": "none",
+            "polyfills": "none",
+            "tsConfig": "none",
+            "assets": [],
+            "styles": [],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ink-master-link"
+}
