@@ -3,25 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <title>InkMasterLink - All Shops</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav>
-    <a href="index.html">Home</a>
-    <a href="shops.html">Shops</a>
+    <a href="index.html">Home</a> |
+    <a href="shops.html">Shops</a> |
     <a href="contact.html">Contact</a>
   </nav>
-  <main>
-    <h1>All Tattoo Shops</h1>
-    <div class="filter-container">
-      <input id="filterName" placeholder="Search name..." />
-      <input id="filterZip" placeholder="Search ZIP..." />
-      <input id="filterCity" placeholder="Search city..." />
-      <input id="filterState" placeholder="Search state..." />
-    </div>
-    <div id="results" class="shop-grid"></div>
-  </main>
+  <h1>All Tattoo Shops</h1>
+  <input id="filterName" placeholder="Search name..." />
+  <input id="filterZip" placeholder="Search ZIP..." />
+  <input id="filterCity" placeholder="Search city..." />
+  <input id="filterState" placeholder="Search state..." />
+  <div id="results"></div>
 
   <script>
     let allShops = [];
@@ -47,7 +42,7 @@
       container.innerHTML = "";
       filtered.forEach(shop => {
         const div = document.createElement("div");
-        div.className = "shop";
+        div.className = "shop-card";
         div.innerHTML = `
           <strong>${shop.name}</strong><br/>
           ${shop.address}<br/>
