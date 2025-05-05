@@ -2,11 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>InkMasterLink - Home</title>
+  <title>InkMasterLink - Tattoo Shop Directory</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>InkMasterLink - Home</h1>
-  <p>This is a placeholder homepage with 9 tattoo shops. Filtering and full list available on the Shops page.</p>
-  <a href="shops.html">View All Shops</a> | <a href="contact.html">Contact</a>
+  <header>
+    <h1>Ink Master Link</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shops.html">Shops</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Featured Shops</h2>
+    <div id="featuredShops" class="shop-grid"></div>
+  </main>
+  <script>
+    fetch("tattoo_shops.json")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("featuredShops");
+        const shops = data.slice(0, 9);
+        shops.forEach(shop => {
+          const div = document.createElement("div");
+          div.className = "shop-card";
+          div.innerHTML = `
+            <h3>${shop.name}</h3>
+            <p>${shop.address}</p>
+            ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
+            ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
+          `;
+          container.appendChild(div);
+        });
+      });
+  </script>
 </body>
 </html>
