@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ink Master Link</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>Ink Master Link</h1>
+    <div id="filters">
+      <input type="text" id="filter-name" placeholder="Shop Name"/>
+      <input type="text" id="filter-zip" placeholder="ZIP Code"/>
+      <input type="text" id="filter-city" placeholder="City"/>
+      <input type="text" id="filter-state" placeholder="State"/>
+      <input type="text" id="filter-rating" placeholder="Rating ≥"/>
+    </div>
+  </header>
+
+  <main id="shop-list"></main>
+
+  <script>
+    async function fetchShops() {
+      const res = await fetch("/.netlify/functions/shops");
+      return res.json();
+    }
+
+    function renderShops(shops) {
+      const container = document.getElementById("shop-list");
+      container.innerHTML = "";
+      shops.forEach(shop => {
+        const card = document.createElement("div");
+        card.className = "shop-card";
+        card.innerHTML = `
+          <h2>${shop.name}</h2>
+          <p><strong>Address:</strong> ${shop.address}</p>
+          <p><strong>Phone:</strong> ${shop.phone}</p>
+          <p><strong>Rating:</strong> ${shop.rating}</p>
+          <p><a href="${shop.website}" target="_blank">Website</a></p>
+          <p><a href="mailto:${shop.email}">${shop.email}</a></p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function applyFilters(data) {
+      const name = document.getElementById("filter-name").value.toLowerCase();
+      const zip = document.getElementById("filter-zip").value;
+      const city = document.getElementById("filter-city").value.toLowerCase();
+      const state = document.getElementById("filter-state").value.toLowerCase();
+      const rating = parseFloat(document.getElementById("filter-rating").value);
+
+      return data.filter(shop => {
+        return (!name || shop.name.toLowerCase().includes(name)) &&
+               (!zip || shop.zip.startsWith(zip)) &&
+               (!city || shop.address.toLowerCase().includes(city)) &&
+               (!state || shop.address.toLowerCase().includes(state)) &&
+               (!rating || parseFloat(shop.rating) >= rating);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const shops = await fetchShops();
+      renderShops(shops);
+
+      document.querySelectorAll("#filters input").forEach(input => {
+        input.addEventListener("input", () => {
+          const filtered = applyFilters(shops);
+          renderShops(filtered);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
