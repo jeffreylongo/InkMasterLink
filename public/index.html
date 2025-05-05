@@ -1,34 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InkMasterLink Tattoo Shops</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="shops.html">Shops</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="shops.html">Shops</a>
+    <a href="contact.html">Contact</a>
+  </nav>
 
-  <main>
-    <h1>🖋️ Tattoo Shop Directory</h1>
-    <div id="home-shops" class="shop-grid"></div>
-    <div class="view-all-container">
-      <a href="shops.html" class="view-more-button">View All Shops</a>
-    </div>
-  </main>
+  <h1>Featured Tattoo Shops</h1>
+  <div id="results" class="shop-grid"></div>
+
+  <div class="view-more">
+    <a href="shops.html">View All Shops</a>
+  </div>
 
   <script>
     fetch("/.netlify/functions/shops")
       .then(res => res.json())
       .then(data => {
-        const container = document.getElementById("home-shops");
+        const container = document.getElementById("results");
         const shops = data.slice(0, 9);
         shops.forEach(shop => {
           const div = document.createElement("div");
@@ -36,7 +31,7 @@
           div.innerHTML = `
             <strong>${shop.name}</strong><br/>
             ${shop.address}<br/>
-            ${shop.phone ? `${shop.phone}<br/>` : ""}
+            ${shop.phone || ""}<br/>
             ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
             ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
           `;
@@ -44,8 +39,7 @@
         });
       })
       .catch(err => {
-        document.getElementById("home-shops").innerHTML = "Error loading data.";
-        console.error(err);
+        document.getElementById("results").innerHTML = "<p>Error loading data.</p>";
       });
   </script>
 </body>
