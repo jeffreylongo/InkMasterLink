@@ -1,0 +1,9 @@
+{
+  "name": "ink-master-link-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for Ink Master Link",
+  "main": "api.js",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
