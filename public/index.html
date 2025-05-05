@@ -1,32 +1,42 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>InkMasterLink - Home</title>
+  <title>InkMasterLink - Tattoo Shops</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav>
+  <nav class="main-nav">
     <a href="index.html">Home</a>
     <a href="shops.html">Shops</a>
     <a href="contact.html">Contact</a>
   </nav>
-  <h1>Featured Tattoo Shops</h1>
-  <div class="card-container">
-    <!-- Example cards -->
-    <div class="shop-card">Shop 1</div>
-    <div class="shop-card">Shop 2</div>
-    <div class="shop-card">Shop 3</div>
-    <div class="shop-card">Shop 4</div>
-    <div class="shop-card">Shop 5</div>
-    <div class="shop-card">Shop 6</div>
-    <div class="shop-card">Shop 7</div>
-    <div class="shop-card">Shop 8</div>
-    <div class="shop-card">Shop 9</div>
+  <h1 class="section-title">Featured Tattoo Shops</h1>
+  <div id="shopGrid" class="card-grid"></div>
+  <div class="view-more-container">
+    <a href="shops.html" class="view-more-button">View All Shops</a>
   </div>
-  <div class="view-all">
-    <a href="shops.html">View All Shops</a>
-  </div>
+  <script>
+    fetch("/.netlify/functions/shops")
+      .then((res) => res.json())
+      .then((shops) => {
+        const container = document.getElementById("shopGrid");
+        if (!Array.isArray(shops)) return;
+        const preview = shops.slice(0, 9);
+        container.innerHTML = preview.map(shop => `
+          <div class="shop-card">
+            <h3>${shop.name}</h3>
+            <p>${shop.address}</p>
+            <p>${shop.phone || ""}</p>
+            ${shop.website ? `<p><a href="${shop.website}" target="_blank">Website</a></p>` : ""}
+            ${shop.email ? `<p><a href="mailto:${shop.email}">${shop.email}</a></p>` : ""}
+          </div>
+        `).join("");
+      })
+      .catch(err => {
+        document.getElementById("shopGrid").innerHTML = "<p class='error-message'>Error loading shops.</p>";
+        console.error(err);
+      });
+  </script>
 </body>
 </html>

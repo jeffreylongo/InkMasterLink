@@ -1,29 +1,72 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>InkMasterLink - Shops</title>
+  <title>All Tattoo Shops</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav>
+  <nav class="main-nav">
     <a href="index.html">Home</a>
     <a href="shops.html">Shops</a>
     <a href="contact.html">Contact</a>
   </nav>
-  <h1>All Tattoo Shops</h1>
+  <h1 class="section-title">All Tattoo Shops</h1>
   <div class="filter-container">
-    <input type="text" placeholder="Search by name" />
-    <input type="text" placeholder="Search by ZIP" />
-    <input type="text" placeholder="Search by city" />
-    <input type="text" placeholder="Search by state" />
+    <input id="filterName" placeholder="Search name..." />
+    <input id="filterZip" placeholder="Search ZIP..." />
+    <input id="filterCity" placeholder="Search city..." />
+    <input id="filterState" placeholder="Search state..." />
   </div>
-  <div class="card-container">
-    <!-- Example cards -->
-    <div class="shop-card">Shop A</div>
-    <div class="shop-card">Shop B</div>
-    <div class="shop-card">Shop C</div>
-  </div>
+  <div id="results" class="card-grid"></div>
+  <script>
+    let allShops = [];
+
+    function filterShops() {
+      const name = document.getElementById("filterName").value.toLowerCase();
+      const zip = document.getElementById("filterZip").value.trim();
+      const city = document.getElementById("filterCity").value.toLowerCase();
+      const state = document.getElementById("filterState").value.toLowerCase();
+
+      const filtered = allShops.filter(shop => {
+        const [ , , cityPart = "", stateZip = ""] = shop.address.split(",");
+        const shopCity = cityPart.trim().toLowerCase();
+        const shopState = stateZip.trim().split(" ")[0].toLowerCase();
+
+        return (!name || shop.name.toLowerCase().includes(name)) &&
+               (!zip || shop.zip === zip) &&
+               (!city || shopCity.includes(city)) &&
+               (!state || shopState.includes(state));
+      });
+
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+      filtered.forEach(shop => {
+        const div = document.createElement("div");
+        div.className = "shop-card";
+        div.innerHTML = `
+          <h3>${shop.name}</h3>
+          <p>${shop.address}</p>
+          <p>${shop.phone || ""}</p>
+          ${shop.website ? `<p><a href="${shop.website}" target="_blank">Website</a></p>` : ""}
+          ${shop.email ? `<p><a href="mailto:${shop.email}">${shop.email}</a></p>` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    fetch("/.netlify/functions/shops")
+      .then(res => res.json())
+      .then(data => {
+        allShops = data;
+        filterShops();
+        document.querySelectorAll("input").forEach(input =>
+          input.addEventListener("input", filterShops));
+      })
+      .catch(err => {
+        document.getElementById("results").innerHTML = "<p class='error-message'>Error loading shops.</p>";
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
