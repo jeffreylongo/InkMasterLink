@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>InkMasterLink Tattoo Shops</title>
+  <title>InkMasterLink - Home</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,36 +12,21 @@
     <a href="shops.html">Shops</a>
     <a href="contact.html">Contact</a>
   </nav>
-
   <h1>Featured Tattoo Shops</h1>
-  <div id="results" class="shop-grid"></div>
-
-  <div class="view-more">
+  <div class="card-container">
+    <!-- Example cards -->
+    <div class="shop-card">Shop 1</div>
+    <div class="shop-card">Shop 2</div>
+    <div class="shop-card">Shop 3</div>
+    <div class="shop-card">Shop 4</div>
+    <div class="shop-card">Shop 5</div>
+    <div class="shop-card">Shop 6</div>
+    <div class="shop-card">Shop 7</div>
+    <div class="shop-card">Shop 8</div>
+    <div class="shop-card">Shop 9</div>
+  </div>
+  <div class="view-all">
     <a href="shops.html">View All Shops</a>
   </div>
-
-  <script>
-    fetch("/.netlify/functions/shops")
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById("results");
-        const shops = data.slice(0, 9);
-        shops.forEach(shop => {
-          const div = document.createElement("div");
-          div.className = "shop-card";
-          div.innerHTML = `
-            <strong>${shop.name}</strong><br/>
-            ${shop.address}<br/>
-            ${shop.phone || ""}<br/>
-            ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
-            ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
-          `;
-          container.appendChild(div);
-        });
-      })
-      .catch(err => {
-        document.getElementById("results").innerHTML = "<p>Error loading data.</p>";
-      });
-  </script>
 </body>
 </html>
