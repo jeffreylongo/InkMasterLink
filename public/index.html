@@ -1,45 +1,37 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Ink Master Link - Home</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>InkMasterLink - Tattoo Shops</title>
 </head>
 <body>
+  <h1>InkMasterLink Tattoo Shops</h1>
+  <div id="shopList">Loading...</div>
 
-<header>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="shops.html">Shops</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-</header>
-
-<h1>Welcome to Ink Master Link</h1>
-<div class="card-grid" id="homeCards">
-  <!-- Cards will be populated by JS -->
-</div>
-<div style="text-align:center; margin-top:20px;">
-  <a href="shops.html" style="color:#ff4c60; font-weight:bold;">View All Shops</a>
-</div>
-<script>
-fetch('tattoo_shops.json')
-  .then(res => res.json())
-  .then(data => {
-    const container = document.getElementById("homeCards");
-    data.slice(0, 9).forEach(shop => {
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `
-        <strong>${shop.name}</strong><br/>
-        ${shop.address}<br/>
-        ${shop.phone || ""}<br/>
-        ${shop.website ? `<a href="${shop.website}" target="_blank">Website</a><br/>` : ""}
-        ${shop.email ? `Email: <a href="mailto:${shop.email}">${shop.email}</a>` : ""}
-      `;
-      container.appendChild(div);
-    });
-  });
-</script>
+  <script>
+    fetch("/api/shops")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("shopList");
+        container.innerHTML = "";
+        data.forEach(shop => {
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <strong>${shop.business_name}</strong><br/>
+            ${shop.address}<br/>
+            ${shop.phone}<br/>
+            <a href="\${shop.website}" target="_blank">Website</a><br/>
+            <a href="mailto:\${shop.email}">Email</a>
+            <hr/>
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById("shopList").textContent = "Error loading data.";
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
