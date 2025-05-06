@@ -109,14 +109,14 @@
     function applyFilters(data) {
       const name = document.getElementById("filter-name").value.toLowerCase();
       const zip = document.getElementById("filter-zip").value;
-      const city = document.getElementById("filter-city").value.toLowerCase();
+      const city = document.getElementById("filter-city").value;
       const state = document.getElementById("filter-state").value;
       const rating = parseFloat(document.getElementById("filter-rating").value);
 
       return data.filter(shop => {
         return (!name || shop.name.toLowerCase().includes(name)) &&
                (!zip || shop.zip.startsWith(zip)) &&
-               (!city || shop.city.toLowerCase().includes(city)) &&
+               (!city || shop.city === city) &&
                (!state || shop.state === state) &&
                (!rating || parseFloat(shop.rating) >= rating);
       });
@@ -154,8 +154,11 @@
         document.getElementById("filter-city").value = "";
         document.getElementById("filter-state").value = "";
         document.getElementById("filter-rating").value = "";
-
-        document.getElementById("shop-list").innerHTML = '<div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;"><p>Use the filters above to find a tattoo shop.</p></div>';
+        document.getElementById("shop-list").innerHTML = `
+          <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+            <p>Use the filters above to find a tattoo shop.</p>
+          </div>
+        `;
       });
     });
   </script>
