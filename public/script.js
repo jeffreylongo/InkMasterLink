@@ -176,6 +176,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         <p>Use the filters above to find a tattoo shop.</p>
       </div>
     `;
+
+    const cityShopList = document.getElementById("city-shop-list");
+    if (cityShopList) {
+      const targetCity = cityShopList.dataset.city;
+      const targetState = cityShopList.dataset.state;
+    
+      const cityShops = (filteredShops || shops || []).filter(s =>
+        s.city === targetCity && s.state === targetState
+      );
+    
+      if (cityShops.length === 0) {
+        cityShopList.innerHTML = "<p>No shops found for this location.</p>";
+      } else {
+        const grid = document.createElement("div");
+        grid.className = "grid";
+    
+        cityShops.forEach(shop => {
+          const card = document.createElement("div");
+          card.className = "shop-card";
+          card.innerHTML = `
+            <h2>${shop.name}</h2>
+            <p>${shop.city}, ${shop.state}</p>
+            <p>Rating: ${shop.rating}</p>
+          `;
+          card.addEventListener("click", () => showModal(shop));
+          grid.appendChild(card);
+        });
+    
+        cityShopList.appendChild(grid);
+      }
+    }
+
   });
 
   document.getElementById("prev-page").addEventListener("click", () => {
