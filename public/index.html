@@ -18,11 +18,10 @@
     </div>
   </header>
 
-  <main id="shop-list" style="text-align: center;">
+  <main id="shop-list" class="centered-flex">
     <p>Use the filters above to find a tattoo shop.</p>
   </main>
-
-
+  
   <script>
     async function fetchShops() {
       const res = await fetch("/.netlify/functions/shops");
