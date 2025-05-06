@@ -1,188 +1,164 @@
-<main>
-  <div id="shop-list" class="grid-container"></div>
-  <div id="pagination" style="text-align: center; margin-top: 20px;">
-    <button id="prev-page" disabled>Previous</button>
-    <span id="page-info" style="margin: 0 10px;"></span>
-    <button id="next-page">Next</button>
-  </div>
-</main>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ink Master Link</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>Ink Master Link</h1>
+    <div id="filters">
+      <input type="text" id="filter-name" placeholder="Shop Name"/>
+      <input type="text" id="filter-zip" placeholder="ZIP Code"/>
+      <select id="filter-city">
+        <option value="">All Cities</option>
+      </select>
+      <select id="filter-state">
+        <option value="">All States</option>
+      </select>
+      <input type="text" id="filter-rating" placeholder="Rating ≥"/>
+      <button id="clear-filters">Clear Filters</button>
+    </div>
+  </header>
 
-<script defer>
-  localStorage.removeItem("cachedShops");
-  let debounceTimer;
-  let currentPage = 1;
-  const pageSize = 9;
-  let filteredShops = [];
+  <main id="shop-list">
+    <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+      <p>Use the filters above to find a tattoo shop.</p>
+    </div>
+  </main>
 
-  async function fetchShops() {
-    try {
-      const cached = localStorage.getItem("cachedShops");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed)) return parsed;
+  <script>
+    localStorage.removeItem("cachedShops");
+    let debounceTimer;
+
+    async function fetchShops() {
+      try {
+        const cached = localStorage.getItem("cachedShops");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed)) return parsed;
+        }
+
+        const res = await fetch("/.netlify/functions/shops");
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          localStorage.setItem("cachedShops", JSON.stringify(data));
+          return data;
+        } else {
+          throw new Error("Invalid data structure");
+        }
+      } catch (e) {
+        console.error("Failed to fetch shops:", e);
+        return [];
       }
-
-      const res = await fetch("/.netlify/functions/shops");
-      const data = await res.json();
-
-      if (Array.isArray(data)) {
-        localStorage.setItem("cachedShops", JSON.stringify(data));
-        return data;
-      } else {
-        throw new Error("Invalid data structure");
-      }
-    } catch (e) {
-      console.error("Failed to fetch shops:", e);
-      return [];
-    }
-  }
-
-  function renderShops(shops) {
-    const container = document.getElementById("shop-list");
-    container.innerHTML = "";
-    const start = (currentPage - 1) * pageSize;
-    const pageShops = shops.slice(start, start + pageSize);
-
-    pageShops.forEach(shop => {
-      const card = document.createElement("div");
-      card.className = "shop-card";
-      card.innerHTML = `
-        <h2>${shop.name}</h2>
-        <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
-        <p><strong>Phone:</strong> ${shop.phone}</p>
-        <p><strong>Rating:</strong> ${shop.rating}</p>
-        <p><a href="${shop.website}" target="_blank">Website</a></p>
-        <p><a href="mailto:${shop.email}">${shop.email}</a></p>
-      `;
-      container.appendChild(card);
-    });
-
-    updatePagination(shops.length);
-  }
-
-  function updatePagination(totalItems) {
-    const totalPages = Math.ceil(totalItems / pageSize);
-    document.getElementById("page-info").textContent = `Page ${currentPage} of ${totalPages}`;
-    document.getElementById("prev-page").disabled = currentPage === 1;
-    document.getElementById("next-page").disabled = currentPage === totalPages || totalPages === 0;
-  }
-
-  function populateDropdowns(shops) {
-    const citySet = new Set();
-    const stateSet = new Set();
-
-    shops.forEach(shop => {
-      if (shop.city) citySet.add(shop.city.trim());
-      if (shop.state) stateSet.add(shop.state.trim().toUpperCase());
-    });
-
-    const citySelect = document.getElementById("filter-city");
-    const stateSelect = document.getElementById("filter-state");
-
-    citySelect.innerHTML = '<option value="">All Cities</option>';
-    stateSelect.innerHTML = '<option value="">All States</option>';
-
-    Array.from(citySet).sort().forEach(city => {
-      const option = document.createElement("option");
-      option.value = city;
-      option.textContent = city;
-      citySelect.appendChild(option);
-    });
-
-    Array.from(stateSet).sort().forEach(state => {
-      const option = document.createElement("option");
-      option.value = state;
-      option.textContent = state;
-      stateSelect.appendChild(option);
-    });
-  }
-
-  function applyFilters(data) {
-    const name = document.getElementById("filter-name").value.toLowerCase();
-    const zip = document.getElementById("filter-zip").value;
-    const city = document.getElementById("filter-city").value;
-    const state = document.getElementById("filter-state").value;
-    const rating = parseFloat(document.getElementById("filter-rating").value);
-
-    return data.filter(shop => {
-      return (!name || shop.name.toLowerCase().includes(name)) &&
-             (!zip || shop.zip.startsWith(zip)) &&
-             (!city || shop.city === city) &&
-             (!state || shop.state === state) &&
-             (!rating || parseFloat(shop.rating) >= rating);
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    let shops = [];
-    try {
-      shops = await fetchShops();
-      if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
-
-      populateDropdowns(shops);
-      filteredShops = applyFilters(shops);
-      renderShops(filteredShops);
-    } catch (e) {
-      console.error("Failed to load shops:", e);
-      document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
-      return;
     }
 
-    function filterAndRender() {
-      currentPage = 1;
-      filteredShops = applyFilters(shops || []);
-      renderShops(filteredShops);
-    }
-
-    document.querySelectorAll("#filters input, #filters select").forEach(input => {
-      input.addEventListener("input", () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(filterAndRender, 300);
+    function renderShops(shops) {
+      const container = document.getElementById("shop-list");
+      container.innerHTML = "";
+      shops.forEach(shop => {
+        const card = document.createElement("div");
+        card.className = "shop-card";
+        card.innerHTML = 
+          <h2>${shop.name}</h2>
+          <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
+          <p><strong>Phone:</strong> ${shop.phone}</p>
+          <p><strong>Rating:</strong> ${shop.rating}</p>
+          <p><a href="${shop.website}" target="_blank">Website</a></p>
+          <p><a href="mailto:${shop.email}">${shop.email}</a></p>
+        ;
+        container.appendChild(card);
       });
-      input.addEventListener("change", filterAndRender);
-    });
+    }
 
-    document.getElementById("clear-filters").addEventListener("click", () => {
-      document.getElementById("filter-name").value = "";
-      document.getElementById("filter-zip").value = "";
-      document.getElementById("filter-city").value = "";
-      document.getElementById("filter-state").value = "";
-      document.getElementById("filter-rating").value = "";
+    function populateDropdowns(shops) {
+      const citySet = new Set();
+      const stateSet = new Set();
 
-      filteredShops = applyFilters(shops || []);
-      currentPage = 1;
-      renderShops(filteredShops);
-    });
+      shops.forEach(shop => {
+        if (shop.city) citySet.add(shop.city.trim());
+        if (shop.state) stateSet.add(shop.state.trim().toUpperCase());
+      });
 
-    document.getElementById("prev-page").addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderShops(filteredShops);
+      const citySelect = document.getElementById("filter-city");
+      const stateSelect = document.getElementById("filter-state");
+
+      citySelect.innerHTML = '<option value="">All Cities</option>';
+      stateSelect.innerHTML = '<option value="">All States</option>';
+
+      Array.from(citySet).sort().forEach(city => {
+        const option = document.createElement("option");
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+      });
+
+      Array.from(stateSet).sort().forEach(state => {
+        const option = document.createElement("option");
+        option.value = state;
+        option.textContent = state;
+        stateSelect.appendChild(option);
+      });
+    }
+
+    function applyFilters(data) {
+      const name = document.getElementById("filter-name").value.toLowerCase();
+      const zip = document.getElementById("filter-zip").value;
+      const city = document.getElementById("filter-city").value;
+      const state = document.getElementById("filter-state").value;
+      const rating = parseFloat(document.getElementById("filter-rating").value);
+
+      return data.filter(shop => {
+        return (!name || shop.name.toLowerCase().includes(name)) &&
+               (!zip || shop.zip.startsWith(zip)) &&
+               (!city || shop.city === city) &&
+               (!state || shop.state === state) &&
+               (!rating || parseFloat(shop.rating) >= rating);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      let shops = [];
+      try {
+        shops = await fetchShops();
+        if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
+
+        populateDropdowns(shops);
+      } catch (e) {
+        console.error("Failed to load shops:", e);
+        document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
+        return;
       }
-    });
 
-    document.getElementById("next-page").addEventListener("click", () => {
-      if ((currentPage * pageSize) < filteredShops.length) {
-        currentPage++;
-        renderShops(filteredShops);
+      function filterAndRender() {
+        const filtered = applyFilters(shops || []);
+        renderShops(filtered);
       }
+
+      document.querySelectorAll("#filters input, #filters select").forEach(input => {
+        input.addEventListener("input", () => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(filterAndRender, 300);
+        });
+        input.addEventListener("change", filterAndRender);
+      });
+
+      document.getElementById("clear-filters").addEventListener("click", () => {
+        document.getElementById("filter-name").value = "";
+        document.getElementById("filter-zip").value = "";
+        document.getElementById("filter-city").value = "";
+        document.getElementById("filter-state").value = "";
+        document.getElementById("filter-rating").value = "";
+        document.getElementById("shop-list").innerHTML = 
+          <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+            <p>Use the filters above to find a tattoo shop.</p>
+          </div>
+        ;
+      });
     });
-  });
-</script>
-
-<style>
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
-
-  .shop-card {
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    padding: 15px;
-    background-color: #fdfdfd;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-</style>
+  </script>
+</body>
+</html>
