@@ -35,17 +35,17 @@
     </div>
   </main>
 
-  <div id="pagination" class="pagination" style="text-align: center; margin: 20px 0;">
+  <div id="pagination" class="pagination">
     <button id="prev-page">Previous</button>
-    <span id="page-info" style="margin: 0 15px;"></span>
+    <span id="page-info"></span>
     <button id="next-page">Next</button>
   </div>
 
   <!-- Modal -->
-  <div id="modal-backdrop" class="modal-backdrop hidden">
-    <div id="modal" class="modal">
-      <span id="modal-close" class="modal-close">&times;</span>
-      <div id="modal-content"></div>
+  <div id="modal-overlay" style="display:none;" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div id="modal-details"></div>
     </div>
   </div>
 
@@ -67,7 +67,6 @@
 
         const res = await fetch("/.netlify/functions/shops");
         const data = await res.json();
-
         if (Array.isArray(data)) {
           localStorage.setItem("cachedShops", JSON.stringify(data));
           return data;
@@ -80,17 +79,32 @@
       }
     }
 
+    function showModal(shop) {
+      const modal = document.getElementById("modal-overlay");
+      const details = document.getElementById("modal-details");
+      details.innerHTML = `
+        <h2>${shop.name}</h2>
+        <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
+        <p><strong>Phone:</strong> ${shop.phone}</p>
+        <p><strong>Rating:</strong> ${shop.rating}</p>
+        <p><a href="${shop.website}" target="_blank">Website</a></p>
+        <p><a href="mailto:${shop.email}">${shop.email}</a></p>
+      `;
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal-overlay").style.display = "none";
+    }
+
     function renderShops(shopsToRender) {
       const container = document.getElementById("shop-list");
       container.innerHTML = "";
-
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
       const paginated = shopsToRender.slice(start, end);
-
       const grid = document.createElement("div");
       grid.className = "grid";
-
       paginated.forEach(shop => {
         const card = document.createElement("div");
         card.className = "shop-card";
@@ -102,26 +116,8 @@
         card.addEventListener("click", () => showModal(shop));
         grid.appendChild(card);
       });
-
       container.appendChild(grid);
       updatePaginationControls(shopsToRender.length);
-    }
-
-    function showModal(shop) {
-      const modal = document.getElementById("modal-content");
-      modal.innerHTML = `
-        <h2>${shop.name}</h2>
-        <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
-        <p><strong>Phone:</strong> ${shop.phone}</p>
-        <p><strong>Email:</strong> <a href="mailto:${shop.email}">${shop.email}</a></p>
-        <p><strong>Website:</strong> <a href="${shop.website}" target="_blank">${shop.website}</a></p>
-        <p><strong>Rating:</strong> ${shop.rating}</p>
-      `;
-      document.getElementById("modal-backdrop").classList.remove("hidden");
-    }
-
-    function hideModal() {
-      document.getElementById("modal-backdrop").classList.add("hidden");
     }
 
     function updatePaginationControls(totalItems) {
@@ -132,40 +128,40 @@
     }
 
     function populateDropdowns(shops) {
-      const citySelect = document.getElementById("filter-city");
-      const stateSelect = document.getElementById("filter-state");
-
-      const states = [...new Set(shops.map(shop => shop.state?.trim().toUpperCase()).filter(Boolean))];
-      const citiesByState = {};
+      const citySet = new Set();
+      const stateMap = {};
 
       shops.forEach(shop => {
         const state = shop.state?.trim().toUpperCase();
         const city = shop.city?.trim();
         if (state && city) {
-          if (!citiesByState[state]) citiesByState[state] = new Set();
-          citiesByState[state].add(city);
+          if (!stateMap[state]) stateMap[state] = new Set();
+          stateMap[state].add(city);
         }
       });
 
-      // Populate state dropdown
+      const citySelect = document.getElementById("filter-city");
+      const stateSelect = document.getElementById("filter-state");
+
       stateSelect.innerHTML = '<option value="">All States</option>';
-      states.sort().forEach(state => {
-        const opt = document.createElement("option");
-        opt.value = state;
-        opt.textContent = state;
-        stateSelect.appendChild(opt);
+      Object.keys(stateMap).sort().forEach(state => {
+        const option = document.createElement("option");
+        option.value = state;
+        option.textContent = state;
+        stateSelect.appendChild(option);
       });
 
       function updateCityDropdown() {
         const selectedState = stateSelect.value;
-        const cities = selectedState ? Array.from(citiesByState[selectedState] || []) : [...new Set(shops.map(s => s.city).filter(Boolean))];
         citySelect.innerHTML = '<option value="">All Cities</option>';
-        cities.sort().forEach(city => {
-          const opt = document.createElement("option");
-          opt.value = city;
-          opt.textContent = city;
-          citySelect.appendChild(opt);
-        });
+        if (stateMap[selectedState]) {
+          Array.from(stateMap[selectedState]).sort().forEach(city => {
+            const option = document.createElement("option");
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+          });
+        }
       }
 
       stateSelect.addEventListener("change", () => {
@@ -173,7 +169,7 @@
         filterAndRender();
       });
 
-      updateCityDropdown(); // initial load
+      updateCityDropdown();
     }
 
     function applyFilters(data) {
@@ -182,7 +178,6 @@
       const city = document.getElementById("filter-city").value;
       const state = document.getElementById("filter-state").value;
       const rating = parseFloat(document.getElementById("filter-rating").value);
-
       return data.filter(shop => {
         return (!name || shop.name.toLowerCase().includes(name)) &&
                (!zip || shop.zip.startsWith(zip)) &&
@@ -199,17 +194,21 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
+      const modal = document.getElementById("modal-overlay");
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.querySelector(".modal-close").addEventListener("click", closeModal);
+
       try {
         shops = await fetchShops();
         if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
-
         populateDropdowns(shops);
         filteredShops = applyFilters(shops);
         renderShops(filteredShops);
       } catch (e) {
         console.error("Failed to load shops:", e);
         document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
-        return;
       }
 
       document.querySelectorAll("#filters input, #filters select").forEach(input => {
@@ -221,13 +220,15 @@
       });
 
       document.getElementById("clear-filters").addEventListener("click", () => {
-        document.getElementById("filter-name").value = "";
-        document.getElementById("filter-zip").value = "";
-        document.getElementById("filter-city").value = "";
-        document.getElementById("filter-state").value = "";
-        document.getElementById("filter-rating").value = "";
+        ["filter-name", "filter-zip", "filter-city", "filter-state", "filter-rating"].forEach(id => {
+          document.getElementById(id).value = "";
+        });
         currentPage = 1;
-        filterAndRender();
+        document.getElementById("shop-list").innerHTML = `
+          <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+            <p>Use the filters above to find a tattoo shop.</p>
+          </div>
+        `;
       });
 
       document.getElementById("prev-page").addEventListener("click", () => {
@@ -243,11 +244,6 @@
           currentPage++;
           renderShops(filteredShops);
         }
-      });
-
-      document.getElementById("modal-close").addEventListener("click", hideModal);
-      document.getElementById("modal-backdrop").addEventListener("click", (e) => {
-        if (e.target.id === "modal-backdrop") hideModal();
       });
     });
   </script>
