@@ -52,9 +52,3 @@ header {
   color: #ff3366;
 }
 
-.full-span {
-  grid-column: 1 / -1;
-  text-align: center;
-}
-
-
