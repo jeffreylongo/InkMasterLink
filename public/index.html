@@ -59,6 +59,53 @@
       });
     }
 
+    function populateDropdowns(shops) {
+      const citySet = new Set();
+      const stateSet = new Set();
+
+      shops.forEach(shop => {
+        const addressParts = shop.address.split(",");
+        if (addressParts.length >= 2) {
+          const rawCity = addressParts[1].trim();
+          if (!/\d/.test(rawCity)) {
+            const cleanCity = rawCity.replace(/[^a-zA-Z\s]/g, "").trim();
+            if (cleanCity) {
+              const formattedCity = cleanCity.charAt(0).toUpperCase() + cleanCity.slice(1).toLowerCase();
+              citySet.add(formattedCity);
+            }
+          }
+        }
+
+        const maybeStateZip = addressParts[addressParts.length - 1]?.trim();
+        if (maybeStateZip) {
+          const state = maybeStateZip.split(/\s+/)[0];
+          if (state.length === 2) {
+            stateSet.add(state.toUpperCase());
+          }
+        }
+      });
+
+      const citySelect = document.getElementById("filter-city");
+      const stateSelect = document.getElementById("filter-state");
+
+      citySelect.innerHTML = '<option value="">All Cities</option>';
+      stateSelect.innerHTML = '<option value="">All States</option>';
+
+      Array.from(citySet).sort().forEach(city => {
+        const option = document.createElement("option");
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+      });
+
+      Array.from(stateSet).sort().forEach(state => {
+        const option = document.createElement("option");
+        option.value = state;
+        option.textContent = state;
+        stateSelect.appendChild(option);
+      });
+    }
+
     function applyFilters(data) {
       const name = document.getElementById("filter-name").value.toLowerCase();
       const zip = document.getElementById("filter-zip").value;
@@ -84,43 +131,7 @@
         shops = await fetchShops();
         if (!Array.isArray(shops)) throw new Error("Invalid shop data");
 
-        const citySet = new Set();
-        const stateSet = new Set();
-
-        shops.forEach(shop => {
-          const addressParts = shop.address.split(",");
-if (addressParts.length >= 2) {
-  const city = addressParts[1].trim();
-  citySet.add(city.charAt(0).toUpperCase() + city.slice(1).toLowerCase());
-}
-
-          const parts = shop.address.split(",");
-          const maybeStateZip = parts[parts.length - 1]?.trim();
-          if (maybeStateZip) {
-            const state = maybeStateZip.split(/\s+/)[0];
-            if (state.length === 2) {
-              stateSet.add(state.toUpperCase());
-            }
-          }
-        });
-
-        const citySelect = document.getElementById("filter-city");
-        const stateSelect = document.getElementById("filter-state");
-
-        Array.from(citySet).sort().forEach(city => {
-          const option = document.createElement("option");
-          option.value = city;
-          option.textContent = city;
-          citySelect.appendChild(option);
-        });
-
-        Array.from(stateSet).sort().forEach(state => {
-          const option = document.createElement("option");
-          option.value = state;
-          option.textContent = state;
-          stateSelect.appendChild(option);
-        });
-
+        populateDropdowns(shops);
       } catch (e) {
         console.error("Failed to load shops:", e);
         document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
@@ -141,13 +152,12 @@ if (addressParts.length >= 2) {
       });
 
       document.getElementById("clear-filters").addEventListener("click", () => {
-  document.getElementById("filter-name").value = "";
-  document.getElementById("filter-zip").value = "";
-  document.getElementById("filter-city").value = "";
-  document.getElementById("filter-state").value = "";
-  document.getElementById("filter-rating").value = "";
-  document.getElementById("shop-list").innerHTML = '<div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;"><p>Use the filters above to find a tattoo shop.</p></div>';
-});
+        document.getElementById("filter-name").value = "";
+        document.getElementById("filter-zip").value = "";
+        document.getElementById("filter-city").value = "";
+        document.getElementById("filter-state").value = "";
+        document.getElementById("filter-rating").value = "";
+        document.getElementById("shop-list").innerHTML = '<div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;"><p>Use the filters above to find a tattoo shop.</p></div>';
       });
     });
   </script>
