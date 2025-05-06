@@ -33,24 +33,24 @@ try {
       const description = `Browse verified tattoo artists in ${shop.city}, ${shop.state}. Filter by rating, reviews, and location.`;
 
       const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
-  <meta name="description" content="${description}" />
-  <link rel="stylesheet" href="/style.css" />
-  <script defer src="/script.js"></script>
-</head>
-<body>
-  <header><h1>${title}</h1></header>
-  <main>
-    <p>${description}</p>
-    <div id="city-shop-list" data-city="${shop.city}" data-state="${shop.state}"></div>
-    <p><a href="/">Back to main directory</a></p>
-  </main>
-</body>
-</html>`;
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title}</title>
+        <meta name="description" content="${description}" />
+        <link rel="stylesheet" href="/style.css" />
+        <script src="/script.js" defer></script>
+      </head>
+      <body>
+        <header><h1>${title}</h1></header>
+        <main id="city-shop-list" data-city="${shop.city}" data-state="${shop.state}">
+          <p>${description}</p>
+          <p><a href="/">Back to main directory</a></p>
+        </main>
+      </body>
+      </html>`;
+
 
       fs.writeFileSync(filePath, html, "utf-8");
       console.log(`✅ Created ${fileName}`);
