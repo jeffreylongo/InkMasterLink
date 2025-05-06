@@ -41,6 +41,14 @@
     <button id="next-page">Next</button>
   </div>
 
+  <!-- Modal -->
+  <div id="modal-backdrop" class="modal-backdrop hidden">
+    <div id="modal" class="modal">
+      <span id="modal-close" class="modal-close">&times;</span>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
   <script>
     localStorage.removeItem("cachedShops");
     let debounceTimer;
@@ -48,7 +56,6 @@
     const itemsPerPage = 9;
     let filteredShops = [];
     let shops = [];
-    let stateCityMap = {};
 
     async function fetchShops() {
       try {
@@ -89,17 +96,32 @@
         card.className = "shop-card";
         card.innerHTML = `
           <h2>${shop.name}</h2>
-          <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
-          <p><strong>Phone:</strong> ${shop.phone}</p>
-          <p><strong>Rating:</strong> ${shop.rating}</p>
-          <p><a href="${shop.website}" target="_blank">Website</a></p>
-          <p><a href="mailto:${shop.email}">${shop.email}</a></p>
+          <p>${shop.city}, ${shop.state}</p>
+          <p>Rating: ${shop.rating}</p>
         `;
+        card.addEventListener("click", () => showModal(shop));
         grid.appendChild(card);
       });
 
       container.appendChild(grid);
       updatePaginationControls(shopsToRender.length);
+    }
+
+    function showModal(shop) {
+      const modal = document.getElementById("modal-content");
+      modal.innerHTML = `
+        <h2>${shop.name}</h2>
+        <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
+        <p><strong>Phone:</strong> ${shop.phone}</p>
+        <p><strong>Email:</strong> <a href="mailto:${shop.email}">${shop.email}</a></p>
+        <p><strong>Website:</strong> <a href="${shop.website}" target="_blank">${shop.website}</a></p>
+        <p><strong>Rating:</strong> ${shop.rating}</p>
+      `;
+      document.getElementById("modal-backdrop").classList.remove("hidden");
+    }
+
+    function hideModal() {
+      document.getElementById("modal-backdrop").classList.add("hidden");
     }
 
     function updatePaginationControls(totalItems) {
@@ -110,50 +132,48 @@
     }
 
     function populateDropdowns(shops) {
-      stateCityMap = {};
+      const citySelect = document.getElementById("filter-city");
+      const stateSelect = document.getElementById("filter-state");
+
+      const states = [...new Set(shops.map(shop => shop.state?.trim().toUpperCase()).filter(Boolean))];
+      const citiesByState = {};
 
       shops.forEach(shop => {
-        const state = shop.state.trim().toUpperCase();
-        const city = shop.city.trim();
-        if (!stateCityMap[state]) stateCityMap[state] = new Set();
-        stateCityMap[state].add(city);
+        const state = shop.state?.trim().toUpperCase();
+        const city = shop.city?.trim();
+        if (state && city) {
+          if (!citiesByState[state]) citiesByState[state] = new Set();
+          citiesByState[state].add(city);
+        }
       });
 
-      const stateSelect = document.getElementById("filter-state");
+      // Populate state dropdown
       stateSelect.innerHTML = '<option value="">All States</option>';
-      Object.keys(stateCityMap).sort().forEach(state => {
-        const option = document.createElement("option");
-        option.value = state;
-        option.textContent = state;
-        stateSelect.appendChild(option);
+      states.sort().forEach(state => {
+        const opt = document.createElement("option");
+        opt.value = state;
+        opt.textContent = state;
+        stateSelect.appendChild(opt);
       });
 
-      populateCityDropdown();
-    }
-
-    function populateCityDropdown(state = "") {
-      const citySelect = document.getElementById("filter-city");
-      citySelect.innerHTML = '<option value="">All Cities</option>';
-
-      if (state && stateCityMap[state]) {
-        Array.from(stateCityMap[state]).sort().forEach(city => {
-          const option = document.createElement("option");
-          option.value = city;
-          option.textContent = city;
-          citySelect.appendChild(option);
-        });
-      } else {
-        const allCities = new Set();
-        Object.values(stateCityMap).forEach(citySet => {
-          citySet.forEach(city => allCities.add(city));
-        });
-        Array.from(allCities).sort().forEach(city => {
-          const option = document.createElement("option");
-          option.value = city;
-          option.textContent = city;
-          citySelect.appendChild(option);
+      function updateCityDropdown() {
+        const selectedState = stateSelect.value;
+        const cities = selectedState ? Array.from(citiesByState[selectedState] || []) : [...new Set(shops.map(s => s.city).filter(Boolean))];
+        citySelect.innerHTML = '<option value="">All Cities</option>';
+        cities.sort().forEach(city => {
+          const opt = document.createElement("option");
+          opt.value = city;
+          opt.textContent = city;
+          citySelect.appendChild(opt);
         });
       }
+
+      stateSelect.addEventListener("change", () => {
+        updateCityDropdown();
+        filterAndRender();
+      });
+
+      updateCityDropdown(); // initial load
     }
 
     function applyFilters(data) {
@@ -200,10 +220,6 @@
         input.addEventListener("change", filterAndRender);
       });
 
-      document.getElementById("filter-state").addEventListener("change", (e) => {
-        populateCityDropdown(e.target.value);
-      });
-
       document.getElementById("clear-filters").addEventListener("click", () => {
         document.getElementById("filter-name").value = "";
         document.getElementById("filter-zip").value = "";
@@ -211,12 +227,7 @@
         document.getElementById("filter-state").value = "";
         document.getElementById("filter-rating").value = "";
         currentPage = 1;
-        document.getElementById("shop-list").innerHTML = `
-          <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
-            <p>Use the filters above to find a tattoo shop.</p>
-          </div>
-        `;
-        populateCityDropdown();
+        filterAndRender();
       });
 
       document.getElementById("prev-page").addEventListener("click", () => {
@@ -232,6 +243,11 @@
           currentPage++;
           renderShops(filteredShops);
         }
+      });
+
+      document.getElementById("modal-close").addEventListener("click", hideModal);
+      document.getElementById("modal-backdrop").addEventListener("click", (e) => {
+        if (e.target.id === "modal-backdrop") hideModal();
       });
     });
   </script>
