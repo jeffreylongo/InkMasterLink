@@ -60,5 +60,20 @@ ${urls}
   fs.writeFileSync(sitemapPath, xml);
 }
 
+function generateLocationListFragment() {
+  const listItems = sitemapEntries.map(url => {
+    const [, citySlug] = url.match(/\/city\/(.+)\.html/);
+    const [cityPart, statePart] = citySlug.split("-");
+    const city = cityPart.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    const state = statePart.toUpperCase();
+
+    return `<li><a href="${url}">Tattoo Shops in ${city}, ${state}</a></li>`;
+  });
+
+  const html = `<ul>\n${listItems.join("\n")}\n</ul>`;
+  fs.writeFileSync(path.join(__dirname, "public", "partials", "locations.html"), html);
+}
+
 generatePages();
 generateSitemap();
+generateLocationListFragment();
