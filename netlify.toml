@@ -3,4 +3,4 @@
   functions = "netlify/functions"
 
 [functions]
-  included_files = ["netlify/functions/data/tattoo_shops.json"]
+  included_files = ["netlify/functions/tattoo_shops.json"]
