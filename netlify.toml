@@ -3,6 +3,9 @@
   functions = "netlify/functions"
   command = "node public/generate-pages.js"
 
+[functions]
+  included_files = ["netlify/functions/tattoo_shops.json"]
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
