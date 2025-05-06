@@ -4,7 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ink Master Link</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      padding: 16px;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+    }
+    .pagination button {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -24,14 +42,19 @@
   </header>
 
   <main id="shop-list">
-    <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+    <div style="display: flex; justify-content: center; width: 100%;">
       <p>Use the filters above to find a tattoo shop.</p>
     </div>
   </main>
 
-  <script>
+  <div class="pagination" id="pagination"></div>
+
+  <script defer>
     localStorage.removeItem("cachedShops");
     let debounceTimer;
+    let currentPage = 1;
+    const pageSize = 9;
+    let filteredShops = [];
 
     async function fetchShops() {
       try {
@@ -59,19 +82,51 @@
     function renderShops(shops) {
       const container = document.getElementById("shop-list");
       container.innerHTML = "";
-      shops.forEach(shop => {
+
+      if (shops.length === 0) {
+        container.innerHTML = `<p style="text-align:center;">No results found.</p>`;
+        return;
+      }
+
+      const start = (currentPage - 1) * pageSize;
+      const paginated = shops.slice(start, start + pageSize);
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      paginated.forEach(shop => {
         const card = document.createElement("div");
         card.className = "shop-card";
-        card.innerHTML = 
+        card.innerHTML = `
           <h2>${shop.name}</h2>
           <p><strong>Address:</strong> ${shop.address}, ${shop.city}, ${shop.state} ${shop.zip}</p>
           <p><strong>Phone:</strong> ${shop.phone}</p>
           <p><strong>Rating:</strong> ${shop.rating}</p>
           <p><a href="${shop.website}" target="_blank">Website</a></p>
           <p><a href="mailto:${shop.email}">${shop.email}</a></p>
-        ;
-        container.appendChild(card);
+        `;
+        grid.appendChild(card);
       });
+
+      container.appendChild(grid);
+      renderPagination(shops.length);
+    }
+
+    function renderPagination(total) {
+      const pageCount = Math.ceil(total / pageSize);
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === currentPage) btn.disabled = true;
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          renderShops(filteredShops);
+        });
+        pagination.appendChild(btn);
+      }
     }
 
     function populateDropdowns(shops) {
@@ -127,37 +182,42 @@
         if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
 
         populateDropdowns(shops);
+
+        function filterAndRender() {
+          filteredShops = applyFilters(shops || []);
+          currentPage = 1;
+          renderShops(filteredShops);
+        }
+
+        document.querySelectorAll("#filters input, #filters select").forEach(input => {
+          input.addEventListener("input", () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(filterAndRender, 300);
+          });
+          input.addEventListener("change", filterAndRender);
+        });
+
+        document.getElementById("clear-filters").addEventListener("click", () => {
+          document.getElementById("filter-name").value = "";
+          document.getElementById("filter-zip").value = "";
+          document.getElementById("filter-city").value = "";
+          document.getElementById("filter-state").value = "";
+          document.getElementById("filter-rating").value = "";
+          document.getElementById("shop-list").innerHTML = `
+            <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+              <p>Use the filters above to find a tattoo shop.</p>
+            </div>
+          `;
+          document.getElementById("pagination").innerHTML = "";
+        });
+
+        // Render default grid of 9 shops
+        filteredShops = shops;
+        renderShops(filteredShops);
       } catch (e) {
         console.error("Failed to load shops:", e);
         document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
-        return;
       }
-
-      function filterAndRender() {
-        const filtered = applyFilters(shops || []);
-        renderShops(filtered);
-      }
-
-      document.querySelectorAll("#filters input, #filters select").forEach(input => {
-        input.addEventListener("input", () => {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(filterAndRender, 300);
-        });
-        input.addEventListener("change", filterAndRender);
-      });
-
-      document.getElementById("clear-filters").addEventListener("click", () => {
-        document.getElementById("filter-name").value = "";
-        document.getElementById("filter-zip").value = "";
-        document.getElementById("filter-city").value = "";
-        document.getElementById("filter-state").value = "";
-        document.getElementById("filter-rating").value = "";
-        document.getElementById("shop-list").innerHTML = 
-          <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
-            <p>Use the filters above to find a tattoo shop.</p>
-          </div>
-        ;
-      });
     });
   </script>
 </body>
