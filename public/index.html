@@ -61,21 +61,23 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      let shops = [];
-      try {
-        shops = await fetchShops();
-        if (!Array.isArray(shops)) throw new Error("Invalid shop data");
-        renderShops(shops);
-      } catch (e) {
-        console.error("Failed to load shops:", e);
-        document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
-      }
+  let shops;
+  try {
+    shops = await fetchShops();
+    if (!Array.isArray(shops)) throw new Error("Invalid shop data");
+    renderShops(shops);
+  } catch (e) {
+    console.error("Failed to load shops:", e);
+    document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
+  }
 
-      document.querySelectorAll("#filters input").forEach(input => {
-        input.addEventListener("input", () => {
-          const filtered = applyFilters(shops || []);
-          renderShops(filtered);
-        });
+  document.querySelectorAll("#filters input").forEach(input => {
+    input.addEventListener("input", () => {
+      const filtered = applyFilters(shops || []);
+      renderShops(filtered);
+    });
+  });
+});
       });
     });
   </script>
