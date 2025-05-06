@@ -1,5 +1,3 @@
-// public/generate-pages.js
-
 const fs = require("fs");
 const path = require("path");
 
@@ -33,6 +31,7 @@ try {
 
       const title = `Top Tattoo Shops in ${shop.city}, ${shop.state}`;
       const description = `Browse verified tattoo artists in ${shop.city}, ${shop.state}. Filter by rating, reviews, and location.`;
+      const pageUrl = `https://inkmasterlink.netlify.app/city/${fileName}`;
 
       const html = `<!DOCTYPE html>
 <html lang="en">
@@ -42,6 +41,17 @@ try {
   <title>${title}</title>
   <meta name="description" content="${description}" />
   <link rel="stylesheet" href="/style.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="${description}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="${pageUrl}" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${description}" />
 </head>
 <body>
   <header><h1>${title}</h1></header>
@@ -66,7 +76,7 @@ try {
       fs.writeFileSync(filePath, html, "utf-8");
       console.log(`✅ Created ${fileName}`);
 
-      sitemapUrls.push(`<url><loc>https://inkmasterlink.netlify.app/city/${fileName}</loc></url>`);
+      sitemapUrls.push(`<url><loc>${pageUrl}</loc></url>`);
       listItems.push(`<li><a href="/city/${fileName}">Tattoo Shops in ${shop.city}, ${shop.state}</a></li>`);
     }
   });
