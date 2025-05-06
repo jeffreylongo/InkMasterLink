@@ -26,7 +26,6 @@
     </div>
   </main>
 
-
   <script>
     async function fetchShops() {
       const res = await fetch("/.netlify/functions/shops");
@@ -55,14 +54,17 @@
       const name = document.getElementById("filter-name").value.toLowerCase();
       const zip = document.getElementById("filter-zip").value;
       const city = document.getElementById("filter-city").value.toLowerCase();
-      const state = document.getElementById("filter-state").value.toLowerCase();
+      const state = document.getElementById("filter-state").value;
       const rating = parseFloat(document.getElementById("filter-rating").value);
 
       return data.filter(shop => {
+        const addressLower = shop.address.toLowerCase();
+        const match = shop.address.match(/\b([A-Z]{2})\b/);
+        const shopState = match ? match[1].toUpperCase() : "";
         return (!name || shop.name.toLowerCase().includes(name)) &&
                (!zip || shop.zip.startsWith(zip)) &&
-               (!city || shop.address.toLowerCase().includes(city)) &&
-               (!state || new RegExp(`,\\s*${state}\\s+\\d{5}`).test(shop.address)) &&
+               (!city || addressLower.includes(city)) &&
+               (!state || shopState === state) &&
                (!rating || parseFloat(shop.rating) >= rating);
       });
     }
@@ -71,27 +73,42 @@
       let shops = [];
       try {
         shops = await fetchShops();
+        if (!Array.isArray(shops)) throw new Error("Invalid shop data");
+
+        // Dynamically populate state dropdown
+        const stateSet = new Set();
+        shops.forEach(shop => {
+          const parts = shop.address.split(",");
+          const maybeStateZip = parts[parts.length - 1]?.trim();
+          if (maybeStateZip) {
+            const state = maybeStateZip.split(/\s+/)[0];
+            if (state.length === 2) {
+              stateSet.add(state.toUpperCase());
+            }
+          }
+        });
+        const states = Array.from(stateSet).sort();
         const stateSelect = document.getElementById("filter-state");
-        const states = [...new Set(shops.map(shop => {
-          const match = shop.address.match(/,\s*([A-Z]{2})\s+\d{5}/);
-          return match ? match[1] : null;
-        }).filter(Boolean))].sort();
-        
         states.forEach(state => {
           const option = document.createElement("option");
           option.value = state;
           option.textContent = state;
           stateSelect.appendChild(option);
         });
-        if (!Array.isArray(shops)) throw new Error("Invalid shop data");
-        //renderShops(shops);
+
       } catch (e) {
         console.error("Failed to load shops:", e);
         document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
+        return;
       }
 
-      document.querySelectorAll("#filters input").forEach(input => {
+      // Add input listeners
+      document.querySelectorAll("#filters input, #filters select").forEach(input => {
         input.addEventListener("input", () => {
+          const filtered = applyFilters(shops || []);
+          renderShops(filtered);
+        });
+        input.addEventListener("change", () => {
           const filtered = applyFilters(shops || []);
           renderShops(filtered);
         });
