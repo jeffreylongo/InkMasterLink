@@ -64,8 +64,30 @@
       const stateSet = new Set();
 
       shops.forEach(shop => {
+<<<<<<< HEAD
         if (shop.city) citySet.add(shop.city);
         if (shop.state) stateSet.add(shop.state);
+=======
+        const addressParts = shop.address.split(",");
+        if (addressParts.length >= 2) {
+          const rawCity = addressParts[1].trim();
+          if (!/\d/.test(rawCity)) {
+            const cleanCity = rawCity.replace(/[^a-zA-Z\s]/g, "").trim();
+            if (cleanCity) {
+              const formattedCity = cleanCity.charAt(0).toUpperCase() + cleanCity.slice(1).toLowerCase();
+              citySet.add(formattedCity);
+            }
+          }
+        }
+
+        const maybeStateZip = addressParts[addressParts.length - 1]?.trim();
+        if (maybeStateZip) {
+          const state = maybeStateZip.split(/\s+/)[0];
+          if (state.length === 2) {
+            stateSet.add(state.toUpperCase());
+          }
+        }
+>>>>>>> 9e1ed6d5ce6c0aa17d4d0fcf7c3b89c5e0419510
       });
 
       const citySelect = document.getElementById("filter-city");
@@ -97,10 +119,18 @@
       const rating = parseFloat(document.getElementById("filter-rating").value);
 
       return data.filter(shop => {
+        const addressLower = shop.address.toLowerCase();
+        const match = shop.address.match(/\b([A-Z]{2})\b/);
+        const shopState = match ? match[1].toUpperCase() : "";
         return (!name || shop.name.toLowerCase().includes(name)) &&
                (!zip || shop.zip.startsWith(zip)) &&
+<<<<<<< HEAD
                (!city || shop.city.toLowerCase().includes(city)) &&
                (!state || shop.state === state) &&
+=======
+               (!city || addressLower.includes(city)) &&
+               (!state || shopState === state) &&
+>>>>>>> 9e1ed6d5ce6c0aa17d4d0fcf7c3b89c5e0419510
                (!rating || parseFloat(shop.rating) >= rating);
       });
     }
