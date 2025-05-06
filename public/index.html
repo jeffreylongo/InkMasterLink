@@ -62,7 +62,7 @@
         return (!name || shop.name.toLowerCase().includes(name)) &&
                (!zip || shop.zip.startsWith(zip)) &&
                (!city || shop.address.toLowerCase().includes(city)) &&
-               (!state || shop.address.match(new RegExp(`,\\s*${state}\\s+\\d{5}`))) &&
+               (!state || new RegExp(`,\\s*${state}\\s+\\d{5}`).test(shop.address)) &&
                (!rating || parseFloat(shop.rating) >= rating);
       });
     }
