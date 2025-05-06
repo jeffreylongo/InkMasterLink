@@ -2,7 +2,12 @@ const fs = require("fs");
 const path = require("path");
 
 try {
-  const dataPath = path.resolve(__dirname, "netlify", "functions", "tattoo_shops.json");
+  const path = require("path");
+  const fs = require("fs");
+  
+  const dataPath = path.resolve(__dirname, "../netlify/functions/tattoo_shops.json");
+  const json = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+
   const publicCityDir = path.resolve(__dirname, "public", "city");
   const sitemapPath = path.resolve(__dirname, "public", "sitemap.xml");
   const locationsListPath = path.resolve(__dirname, "public", "partials", "locations.html");
