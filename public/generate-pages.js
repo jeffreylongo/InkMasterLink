@@ -2,25 +2,20 @@ const fs = require("fs");
 const path = require("path");
 
 try {
-  const path = require("path");
-  const fs = require("fs");
-  
-  const dataPath = path.resolve(__dirname, "../netlify/functions/tattoo_shops.json");
-  const json = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  const baseDir = path.resolve(__dirname, ".."); // one level up from /public
+  const dataPath = path.join(baseDir, "netlify/functions/tattoo_shops.json");
 
-  const publicCityDir = path.resolve(__dirname, "public", "city");
-  const sitemapPath = path.resolve(__dirname, "public", "sitemap.xml");
-  const locationsListPath = path.resolve(__dirname, "public", "partials", "locations.html");
+  const shops = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
-  // Make sure directories exist
-  if (!fs.existsSync(publicCityDir)) fs.mkdirSync(publicCityDir, { recursive: true });
-  if (!fs.existsSync(path.dirname(locationsListPath))) fs.mkdirSync(path.dirname(locationsListPath), { recursive: true });
+  const publicDir = path.join(baseDir, "public");
+  const cityDir = path.join(publicDir, "city");
+  const partialsDir = path.join(publicDir, "partials");
+  const sitemapPath = path.join(publicDir, "sitemap.xml");
+  const locationsListPath = path.join(partialsDir, "locations.html");
 
-  // Load data
-  const raw = fs.readFileSync(dataPath, "utf-8");
-  const shops = JSON.parse(raw);
+  fs.mkdirSync(cityDir, { recursive: true });
+  fs.mkdirSync(partialsDir, { recursive: true });
 
-  // Track unique city/state combos
   const locationSet = new Set();
   const sitemapUrls = [];
   const listItems = [];
@@ -28,11 +23,11 @@ try {
   shops.forEach(shop => {
     if (!shop.city || !shop.state) return;
 
-    const city = shop.city.trim().toLowerCase().replace(/\s+/g, "-");
-    const state = shop.state.trim().toLowerCase();
-    const slug = `${city}-${state}`;
+    const citySlug = shop.city.trim().toLowerCase().replace(/\s+/g, "-");
+    const stateSlug = shop.state.trim().toLowerCase();
+    const slug = `${citySlug}-${stateSlug}`;
     const fileName = `${slug}.html`;
-    const filePath = path.join(publicCityDir, fileName);
+    const filePath = path.join(cityDir, fileName);
 
     if (!locationSet.has(slug)) {
       locationSet.add(slug);
@@ -51,7 +46,8 @@ try {
 </head>
 <body>
   <header><h1>${title}</h1></header>
-  <main><p>${description}</p>
+  <main>
+    <p>${description}</p>
     <p><a href="/">Back to main directory</a></p>
   </main>
 </body>
@@ -65,7 +61,7 @@ try {
     }
   });
 
-  // Write sitemap
+  // Write sitemap.xml
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapUrls.join("\n")}
@@ -73,9 +69,9 @@ ${sitemapUrls.join("\n")}
   fs.writeFileSync(sitemapPath, sitemap, "utf-8");
   console.log("✅ Sitemap generated");
 
-  // Write location list fragment
-  const locationsListHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
-  fs.writeFileSync(locationsListPath, locationsListHtml, "utf-8");
+  // Write locations.html
+  const locationsHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
+  fs.writeFileSync(locationsListPath, locationsHtml, "utf-8");
   console.log("✅ locations.html generated");
 
 } catch (err) {
