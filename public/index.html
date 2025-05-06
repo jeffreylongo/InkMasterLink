@@ -88,19 +88,12 @@
         const stateSet = new Set();
 
         shops.forEach(shop => {
-        const addressParts = shop.address.split(",");
-        if (addressParts.length >= 2) {
-          const rawCity = addressParts[1].trim();
-          // Ignore if it contains numbers (likely bad data)
-          if (!/\d/.test(rawCity)) {
-            const cleanCity = rawCity.replace(/[^a-zA-Z\\s]/g, "").trim();
-            if (cleanCity) {
-              const formattedCity = cleanCity.charAt(0).toUpperCase() + cleanCity.slice(1).toLowerCase();
-              citySet.add(formattedCity);
-            }
-          }
-        }
-          
+          const addressParts = shop.address.split(",");
+if (addressParts.length >= 2) {
+  const city = addressParts[1].trim();
+  citySet.add(city.charAt(0).toUpperCase() + city.slice(1).toLowerCase());
+}
+
           const parts = shop.address.split(",");
           const maybeStateZip = parts[parts.length - 1]?.trim();
           if (maybeStateZip) {
@@ -148,12 +141,13 @@
       });
 
       document.getElementById("clear-filters").addEventListener("click", () => {
-        document.getElementById("filter-name").value = "";
-        document.getElementById("filter-zip").value = "";
-        document.getElementById("filter-city").value = "";
-        document.getElementById("filter-state").value = "";
-        document.getElementById("filter-rating").value = "";
-        filterAndRender();
+  document.getElementById("filter-name").value = "";
+  document.getElementById("filter-zip").value = "";
+  document.getElementById("filter-city").value = "";
+  document.getElementById("filter-state").value = "";
+  document.getElementById("filter-rating").value = "";
+  document.getElementById("shop-list").innerHTML = '<div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;"><p>Use the filters above to find a tattoo shop.</p></div>';
+});
       });
     });
   </script>
