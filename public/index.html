@@ -13,7 +13,9 @@
       <input type="text" id="filter-name" placeholder="Shop Name"/>
       <input type="text" id="filter-zip" placeholder="ZIP Code"/>
       <input type="text" id="filter-city" placeholder="City"/>
-      <input type="text" id="filter-state" placeholder="State"/>
+      <select id="filter-state">
+        <option value="">All States</option>
+      </select>
       <input type="text" id="filter-rating" placeholder="Rating ≥"/>
     </div>
   </header>
@@ -60,7 +62,7 @@
         return (!name || shop.name.toLowerCase().includes(name)) &&
                (!zip || shop.zip.startsWith(zip)) &&
                (!city || shop.address.toLowerCase().includes(city)) &&
-               (!state || shop.address.toLowerCase().includes(state)) &&
+               (!state || shop.address.match(new RegExp(`,\\s*${state}\\s+\\d{5}`))) &&
                (!rating || parseFloat(shop.rating) >= rating);
       });
     }
@@ -69,6 +71,18 @@
       let shops = [];
       try {
         shops = await fetchShops();
+        const stateSelect = document.getElementById("filter-state");
+        const states = [...new Set(shops.map(shop => {
+          const match = shop.address.match(/,\s*([A-Z]{2})\s+\d{5}/);
+          return match ? match[1] : null;
+        }).filter(Boolean))].sort();
+        
+        states.forEach(state => {
+          const option = document.createElement("option");
+          option.value = state;
+          option.textContent = state;
+          stateSelect.appendChild(option);
+        });
         if (!Array.isArray(shops)) throw new Error("Invalid shop data");
         //renderShops(shops);
       } catch (e) {
