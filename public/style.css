@@ -66,6 +66,13 @@ header {
   box-sizing: border-box;
 }
 
+/* Responsive: Show 1 card per row on small screens */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Each individual shop card */
 .shop-card {
   background-color: #fff;
