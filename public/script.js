@@ -1,6 +1,5 @@
 // script.js
 
-localStorage.removeItem("cachedShops");
 let debounceTimer;
 let currentPage = 1;
 const itemsPerPage = 9;
