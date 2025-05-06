@@ -48,8 +48,11 @@ try {
   <header><h1>${title}</h1></header>
   <main>
     <p>${description}</p>
+    <div id="city-shop-list" data-city="${shop.city}" data-state="${shop.state}"></div>
     <p><a href="/">Back to main directory</a></p>
+    <script src="/script.js" defer></script>
   </main>
+
 </body>
 </html>`;
 
