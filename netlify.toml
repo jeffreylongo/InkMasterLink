@@ -1,4 +1,4 @@
 [build]
   publish = "public"
   functions = "netlify/functions"
-  command = "node generate-pages.js"
+  command = "node public/generate-pages.js"
