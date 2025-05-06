@@ -88,9 +88,11 @@
         const stateSet = new Set();
 
         shops.forEach(shop => {
-          const address = shop.address.toLowerCase();
-          const city = address.split(",")[0].trim();
-          citySet.add(city.charAt(0).toUpperCase() + city.slice(1));
+          const addressParts = shop.address.split(",");
+if (addressParts.length >= 2) {
+  const city = addressParts[1].trim();
+  citySet.add(city.charAt(0).toUpperCase() + city.slice(1).toLowerCase());
+}
 
           const parts = shop.address.split(",");
           const maybeStateZip = parts[parts.length - 1]?.trim();
