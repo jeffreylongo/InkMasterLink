@@ -33,12 +33,26 @@
     let debounceTimer;
 
     async function fetchShops() {
-      const cached = localStorage.getItem("cachedShops");
-      if (cached) return JSON.parse(cached);
-      const res = await fetch("/.netlify/functions/shops");
-      const data = await res.json();
-      localStorage.setItem("cachedShops", JSON.stringify(data));
-      return data;
+      try {
+        const cached = localStorage.getItem("cachedShops");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed)) return parsed;
+        }
+
+        const res = await fetch("/.netlify/functions/shops");
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          localStorage.setItem("cachedShops", JSON.stringify(data));
+          return data;
+        } else {
+          throw new Error("Invalid data structure");
+        }
+      } catch (e) {
+        console.error("Failed to fetch shops:", e);
+        return [];
+      }
     }
 
     function renderShops(shops) {
@@ -64,8 +78,8 @@
       const stateSet = new Set();
 
       shops.forEach(shop => {
-        if (shop.city) citySet.add(shop.city);
-        if (shop.state) stateSet.add(shop.state);
+        if (shop.city) citySet.add(shop.city.trim());
+        if (shop.state) stateSet.add(shop.state.trim().toUpperCase());
       });
 
       const citySelect = document.getElementById("filter-city");
@@ -87,6 +101,9 @@
         option.textContent = state;
         stateSelect.appendChild(option);
       });
+
+      console.log("Cities loaded:", [...citySet]);
+      console.log("States loaded:", [...stateSet]);
     }
 
     function applyFilters(data) {
@@ -109,7 +126,7 @@
       let shops = [];
       try {
         shops = await fetchShops();
-        if (!Array.isArray(shops)) throw new Error("Invalid shop data");
+        if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
 
         populateDropdowns(shops);
       } catch (e) {
@@ -137,6 +154,7 @@
         document.getElementById("filter-city").value = "";
         document.getElementById("filter-state").value = "";
         document.getElementById("filter-rating").value = "";
+
         document.getElementById("shop-list").innerHTML = '<div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;"><p>Use the filters above to find a tattoo shop.</p></div>';
       });
     });
