@@ -52,11 +52,9 @@ header {
   color: #ff3366;
 }
 
-.centered-flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.full-span {
+  grid-column: 1 / -1;
   text-align: center;
-  height: 200px; /* Adjust if needed */
 }
+
 
