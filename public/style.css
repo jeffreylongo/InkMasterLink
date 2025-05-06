@@ -43,9 +43,46 @@ header {
   transition: transform 0.2s;
 }
 
-.shop-card:hover {
-  transform: translateY(-4px);
+/* Grid container for shop cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+  gap: 24px;
+  padding: 24px;
+  justify-items: stretch;
 }
+
+/* Each individual shop card */
+.shop-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination buttons */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #333;
+  background-color: #f9f9f9;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 
 .shop-card h2 {
   margin-top: 0;
