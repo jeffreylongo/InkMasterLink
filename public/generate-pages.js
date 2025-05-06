@@ -52,6 +52,8 @@ try {
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${description}" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2496536067852316"
+     crossorigin="anonymous"></script>
 </head>
 <body>
   <header><h1>${title}</h1></header>
