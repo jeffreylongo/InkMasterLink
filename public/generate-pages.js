@@ -1,6 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const shops = require("./netlify/functions/data/tattoo_shops.json");
+const partialsDir = path.join(__dirname, "public", "partials");
+if (!fs.existsSync(partialsDir)) fs.mkdirSync(partialsDir, { recursive: true });
+
 
 const outputDir = path.join(__dirname, "public", "city");
 const sitemapEntries = [];
