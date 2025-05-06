@@ -51,3 +51,12 @@ header {
   margin-top: 0;
   color: #ff3366;
 }
+
+.centered-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 200px; /* Adjust if needed */
+}
+
