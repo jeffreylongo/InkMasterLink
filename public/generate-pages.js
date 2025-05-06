@@ -1,33 +1,30 @@
+// generate-pages.js
 const fs = require("fs");
 const path = require("path");
 
 try {
-  const baseDir = path.resolve(__dirname, ".."); // one level up from /public
-  const dataPath = path.join(baseDir, "netlify/functions/tattoo_shops.json");
+  const dataPath = path.resolve(__dirname, "../netlify/functions/tattoo_shops.json");
+  const json = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
-  const shops = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  const publicCityDir = path.resolve(__dirname, "city");
+  const sitemapPath = path.resolve(__dirname, "sitemap.xml");
+  const locationsListPath = path.resolve(__dirname, "partials", "locations.html");
 
-  const publicDir = path.join(baseDir, "public");
-  const cityDir = path.join(publicDir, "city");
-  const partialsDir = path.join(publicDir, "partials");
-  const sitemapPath = path.join(publicDir, "sitemap.xml");
-  const locationsListPath = path.join(partialsDir, "locations.html");
-
-  fs.mkdirSync(cityDir, { recursive: true });
-  fs.mkdirSync(partialsDir, { recursive: true });
+  if (!fs.existsSync(publicCityDir)) fs.mkdirSync(publicCityDir, { recursive: true });
+  if (!fs.existsSync(path.dirname(locationsListPath))) fs.mkdirSync(path.dirname(locationsListPath), { recursive: true });
 
   const locationSet = new Set();
   const sitemapUrls = [];
   const listItems = [];
 
-  shops.forEach(shop => {
+  json.forEach(shop => {
     if (!shop.city || !shop.state) return;
 
     const citySlug = shop.city.trim().toLowerCase().replace(/\s+/g, "-");
     const stateSlug = shop.state.trim().toLowerCase();
     const slug = `${citySlug}-${stateSlug}`;
     const fileName = `${slug}.html`;
-    const filePath = path.join(cityDir, fileName);
+    const filePath = path.join(publicCityDir, fileName);
 
     if (!locationSet.has(slug)) {
       locationSet.add(slug);
@@ -43,6 +40,7 @@ try {
   <title>${title}</title>
   <meta name="description" content="${description}" />
   <link rel="stylesheet" href="/style.css" />
+  <script defer src="/script.js"></script>
 </head>
 <body>
   <header><h1>${title}</h1></header>
@@ -50,9 +48,7 @@ try {
     <p>${description}</p>
     <div id="city-shop-list" data-city="${shop.city}" data-state="${shop.state}"></div>
     <p><a href="/">Back to main directory</a></p>
-    <script src="/script.js" defer></script>
   </main>
-
 </body>
 </html>`;
 
@@ -64,7 +60,6 @@ try {
     }
   });
 
-  // Write sitemap.xml
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapUrls.join("\n")}
@@ -72,9 +67,8 @@ ${sitemapUrls.join("\n")}
   fs.writeFileSync(sitemapPath, sitemap, "utf-8");
   console.log("✅ Sitemap generated");
 
-  // Write locations.html
-  const locationsHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
-  fs.writeFileSync(locationsListPath, locationsHtml, "utf-8");
+  const locationsListHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
+  fs.writeFileSync(locationsListPath, locationsListHtml, "utf-8");
   console.log("✅ locations.html generated");
 
 } catch (err) {
