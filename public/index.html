@@ -48,6 +48,7 @@
     const itemsPerPage = 9;
     let filteredShops = [];
     let shops = [];
+    let stateCityMap = {};
 
     async function fetchShops() {
       try {
@@ -109,33 +110,50 @@
     }
 
     function populateDropdowns(shops) {
-      const citySet = new Set();
-      const stateSet = new Set();
+      stateCityMap = {};
 
       shops.forEach(shop => {
-        if (shop.city) citySet.add(shop.city.trim());
-        if (shop.state) stateSet.add(shop.state.trim().toUpperCase());
+        const state = shop.state.trim().toUpperCase();
+        const city = shop.city.trim();
+        if (!stateCityMap[state]) stateCityMap[state] = new Set();
+        stateCityMap[state].add(city);
       });
 
-      const citySelect = document.getElementById("filter-city");
       const stateSelect = document.getElementById("filter-state");
-
-      citySelect.innerHTML = '<option value="">All Cities</option>';
       stateSelect.innerHTML = '<option value="">All States</option>';
-
-      Array.from(citySet).sort().forEach(city => {
-        const option = document.createElement("option");
-        option.value = city;
-        option.textContent = city;
-        citySelect.appendChild(option);
-      });
-
-      Array.from(stateSet).sort().forEach(state => {
+      Object.keys(stateCityMap).sort().forEach(state => {
         const option = document.createElement("option");
         option.value = state;
         option.textContent = state;
         stateSelect.appendChild(option);
       });
+
+      populateCityDropdown();
+    }
+
+    function populateCityDropdown(state = "") {
+      const citySelect = document.getElementById("filter-city");
+      citySelect.innerHTML = '<option value="">All Cities</option>';
+
+      if (state && stateCityMap[state]) {
+        Array.from(stateCityMap[state]).sort().forEach(city => {
+          const option = document.createElement("option");
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      } else {
+        const allCities = new Set();
+        Object.values(stateCityMap).forEach(citySet => {
+          citySet.forEach(city => allCities.add(city));
+        });
+        Array.from(allCities).sort().forEach(city => {
+          const option = document.createElement("option");
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      }
     }
 
     function applyFilters(data) {
@@ -182,6 +200,10 @@
         input.addEventListener("change", filterAndRender);
       });
 
+      document.getElementById("filter-state").addEventListener("change", (e) => {
+        populateCityDropdown(e.target.value);
+      });
+
       document.getElementById("clear-filters").addEventListener("click", () => {
         document.getElementById("filter-name").value = "";
         document.getElementById("filter-zip").value = "";
@@ -194,6 +216,7 @@
             <p>Use the filters above to find a tattoo shop.</p>
           </div>
         `;
+        populateCityDropdown();
       });
 
       document.getElementById("prev-page").addEventListener("click", () => {
