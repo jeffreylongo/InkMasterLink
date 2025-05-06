@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ink Master Link</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <header>
@@ -24,19 +24,24 @@
   </header>
 
   <main id="shop-list">
-    <div style="display: flex; justify-content: center; width: 100%;">
+    <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
       <p>Use the filters above to find a tattoo shop.</p>
     </div>
   </main>
 
-  <div class="pagination" id="pagination"></div>
+  <div id="pagination" class="pagination" style="text-align: center; margin: 20px 0;">
+    <button id="prev-page">Previous</button>
+    <span id="page-info" style="margin: 0 15px;"></span>
+    <button id="next-page">Next</button>
+  </div>
 
-  <script defer>
+  <script>
     localStorage.removeItem("cachedShops");
     let debounceTimer;
     let currentPage = 1;
-    const pageSize = 9;
+    const itemsPerPage = 9;
     let filteredShops = [];
+    let shops = [];
 
     async function fetchShops() {
       try {
@@ -61,17 +66,13 @@
       }
     }
 
-    function renderShops(shops) {
+    function renderShops(shopsToRender) {
       const container = document.getElementById("shop-list");
       container.innerHTML = "";
 
-      if (shops.length === 0) {
-        container.innerHTML = `<p style="text-align:center;">No results found.</p>`;
-        return;
-      }
-
-      const start = (currentPage - 1) * pageSize;
-      const paginated = shops.slice(start, start + pageSize);
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginated = shopsToRender.slice(start, end);
 
       const grid = document.createElement("div");
       grid.className = "grid";
@@ -91,24 +92,14 @@
       });
 
       container.appendChild(grid);
-      renderPagination(shops.length);
+      updatePaginationControls(shopsToRender.length);
     }
 
-    function renderPagination(total) {
-      const pageCount = Math.ceil(total / pageSize);
-      const pagination = document.getElementById("pagination");
-      pagination.innerHTML = "";
-
-      for (let i = 1; i <= pageCount; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        if (i === currentPage) btn.disabled = true;
-        btn.addEventListener("click", () => {
-          currentPage = i;
-          renderShops(filteredShops);
-        });
-        pagination.appendChild(btn);
-      }
+    function updatePaginationControls(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      document.getElementById("page-info").textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById("prev-page").disabled = currentPage === 1;
+      document.getElementById("next-page").disabled = currentPage === totalPages;
     }
 
     function populateDropdowns(shops) {
@@ -157,49 +148,62 @@
       });
     }
 
+    function filterAndRender() {
+      currentPage = 1;
+      filteredShops = applyFilters(shops || []);
+      renderShops(filteredShops);
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
-      let shops = [];
       try {
         shops = await fetchShops();
         if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
 
         populateDropdowns(shops);
-
-        function filterAndRender() {
-          filteredShops = applyFilters(shops || []);
-          currentPage = 1;
-          renderShops(filteredShops);
-        }
-
-        document.querySelectorAll("#filters input, #filters select").forEach(input => {
-          input.addEventListener("input", () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(filterAndRender, 300);
-          });
-          input.addEventListener("change", filterAndRender);
-        });
-
-        document.getElementById("clear-filters").addEventListener("click", () => {
-          document.getElementById("filter-name").value = "";
-          document.getElementById("filter-zip").value = "";
-          document.getElementById("filter-city").value = "";
-          document.getElementById("filter-state").value = "";
-          document.getElementById("filter-rating").value = "";
-          document.getElementById("shop-list").innerHTML = `
-            <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
-              <p>Use the filters above to find a tattoo shop.</p>
-            </div>
-          `;
-          document.getElementById("pagination").innerHTML = "";
-        });
-
-        // Render default grid of 9 shops
-        filteredShops = shops;
+        filteredShops = applyFilters(shops);
         renderShops(filteredShops);
       } catch (e) {
         console.error("Failed to load shops:", e);
         document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
+        return;
       }
+
+      document.querySelectorAll("#filters input, #filters select").forEach(input => {
+        input.addEventListener("input", () => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(filterAndRender, 300);
+        });
+        input.addEventListener("change", filterAndRender);
+      });
+
+      document.getElementById("clear-filters").addEventListener("click", () => {
+        document.getElementById("filter-name").value = "";
+        document.getElementById("filter-zip").value = "";
+        document.getElementById("filter-city").value = "";
+        document.getElementById("filter-state").value = "";
+        document.getElementById("filter-rating").value = "";
+        currentPage = 1;
+        document.getElementById("shop-list").innerHTML = `
+          <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+            <p>Use the filters above to find a tattoo shop.</p>
+          </div>
+        `;
+      });
+
+      document.getElementById("prev-page").addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderShops(filteredShops);
+        }
+      });
+
+      document.getElementById("next-page").addEventListener("click", () => {
+        const totalPages = Math.ceil(filteredShops.length / itemsPerPage);
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderShops(filteredShops);
+        }
+      });
     });
   </script>
 </body>
