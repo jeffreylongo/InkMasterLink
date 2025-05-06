@@ -18,7 +18,6 @@ async function fetchShops() {
     const data = await res.json();
     if (Array.isArray(data)) {
       localStorage.setItem("cachedShops", JSON.stringify(data));
-      console.log("Fetched shops:", data);
       return data;
     } else {
       throw new Error("Invalid data structure");
@@ -44,7 +43,8 @@ function showModal(shop) {
 }
 
 function closeModal() {
-  document.getElementById("modal-overlay").style.display = "none";
+  const modal = document.getElementById("modal-overlay");
+  if (modal) modal.style.display = "none";
 }
 
 function renderShops(shopsToRender) {
@@ -121,11 +121,11 @@ function populateDropdowns(shops) {
 }
 
 function applyFilters(data) {
-  const name = document.getElementById("filter-name").value.toLowerCase();
-  const zip = document.getElementById("filter-zip").value;
-  const city = document.getElementById("filter-city").value;
-  const state = document.getElementById("filter-state").value;
-  const rating = parseFloat(document.getElementById("filter-rating").value);
+  const name = document.getElementById("filter-name")?.value.toLowerCase();
+  const zip = document.getElementById("filter-zip")?.value;
+  const city = document.getElementById("filter-city")?.value;
+  const state = document.getElementById("filter-state")?.value;
+  const rating = parseFloat(document.getElementById("filter-rating")?.value);
   return data.filter(shop => {
     return (!name || shop.name.toLowerCase().includes(name)) &&
            (!zip || shop.zip.startsWith(zip)) &&
@@ -142,25 +142,63 @@ function filterAndRender() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("DOM fully loaded");
   const modal = document.getElementById("modal-overlay");
-  modal.addEventListener("click", e => {
-    if (e.target === modal) closeModal();
-  });
-  document.querySelector(".modal-close").addEventListener("click", closeModal);
+  if (modal) {
+    modal.addEventListener("click", e => {
+      if (e.target === modal) closeModal();
+    });
+  }
+
+  const closeButton = document.querySelector(".modal-close");
+  if (closeButton) {
+    closeButton.addEventListener("click", closeModal);
+  }
 
   try {
     shops = await fetchShops();
     if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
-    populateDropdowns(shops);
-    filteredShops = applyFilters(shops);
-    renderShops(filteredShops);
+
+    const shopListEl = document.getElementById("shop-list");
+    const cityListEl = document.getElementById("city-shop-list");
+
+    if (shopListEl) {
+      populateDropdowns(shops);
+      filteredShops = applyFilters(shops);
+      renderShops(filteredShops);
+    }
+
+    if (cityListEl) {
+      const city = cityListEl.dataset.city;
+      const state = cityListEl.dataset.state;
+      const cityShops = shops.filter(s => s.city === city && s.state === state);
+
+      if (cityShops.length === 0) {
+        cityListEl.innerHTML += "<p>No shops found for this location.</p>";
+      } else {
+        const grid = document.createElement("div");
+        grid.className = "grid";
+        cityShops.forEach(shop => {
+          const card = document.createElement("div");
+          card.className = "shop-card clickable";
+          card.innerHTML = `
+            <h2>${shop.name}</h2>
+            <p>${shop.city}, ${shop.state}</p>
+            <p>Rating: ${shop.rating}</p>
+          `;
+          card.addEventListener("click", () => showModal(shop));
+          grid.appendChild(card);
+        });
+        cityListEl.appendChild(grid);
+      }
+    }
   } catch (e) {
     console.error("Failed to load shops:", e);
-    document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
+    const shopListEl = document.getElementById("shop-list");
+    if (shopListEl) shopListEl.innerHTML = "<p>Unable to load shops.</p>";
   }
 
-  document.querySelectorAll("#filters input, #filters select").forEach(input => {
+  const filterInputs = document.querySelectorAll("#filters input, #filters select");
+  filterInputs.forEach(input => {
     input.addEventListener("input", () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(filterAndRender, 300);
@@ -168,62 +206,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     input.addEventListener("change", filterAndRender);
   });
 
-  document.getElementById("clear-filters").addEventListener("click", () => {
-    ["filter-name", "filter-zip", "filter-city", "filter-state", "filter-rating"].forEach(id => {
-      document.getElementById(id).value = "";
-    });
-    currentPage = 1;
-    document.getElementById("shop-list").innerHTML = `
-      <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
-        <p>Use the filters above to find a tattoo shop.</p>
-      </div>
-    `;
-  });
-
-  document.getElementById("prev-page").addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderShops(filteredShops);
-    }
-  });
-
-  document.getElementById("next-page").addEventListener("click", () => {
-    const totalPages = Math.ceil(filteredShops.length / itemsPerPage);
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderShops(filteredShops);
-    }
-  });
-
-  // Hydrate city page if #city-shop-list exists
-  const cityShopList = document.getElementById("city-shop-list");
-  if (cityShopList) {
-    const targetCity = cityShopList.dataset.city;
-    const targetState = cityShopList.dataset.state;
-
-    const cityShops = (shops || []).filter(
-      s => s.city === targetCity && s.state === targetState
-    );
-
-    if (cityShops.length === 0) {
-      cityShopList.innerHTML = "<p>No shops found for this location.</p>";
-    } else {
-      const grid = document.createElement("div");
-      grid.className = "grid";
-
-      cityShops.forEach(shop => {
-        const card = document.createElement("div");
-        card.className = "shop-card clickable";
-        card.innerHTML = `
-          <h2>${shop.name}</h2>
-          <p>${shop.city}, ${shop.state}</p>
-          <p>Rating: ${shop.rating}</p>
-        `;
-        card.addEventListener("click", () => showModal(shop));
-        grid.appendChild(card);
+  const clearBtn = document.getElementById("clear-filters");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      ["filter-name", "filter-zip", "filter-city", "filter-state", "filter-rating"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
       });
+      currentPage = 1;
+      filterAndRender();
+    });
+  }
 
-      cityShopList.appendChild(grid);
-    }
+  const prevBtn = document.getElementById("prev-page");
+  const nextBtn = document.getElementById("next-page");
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderShops(filteredShops);
+      }
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      const totalPages = Math.ceil(filteredShops.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderShops(filteredShops);
+      }
+    });
   }
 });
