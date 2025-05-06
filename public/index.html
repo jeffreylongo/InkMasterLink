@@ -41,6 +41,23 @@
     <button id="next-page">Next</button>
   </div>
 
+  <section id="browse-locations">
+  <h2>Browse by Location</h2>
+  <div id="locations-list">Loading locations...</div>
+</section>
+
+<script>
+  fetch('/partials/locations.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('locations-list').innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById('locations-list').innerHTML = "Unable to load locations.";
+    });
+</script>
+
+
   <!-- Modal -->
   <div id="modal-overlay" style="display:none;" class="modal-overlay">
     <div class="modal-content">
