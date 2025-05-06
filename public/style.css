@@ -29,10 +29,9 @@ header {
 }
 
 #shop-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .shop-card {
@@ -46,10 +45,12 @@ header {
 /* Grid container for shop cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  max-width: 1200px;
+  width: 100%;
   padding: 24px;
-  justify-items: stretch;
+  box-sizing: border-box;
 }
 
 /* Each individual shop card */
