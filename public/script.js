@@ -1,31 +1,46 @@
-// script.js
-
-let debounceTimer;
 let currentPage = 1;
 const itemsPerPage = 9;
-let filteredShops = [];
-let shops = [];
+let totalPages = 1;
+let filters = {};
+let lastFetched = [];
 
-async function fetchShops() {
-  try {
-    const cached = localStorage.getItem("cachedShops");
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed)) return parsed;
-    }
+function buildQuery(params) {
+  return Object.entries(params)
+    .filter(([, v]) => v !== "" && v != null)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join("&");
+}
 
-    const res = await fetch("/.netlify/functions/shops");
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      localStorage.setItem("cachedShops", JSON.stringify(data));
-      return data;
-    } else {
-      throw new Error("Invalid data structure");
-    }
-  } catch (e) {
-    console.error("Failed to fetch shops:", e);
-    return [];
-  }
+async function fetchShops(page = 1) {
+  const query = buildQuery({ ...filters, page, limit: itemsPerPage });
+  const res = await fetch(`/.netlify/functions/shops?${query}`);
+  const json = await res.json();
+  if (!json || !Array.isArray(json.data)) throw new Error("Invalid shop data");
+  lastFetched = json.data;
+  totalPages = json.totalPages;
+  currentPage = json.page;
+  renderShops(json.data);
+  updatePaginationControls(json.total);
+  populateDropdowns(json.data);
+}
+
+function renderShops(shopsToRender) {
+  const container = document.getElementById("shop-list");
+  container.innerHTML = "";
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  shopsToRender.forEach(shop => {
+    const card = document.createElement("div");
+    card.className = "shop-card clickable";
+    card.innerHTML = `
+      <h2>${shop.name}</h2>
+      <p>${shop.city}, ${shop.state}</p>
+      <p>Rating: ${shop.rating}</p>
+    `;
+    card.addEventListener("click", () => showModal(shop));
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
 }
 
 function showModal(shop) {
@@ -47,41 +62,14 @@ function closeModal() {
   if (modal) modal.style.display = "none";
 }
 
-function renderShops(shopsToRender) {
-  const container = document.getElementById("shop-list");
-  container.innerHTML = "";
-  const start = (currentPage - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const paginated = shopsToRender.slice(start, end);
-  const grid = document.createElement("div");
-  grid.className = "grid";
-  paginated.forEach(shop => {
-    const card = document.createElement("div");
-    card.className = "shop-card clickable";
-    card.innerHTML = `
-      <h2>${shop.name}</h2>
-      <p>${shop.city}, ${shop.state}</p>
-      <p>Rating: ${shop.rating}</p>
-    `;
-    card.addEventListener("click", () => showModal(shop));
-    grid.appendChild(card);
-  });
-  container.appendChild(grid);
-  updatePaginationControls(shopsToRender.length);
-}
-
 function updatePaginationControls(totalItems) {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
   document.getElementById("page-info").textContent = `Page ${currentPage} of ${totalPages}`;
   document.getElementById("prev-page").disabled = currentPage === 1;
   document.getElementById("next-page").disabled = currentPage === totalPages;
 }
 
 function populateDropdowns(shops) {
-  const citySelect = document.getElementById("filter-city");
-  const stateSelect = document.getElementById("filter-state");
   const stateMap = {};
-
   shops.forEach(shop => {
     const state = shop.state?.trim().toUpperCase();
     const city = shop.city?.trim();
@@ -91,54 +79,42 @@ function populateDropdowns(shops) {
     }
   });
 
+  const stateSelect = document.getElementById("filter-state");
+  const citySelect = document.getElementById("filter-city");
+
   stateSelect.innerHTML = '<option value="">All States</option>';
   Object.keys(stateMap).sort().forEach(state => {
-    const option = document.createElement("option");
-    option.value = state;
-    option.textContent = state;
-    stateSelect.appendChild(option);
+    const opt = document.createElement("option");
+    opt.value = state;
+    opt.textContent = state;
+    stateSelect.appendChild(opt);
   });
 
-  function updateCityDropdown() {
+  stateSelect.addEventListener("change", () => {
     const selectedState = stateSelect.value;
     citySelect.innerHTML = '<option value="">All Cities</option>';
     if (stateMap[selectedState]) {
-      Array.from(stateMap[selectedState]).sort().forEach(city => {
-        const option = document.createElement("option");
-        option.value = city;
-        option.textContent = city;
-        citySelect.appendChild(option);
+      [...stateMap[selectedState]].sort().forEach(city => {
+        const opt = document.createElement("option");
+        opt.value = city;
+        opt.textContent = city;
+        citySelect.appendChild(opt);
       });
     }
-  }
-
-  stateSelect.addEventListener("change", () => {
-    updateCityDropdown();
     filterAndRender();
-  });
-
-  updateCityDropdown();
-}
-
-function applyFilters(data) {
-  const name = document.getElementById("filter-name")?.value.toLowerCase();
-  const zip = document.getElementById("filter-zip")?.value;
-  const city = document.getElementById("filter-city")?.value;
-  const state = document.getElementById("filter-state")?.value;
-  const rating = parseFloat(document.getElementById("filter-rating")?.value);
-  return data.filter(shop => {
-    return (!name || shop.name.toLowerCase().includes(name)) &&
-           (!zip || shop.zip.startsWith(zip)) &&
-           (!city || shop.city === city) &&
-           (!state || shop.state === state) &&
-           (!rating || parseFloat(shop.rating) >= rating);
   });
 }
 
 function filterAndRender() {
+  filters = {
+    name: document.getElementById("filter-name")?.value.trim().toLowerCase(),
+    zip: document.getElementById("filter-zip")?.value.trim(),
+    city: document.getElementById("filter-city")?.value,
+    state: document.getElementById("filter-state")?.value,
+    rating: document.getElementById("filter-rating")?.value
+  };
   currentPage = 1;
-  filteredShops = applyFilters(shops || []);
-  renderShops(filteredShops);
+  fetchShops(currentPage);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -147,95 +123,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     modal.addEventListener("click", e => {
       if (e.target === modal) closeModal();
     });
+    const closeBtn = document.querySelector(".modal-close");
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
   }
 
-  const closeButton = document.querySelector(".modal-close");
-  if (closeButton) {
-    closeButton.addEventListener("click", closeModal);
-  }
-
-  try {
-    shops = await fetchShops();
-    if (!Array.isArray(shops) || shops.length === 0) throw new Error("Invalid or empty shop data");
-
-    const shopListEl = document.getElementById("shop-list");
-    const cityListEl = document.getElementById("city-shop-list");
-
-    if (shopListEl) {
-      populateDropdowns(shops);
-      filteredShops = applyFilters(shops);
-      renderShops(filteredShops);
-    }
-
-    if (cityListEl) {
-      const city = cityListEl.dataset.city;
-      const state = cityListEl.dataset.state;
-      const cityShops = shops.filter(s => s.city === city && s.state === state);
-
-      if (cityShops.length === 0) {
-        cityListEl.innerHTML += "<p>No shops found for this location.</p>";
-      } else {
-        const grid = document.createElement("div");
-        grid.className = "grid";
-        cityShops.forEach(shop => {
-          const card = document.createElement("div");
-          card.className = "shop-card clickable";
-          card.innerHTML = `
-            <h2>${shop.name}</h2>
-            <p>${shop.city}, ${shop.state}</p>
-            <p>Rating: ${shop.rating}</p>
-          `;
-          card.addEventListener("click", () => showModal(shop));
-          grid.appendChild(card);
-        });
-        cityListEl.appendChild(grid);
-      }
-    }
-  } catch (e) {
-    console.error("Failed to load shops:", e);
-    const shopListEl = document.getElementById("shop-list");
-    if (shopListEl) shopListEl.innerHTML = "<p>Unable to load shops.</p>";
-  }
-
-  const filterInputs = document.querySelectorAll("#filters input, #filters select");
-  filterInputs.forEach(input => {
+  document.querySelectorAll("#filters input, #filters select").forEach(input => {
     input.addEventListener("input", () => {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(filterAndRender, 300);
+      debounceTimer = setTimeout(filterAndRender, 250);
     });
     input.addEventListener("change", filterAndRender);
   });
 
-  const clearBtn = document.getElementById("clear-filters");
-  if (clearBtn) {
-    clearBtn.addEventListener("click", () => {
-      ["filter-name", "filter-zip", "filter-city", "filter-state", "filter-rating"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
-      currentPage = 1;
-      filterAndRender();
+  document.getElementById("clear-filters")?.addEventListener("click", () => {
+    ["filter-name", "filter-zip", "filter-city", "filter-state", "filter-rating"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
     });
-  }
+    filters = {};
+    currentPage = 1;
+    fetchShops(currentPage);
+  });
 
-  const prevBtn = document.getElementById("prev-page");
-  const nextBtn = document.getElementById("next-page");
-  if (prevBtn) {
-    prevBtn.addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderShops(filteredShops);
-      }
-    });
-  }
+  document.getElementById("prev-page")?.addEventListener("click", () => {
+    if (currentPage > 1) fetchShops(--currentPage);
+  });
 
-  if (nextBtn) {
-    nextBtn.addEventListener("click", () => {
-      const totalPages = Math.ceil(filteredShops.length / itemsPerPage);
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderShops(filteredShops);
-      }
-    });
+  document.getElementById("next-page")?.addEventListener("click", () => {
+    if (currentPage < totalPages) fetchShops(++currentPage);
+  });
+
+  try {
+    await fetchShops(currentPage);
+  } catch (e) {
+    console.error("Unable to load shops:", e);
+    document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
   }
 });
