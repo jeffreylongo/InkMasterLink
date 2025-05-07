@@ -21,7 +21,6 @@ async function fetchShops(page = 1) {
   currentPage = json.page;
   renderShops(json.data);
   updatePaginationControls(json.total);
-  populateDropdowns(json.data);
 }
 
 function renderShops(shopsToRender) {
