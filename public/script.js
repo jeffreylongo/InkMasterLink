@@ -73,10 +73,16 @@ async function loadStatesDropdown() {
 
   try {
     const res = await fetch("/.netlify/functions/locations");
-    const { states } = await res.json();
+    const json = await res.json();
+    console.log("States response:", json); // 🔍 Confirm what the API returns
+
+    if (!json.states || json.states.length === 0) {
+      console.warn("No states returned from API");
+      return;
+    }
 
     stateSelect.innerHTML = '<option value="">All States</option>';
-    states.forEach(state => {
+    json.states.forEach(state => {
       const opt = document.createElement("option");
       opt.value = state;
       opt.textContent = state;
@@ -98,10 +104,12 @@ async function loadStatesDropdown() {
       }
       filterAndRender();
     });
+
   } catch (e) {
     console.error("Failed to load state/city dropdowns:", e);
   }
 }
+
 
 function filterAndRender() {
   filters = {
