@@ -68,27 +68,42 @@ function updatePaginationControls(totalItems) {
   document.getElementById("next-page").disabled = currentPage === totalPages;
 }
 
-function populateDropdowns(shops) {
-  const stateMap = {};
-  shops.forEach(shop => {
-    const state = shop.state?.trim().toUpperCase();
-    const city = shop.city?.trim();
-    if (state && city) {
-      if (!stateMap[state]) stateMap[state] = new Set();
-      stateMap[state].add(city);
-    }
-  });
-
+async function loadStatesDropdown() {
   const stateSelect = document.getElementById("filter-state");
   const citySelect = document.getElementById("filter-city");
 
-  stateSelect.innerHTML = '<option value="">All States</option>';
-  Object.keys(stateMap).sort().forEach(state => {
-    const opt = document.createElement("option");
-    opt.value = state;
-    opt.textContent = state;
-    stateSelect.appendChild(opt);
-  });
+  try {
+    const res = await fetch("/.netlify/functions/locations");
+    const { states } = await res.json();
+
+    stateSelect.innerHTML = '<option value="">All States</option>';
+    states.forEach(state => {
+      const opt = document.createElement("option");
+      opt.value = state;
+      opt.textContent = state;
+      stateSelect.appendChild(opt);
+    });
+
+    stateSelect.addEventListener("change", async () => {
+      const selectedState = stateSelect.value;
+      citySelect.innerHTML = '<option value="">All Cities</option>';
+      if (selectedState) {
+        const res = await fetch(`/.netlify/functions/locations?state=${selectedState}`);
+        const { cities } = await res.json();
+        cities.forEach(city => {
+          const opt = document.createElement("option");
+          opt.value = city;
+          opt.textContent = city;
+          citySelect.appendChild(opt);
+        });
+      }
+      filterAndRender();
+    });
+  } catch (e) {
+    console.error("Failed to load state/city dropdowns:", e);
+  }
+}
+
 
   stateSelect.addEventListener("change", () => {
     const selectedState = stateSelect.value;
@@ -142,6 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     filters = {};
     currentPage = 1;
+    await loadStatesDropdown();
     fetchShops(currentPage);
   });
 
