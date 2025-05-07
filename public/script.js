@@ -104,22 +104,6 @@ async function loadStatesDropdown() {
   }
 }
 
-
-  stateSelect.addEventListener("change", () => {
-    const selectedState = stateSelect.value;
-    citySelect.innerHTML = '<option value="">All Cities</option>';
-    if (stateMap[selectedState]) {
-      [...stateMap[selectedState]].sort().forEach(city => {
-        const opt = document.createElement("option");
-        opt.value = city;
-        opt.textContent = city;
-        citySelect.appendChild(opt);
-      });
-    }
-    filterAndRender();
-  });
-}
-
 function filterAndRender() {
   filters = {
     name: document.getElementById("filter-name")?.value.trim().toLowerCase(),
