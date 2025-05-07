@@ -162,6 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   try {
+    await loadStatesDropdown();
     await fetchShops(currentPage);
   } catch (e) {
     console.error("Unable to load shops:", e);
