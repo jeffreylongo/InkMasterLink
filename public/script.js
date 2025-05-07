@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     input.addEventListener("change", filterAndRender);
   });
 
-  document.getElementById("clear-filters")?.addEventListener("click", () => {
+  document.getElementById("clear-filters")?.addEventListener("click", async () => {
     ["filter-name", "filter-zip", "filter-city", "filter-state", "filter-rating"].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = "";
@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadStatesDropdown();
     fetchShops(currentPage);
   });
+
 
   document.getElementById("prev-page")?.addEventListener("click", () => {
     if (currentPage > 1) fetchShops(--currentPage);
