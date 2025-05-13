@@ -1,4 +1,4 @@
-dlet currentPage = 1;
+let currentPage = 1;
 const itemsPerPage = 9;
 let totalPages = 1;
 let filters = {};
@@ -74,7 +74,7 @@ async function loadStatesDropdown() {
   try {
     const res = await fetch("/.netlify/functions/locations");
     const json = await res.json();
-    console.log("States response:", json); // 🔍 Confirm what the API returns
+    console.log("States response:", json);
 
     if (!json.states || json.states.length === 0) {
       console.warn("No states returned from API");
@@ -110,7 +110,6 @@ async function loadStatesDropdown() {
   }
 }
 
-
 function filterAndRender() {
   filters = {
     name: document.getElementById("filter-name")?.value.trim().toLowerCase(),
@@ -121,6 +120,41 @@ function filterAndRender() {
   };
   currentPage = 1;
   fetchShops(currentPage);
+}
+
+function showRandomTip() {
+  const tattooTips = [
+    "🥗 Eat a solid meal before your appointment to avoid dizziness or fainting.",
+    "💧 Stay hydrated the day before and day of your tattoo — your skin will thank you.",
+    "🚫 Avoid alcohol for at least 24 hours — it thins your blood and makes you bleed more.",
+    "🧴 Moisturize daily leading up to your appointment, but skip lotion the day of.",
+    "👕 Wear comfy clothes that give your artist easy access to the area being tattooed.",
+    "🎧 Bring headphones, snacks, and something to do during long sessions.",
+    "🎨 Trust your artist — their suggestions come from experience with design and placement.",
+    "🧼 Ask your artist which aftercare products they recommend — every artist is different.",
+    "🌊 No swimming, soaking, or long showers while your tattoo heals!",
+    "🐍 Don’t pick or scratch your tattoo — even if it itches during healing.",
+    "🗣️ Always follow your artist’s specific aftercare instructions — they know their work best.",
+    "🧪 Don’t use Vaseline or random ointments unless your artist says so.",
+    "🩹 Your tattoo is a wound — treat it with the same care you’d give a cut or scrape.",
+    "🚷 Avoid tight clothes that rub on the fresh ink — let it breathe.",
+    "⏱️ Keep your wrap on for the exact time your artist recommends — not less, not more.",
+    "🧼 Show up freshly showered — clean skin helps your artist and shows respect.",
+    "👫 Don’t bring a crowd unless your artist says it’s okay — most prefer a quiet space.",
+    "🗓️ Don’t schedule your tattoo right before a beach trip, wedding, or major event.",
+    "🤒 If you’re sick, reschedule — your body needs to focus on healing, not ink.",
+    "⚠️ If you take medications or have conditions, tell your artist ahead of time.",
+    "💊 Avoid aspirin or blood thinners unless medically necessary.",
+    "❓ Ask questions! Good artists love educating their clients.",
+    "💵 Tip your artist — tattoos are custom, physical, and personal work.",
+    "✏️ Want to change something? Say so *before* the stencil goes on!",
+    "❤️ Take care of your tattoo and it’ll stay sharp, bold, and beautiful for years."
+  ];
+
+  const tipEl = document.getElementById("tip-content");
+  if (!tipEl) return;
+  const randomIndex = Math.floor(Math.random() * tattooTips.length);
+  tipEl.textContent = tattooTips[randomIndex];
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -152,49 +186,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     fetchShops(currentPage);
   });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const tattooTips = [
-    "🥗 Eat a solid meal before your appointment to avoid dizziness or fainting.",
-    "💧 Stay hydrated the day before and day of your tattoo — your skin will thank you.",
-    "🚫 Avoid alcohol for at least 24 hours — it thins your blood and makes you bleed more.",
-    "🧴 Moisturize daily leading up to your appointment, but skip lotion the day of.",
-    "👕 Wear comfy clothes that give your artist easy access to the area being tattooed.",
-    "🎧 Bring headphones, snacks, and something to do during long sessions.",
-    "🎨 Trust your artist — their suggestions come from experience with design and placement.",
-    "🧼 Ask your artist which aftercare products they recommend — every artist is different.",
-    "🌊 No swimming, soaking, or long showers while your tattoo heals!",
-    "🐍 Don’t pick or scratch your tattoo — even if it itches during healing.",
-    "🗣️ Always follow your artist’s specific aftercare instructions — they know their work best.",
-    "🧪 Don’t use Vaseline or random ointments unless your artist says so.",
-    "🩹 Your tattoo is a wound — treat it with the same care you’d give a cut or scrape.",
-    "🚷 Avoid tight clothes that rub on the fresh ink — let it breathe.",
-    "⏱️ Keep your wrap on for the exact time your artist recommends — not less, not more.",
-    "🧼 Show up freshly showered — clean skin helps your artist and shows respect.",
-    "👫 Don’t bring a crowd unless your artist says it’s okay — most prefer a quiet space.",
-    "🗓️ Don’t schedule your tattoo right before a beach trip, wedding, or major event.",
-    "🤒 If you’re sick, reschedule — your body needs to focus on healing, not ink.",
-    "⚠️ If you take medications or have conditions, tell your artist ahead of time.",
-    "💊 Avoid aspirin or blood thinners unless medically necessary.",
-    "❓ Ask questions! Good artists love educating their clients.",
-    "💵 Tip your artist — tattoos are custom, physical, and personal work.",
-    "✏️ Want to change something? Say so *before* the stencil goes on!",
-    "❤️ Take care of your tattoo and it’ll stay sharp, bold, and beautiful for years."
-  ];
-
-  function showRandomTip() {
-    const tipEl = document.getElementById("tip-content");
-    if (!tipEl) return;
-    const randomIndex = Math.floor(Math.random() * tattooTips.length);
-    tipEl.textContent = tattooTips[randomIndex];
-  }
-
-  showRandomTip();
-  // Optional auto-rotate every 10 seconds:
-  // setInterval(showRandomTip, 10000);
-});
-
-
-
   document.getElementById("prev-page")?.addEventListener("click", () => {
     if (currentPage > 1) fetchShops(--currentPage);
   });
@@ -210,4 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Unable to load shops:", e);
     document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
   }
+
+  // ✅ Show random tip once DOM is ready
+  showRandomTip();
 });
