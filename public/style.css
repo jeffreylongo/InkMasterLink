@@ -201,13 +201,16 @@ header {
   }
 }
 
+.blog-preview {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
 }
 
 .blog-card {
@@ -231,4 +234,16 @@ header {
 
 .blog-content h3 {
   margin-top: 0;
+}
+
+.read-more {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #0077cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.read-more:hover {
+  text-decoration: underline;
 }
