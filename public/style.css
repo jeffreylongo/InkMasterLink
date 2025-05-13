@@ -143,3 +143,61 @@ header {
   cursor: pointer;
 }
 
+.blog-preview {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 1rem;
+  align-items: center;
+}
+
+.blog-thumbnail {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.blog-content {
+  flex: 1;
+}
+
+.blog-content h3 {
+  margin-top: 0;
+}
+
+.read-more,
+.view-all-articles {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #0077cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.read-more:hover,
+.view-all-articles:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .blog-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .blog-thumbnail {
+    width: 100%;
+    height: auto;
+  }
+}
+
