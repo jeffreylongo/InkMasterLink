@@ -305,3 +305,45 @@ header {
   text-align: center;
 }
 
+.newsletter-section {
+  text-align: center;
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+#newsletter-form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#newsletter-form input[type="email"] {
+  padding: 0.75rem;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+#newsletter-form button {
+  padding: 0.75rem 1rem;
+  background-color: #0066cc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.newsletter-status {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #006600;
+}
+
