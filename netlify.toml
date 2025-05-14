@@ -5,6 +5,7 @@
 
 [functions]
   included_files = ["netlify/functions/tattoo_shops.json"]
+  directory = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
