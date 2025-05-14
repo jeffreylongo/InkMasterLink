@@ -206,36 +206,3 @@ document.addEventListener("DOMContentLoaded", async () => {
   showRandomTip();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("newsletter-form");
-  const emailInput = document.getElementById("newsletter-email");
-  const status = document.getElementById("newsletter-status");
-
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = emailInput.value.trim();
-
-      if (!email) return;
-
-      try {
-        const res = await fetch("/.netlify/functions/newsletter", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-
-        const result = await res.json();
-        if (res.ok) {
-          status.textContent = "Thanks for subscribing!";
-          emailInput.value = "";
-        } else {
-          status.textContent = "Something went wrong. Please try again.";
-        }
-      } catch (err) {
-        status.textContent = "Error submitting form.";
-      }
-    });
-  }
-});
-
