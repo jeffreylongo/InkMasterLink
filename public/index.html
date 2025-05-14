@@ -90,22 +90,26 @@
   <h2>📥 Join Our Newsletter</h2>
   <p>Get tattoo tips, artist highlights, and event news in your inbox.</p>
 
-  <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="newsletter-form" netlify>
+  <form name="newsletter" method="POST" netlify netlify-honeypot="bot-field" action="/thank-you/">
     <input type="hidden" name="form-name" value="newsletter" />
     <p class="hidden">
       <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
     </p>
+
     <div class="form-row">
-      <input type="email" name="email" id="newsletter-email" placeholder="Your email address" required />
+      <input
+        type="email"
+        name="email"
+        id="newsletter-email"
+        placeholder="Your email address"
+        required
+      />
       <button type="submit">Subscribe</button>
     </div>
   </form>
 
   <p id="newsletter-status" class="newsletter-status"></p>
 </section>
-
-
-
   
 <section id="browse-locations">
   <h2>Browse by Location</h2>
