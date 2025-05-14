@@ -206,3 +206,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   showRandomTip();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const newsletterForm = document.getElementById("newsletter-form");
+  if (newsletterForm) {
+    newsletterForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(newsletterForm);
+      const encoded = new URLSearchParams(formData).toString();
+
+      fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encoded
+      })
+        .then(() => {
+          window.location.href = "/thank-you/";
+        })
+        .catch((err) => {
+          const status = document.getElementById("newsletter-status");
+          if (status) {
+            status.textContent = "Something went wrong. Please try again.";
+          }
+          console.error("Newsletter form error:", err);
+        });
+    });
+  }
+});
