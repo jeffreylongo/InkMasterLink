@@ -400,3 +400,12 @@ header {
 .hidden {
   display: none;
 }
+
+.blog-header-image {
+  width: 100%;
+  max-width: 800px;
+  display: block;
+  margin: 0 auto 2rem auto;
+  border-radius: 6px;
+}
+
