@@ -466,3 +466,11 @@ main.about ul li {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.page-content {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  line-height: 1.6;
+}
+
