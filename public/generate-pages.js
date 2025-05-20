@@ -72,39 +72,20 @@ try {
     }
   });
 
-  // Add static and blog pages to sitemap
-  const staticPages = [
-    "", // homepage
-    "about.html",
-    "blog.html",
-    "contact.html",
-    "privacy.html",
-    "thank-you/",
-
-    // Blog posts
-    "blog/tattoo-aftercare.html",
-    "blog/first-tattoo-questions.html",
-    "blog/tattoo-healing-timeline.html",
-    "blog/choose-right-tattoo-shop.html",
-    "blog/current-tattoo-trends.html"
-  ];
-
-  staticPages.forEach(path => {
-    sitemapUrls.push(`<url><loc>https://inkmasterlink.netlify.app/${path}</loc></url>`);
-  });
-
-  // Write sitemap.xml
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://inkmasterlink.netlify.app/</loc></url>
+<url><loc>https://inkmasterlink.netlify.app/blog.html</loc></url>
+<url><loc>https://inkmasterlink.netlify.app/about.html</loc></url>
+<url><loc>https://inkmasterlink.netlify.app/contact.html</loc></url>
+<url><loc>https://inkmasterlink.netlify.app/privacy-policy.html</loc></url>
 ${sitemapUrls.join("\n")}
 </urlset>`;
   fs.writeFileSync(sitemapPath, sitemap, "utf-8");
 
-  // Write locations.html
   const locationsListHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
   fs.writeFileSync(locationsListPath, locationsListHtml, "utf-8");
 
 } catch (err) {
-  console.error("❌ Failed in generate-pages.js:", err);
   process.exit(1);
 }
