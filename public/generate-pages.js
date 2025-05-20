@@ -9,7 +9,6 @@ try {
   const sitemapPath = path.resolve(__dirname, "sitemap.xml");
   const locationsListPath = path.resolve(__dirname, "partials", "locations.html");
 
-  // Ensure necessary folders exist
   if (!fs.existsSync(publicCityDir)) fs.mkdirSync(publicCityDir, { recursive: true });
   if (!fs.existsSync(path.dirname(locationsListPath))) fs.mkdirSync(path.dirname(locationsListPath), { recursive: true });
 
@@ -41,36 +40,27 @@ try {
   <title>${title}</title>
   <meta name="description" content="${description}" />
   <link rel="stylesheet" href="/style.css" />
-
-  <!-- Open Graph -->
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${pageUrl}" />
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${description}" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2496536067852316"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2496536067852316" crossorigin="anonymous"></script>
 </head>
 <body>
   <header><h1>${title}</h1></header>
-
   <main id="city-shop-list" data-city="${shop.city}" data-state="${shop.state}">
     <p>${description}</p>
     <p><a href="/">Back to main directory</a></p>
   </main>
-
-  <!-- Modal -->
   <div id="modal-overlay" class="modal-overlay" style="display:none;">
     <div class="modal-content">
       <button class="modal-close">&times;</button>
       <div id="modal-details"></div>
     </div>
   </div>
-
   <script src="/script.js" defer></script>
 </body>
 </html>`;
@@ -82,17 +72,39 @@ try {
     }
   });
 
-  // Write sitemap
+  // Add static and blog pages to sitemap
+  const staticPages = [
+    "", // homepage
+    "about.html",
+    "blog.html",
+    "contact.html",
+    "privacy.html",
+    "thank-you/",
+
+    // Blog posts
+    "blog/tattoo-aftercare.html",
+    "blog/first-tattoo-questions.html",
+    "blog/tattoo-healing-timeline.html",
+    "blog/choose-right-tattoo-shop.html",
+    "blog/current-tattoo-trends.html"
+  ];
+
+  staticPages.forEach(path => {
+    sitemapUrls.push(`<url><loc>https://inkmasterlink.netlify.app/${path}</loc></url>`);
+  });
+
+  // Write sitemap.xml
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapUrls.join("\n")}
 </urlset>`;
   fs.writeFileSync(sitemapPath, sitemap, "utf-8");
 
-  // Write location list fragment
+  // Write locations.html
   const locationsListHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
   fs.writeFileSync(locationsListPath, locationsListHtml, "utf-8");
 
 } catch (err) {
+  console.error("❌ Failed in generate-pages.js:", err);
   process.exit(1);
 }
