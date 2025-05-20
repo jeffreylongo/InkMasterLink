@@ -194,6 +194,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentPage < totalPages) fetchShops(++currentPage);
   });
 
+  // ✅ Auto-apply filters based on static page data
+  const shopListEl = document.getElementById("shop-list");
+  if (shopListEl) {
+    const preCity = shopListEl.getAttribute("data-city");
+    const preState = shopListEl.getAttribute("data-state");
+    if (preCity) filters.city = preCity;
+    if (preState) filters.state = preState;
+  }
+
   try {
     await loadStatesDropdown();
     await fetchShops(currentPage);
@@ -202,7 +211,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("shop-list").innerHTML = "<p>Unable to load shops.</p>";
   }
 
-  // ✅ Show random tip once DOM is ready
   showRandomTip();
 });
 
