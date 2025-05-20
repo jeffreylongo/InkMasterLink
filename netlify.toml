@@ -3,6 +3,11 @@
   functions = "netlify/functions"
   command = "echo 'Building site...' && node public/generate-pages.js"
 
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+  command = "node public/generate-pages.js"
+
 [functions]
   included_files = ["netlify/functions/tattoo_shops.json"]
   directory = "netlify/functions"
