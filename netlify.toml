@@ -1,11 +1,6 @@
 [build]
   publish = "public"
   functions = "netlify/functions"
-  command = "echo 'Building site...' && node public/generate-pages.js"
-
-[build]
-  publish = "public"
-  functions = "netlify/functions"
   command = "node public/generate-pages.js"
 
 [functions]
