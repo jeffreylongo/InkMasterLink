@@ -31,7 +31,7 @@ try {
 
       const title = `Top Tattoo Shops in ${shop.city}, ${shop.state}`;
       const description = `Browse verified tattoo artists in ${shop.city}, ${shop.state}. Filter by rating, reviews, and location.`;
-      const pageUrl = `https://inkmasterlink.com/city/${fileName}`;
+      const pageUrl = `https://inkmasterlink.netlify.app/city/${fileName}`;
 
       const html = `<!DOCTYPE html>
 <html lang="en">
@@ -42,15 +42,18 @@ try {
   <meta name="description" content="${description}" />
   <link rel="stylesheet" href="/style.css" />
 
+  <!-- Open Graph -->
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${pageUrl}" />
 
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${description}" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2496536067852316" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2496536067852316"
+     crossorigin="anonymous"></script>
 </head>
 <body>
   <header><h1>${title}</h1></header>
@@ -60,6 +63,7 @@ try {
     <p><a href="/">Back to main directory</a></p>
   </main>
 
+  <!-- Modal -->
   <div id="modal-overlay" class="modal-overlay" style="display:none;">
     <div class="modal-content">
       <button class="modal-close">&times;</button>
@@ -72,35 +76,23 @@ try {
 </html>`;
 
       fs.writeFileSync(filePath, html, "utf-8");
-      console.log(`✅ Created ${fileName}`);
 
       sitemapUrls.push(`<url><loc>${pageUrl}</loc></url>`);
       listItems.push(`<li><a href="/city/${fileName}">Tattoo Shops in ${shop.city}, ${shop.state}</a></li>`);
     }
   });
 
-  // Static pages to include in sitemap
-  const staticPages = [
-    "https://inkmasterlink.com/",
-    "https://inkmasterlink.com/about.html",
-    "https://inkmasterlink.com/contact.html",
-    "https://inkmasterlink.com/privacy-policy.html",
-    "https://inkmasterlink.com/blog.html"
-  ];
-  staticPages.forEach(url => sitemapUrls.push(`<url><loc>${url}</loc></url>`));
-
+  // Write sitemap
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapUrls.join("\n")}
 </urlset>`;
   fs.writeFileSync(sitemapPath, sitemap, "utf-8");
-  console.log("✅ Sitemap generated");
 
+  // Write location list fragment
   const locationsListHtml = `<ul>\n${listItems.sort().join("\n")}\n</ul>`;
   fs.writeFileSync(locationsListPath, locationsListHtml, "utf-8");
-  console.log("✅ locations.html generated");
 
 } catch (err) {
-  console.error("❌ Failed in generate-pages.js:", err);
   process.exit(1);
 }
