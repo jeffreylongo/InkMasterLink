@@ -51,16 +51,46 @@ try {
 </head>
 <body>
   <header><h1>${title}</h1></header>
-  <main id="city-shop-list" data-city="${shop.city}" data-state="${shop.state}">
+
+  <main>
     <p>${description}</p>
-    <p><a href="/">Back to main directory</a></p>
+    <p><a href="/">← Back to main directory</a></p>
+
+    <div id="filters">
+      <input type="text" id="filter-name" placeholder="Shop Name"/>
+      <input type="text" id="filter-zip" placeholder="ZIP Code"/>
+      <select id="filter-city"><option value="">All Cities</option></select>
+      <select id="filter-state"><option value="">All States</option></select>
+      <select id="filter-rating">
+        <option value="">Any Rating</option>
+        <option value="4.5">4.5+</option>
+        <option value="4.0">4.0+</option>
+        <option value="3.5">3.5+</option>
+        <option value="3.0">3.0+</option>
+      </select>
+      <button id="clear-filters">Clear Filters</button>
+    </div>
+
+    <div id="shop-list" data-city="${shop.city}" data-state="${shop.state}">
+      <div style="display: flex; justify-content: center; width: 100%; grid-column: 1 / -1;">
+        <p>Use the filters above to find a tattoo shop.</p>
+      </div>
+    </div>
+
+    <div id="pagination" class="pagination">
+      <button id="prev-page">Previous</button>
+      <span id="page-info"></span>
+      <button id="next-page">Next</button>
+    </div>
   </main>
+
   <div id="modal-overlay" class="modal-overlay" style="display:none;">
     <div class="modal-content">
       <button class="modal-close">&times;</button>
       <div id="modal-details"></div>
     </div>
   </div>
+
   <script src="/script.js" defer></script>
 </body>
 </html>`;
