@@ -17,3 +17,8 @@
   to = "https://www.inkmasterlink.com/:splat"
   status = 301
   force = true
+
+[[headers]]
+for = "/*"
+  [headers.values]
+  X-Robots-Tag = "all"
