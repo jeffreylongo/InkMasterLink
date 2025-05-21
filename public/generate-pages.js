@@ -30,7 +30,9 @@ try {
 
       const title = `Top Tattoo Shops in ${shop.city}, ${shop.state}`;
       const description = `Browse verified tattoo artists in ${shop.city}, ${shop.state}. Filter by rating, reviews, and location.`;
-      const pageUrl = `https://inkmasterlink.netlify.app/city/${fileName}`;
+      const siteRoot = "https://www.inkmasterlink.com";
+      const pageUrl = `${siteRoot}/city/${fileName}`;
+
 
       const html = `<!DOCTYPE html>
 <html lang="en">
