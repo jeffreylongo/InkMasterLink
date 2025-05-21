@@ -22,3 +22,14 @@
 for = "/*"
   [headers.values]
   X-Robots-Tag = "all"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+  Cache-Control = "no-cache"
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+  force = true
