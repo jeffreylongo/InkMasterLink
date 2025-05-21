@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Core pages -->
+  <url><loc>https://www.inkmasterlink.com/</loc></url>
+  <url><loc>https://www.inkmasterlink.com/blog.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/about.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/contact.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/privacy-policy.html</loc></url>
+
+  <!-- Blog articles -->
+  <url><loc>https://www.inkmasterlink.com/blog/tattoo-aftercare.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/blog/first-tattoo-questions.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/blog/tattoo-healing-timeline.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/blog/choose-right-tattoo-shop.html</loc></url>
+  <url><loc>https://www.inkmasterlink.com/blog/current-tattoo-trends.html</loc></url>
+
+  <!-- Thank-you confirmation page -->
+  <url><loc>https://www.inkmasterlink.com/thank-you/</loc></url>
+
+  <!-- If you want to include location pages too, paste them below this line -->
+  <!-- Example: -->
+  <!-- <url><loc>https://www.inkmasterlink.com/city/los-angeles-ca.html</loc></url> -->
+</urlset>
