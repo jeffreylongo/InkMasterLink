@@ -106,11 +106,11 @@ try {
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://inkmasterlink.netlify.app/</loc></url>
-<url><loc>https://inkmasterlink.netlify.app/blog.html</loc></url>
-<url><loc>https://inkmasterlink.netlify.app/about.html</loc></url>
-<url><loc>https://inkmasterlink.netlify.app/contact.html</loc></url>
-<url><loc>https://inkmasterlink.netlify.app/privacy-policy.html</loc></url>
+<url><loc>https://inkmasterlink.com</loc></url>
+<url><loc>https://inkmasterlink.com/blog.html</loc></url>
+<url><loc>https://inkmasterlink.com/about.html</loc></url>
+<url><loc>https://inkmasterlink.com/contact.html</loc></url>
+<url><loc>https://inkmasterlink.com/privacy-policy.html</loc></url>
 ${sitemapUrls.join("\n")}
 </urlset>`;
   fs.writeFileSync(sitemapPath, sitemap, "utf-8");
