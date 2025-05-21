@@ -13,11 +13,6 @@
   status = 200
 
 [[redirects]]
-  from = "/thank-you"
-  to = "/thank-you.html"
-  status = 200
-
-[[redirects]]
   from = "https://inkmasterlink.com/*"
   to = "https://www.inkmasterlink.com/:splat"
   status = 301
