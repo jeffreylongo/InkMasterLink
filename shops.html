@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tattoo Shops Near You | Find Local Tattoo Parlors by City & State</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse 19,268 tattoo shops across all 50 states. Find top-rated tattoo parlors in your city with reviews, photos, and contact info. Search by location, style, and rating.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('shop.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+    }
+    .logo {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #ffffff;
+      text-shadow: 0 0 10px #ff0099, 0 0 20px #ff0099;
+    }
+    nav a {
+      margin: 0 15px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1em;
+      transition: all 0.3s;
+    }
+    nav a:hover {
+      color: #ff0099;
+      text-shadow: 0 0 5px #ff0099;
+    }
+    .page-header {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      margin: 20px;
+      border-radius: 15px;
+    }
+    .page-title {
+      font-size: 2.5em;
+      margin-bottom: 15px;
+      color: #ff0099;
+      text-shadow: 0 0 10px #ff0099;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      margin: 20px;
+      border-radius: 10px;
+    }
+    .filter-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #ff0099;
+      color: #ffffff;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+    }
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .shop-card {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255, 0, 153, 0.3);
+    }
+    .shop-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(255, 0, 153, 0.4);
+    }
+    .shop-image {
+      height: 200px;
+      background: url('shop.jpeg') center/cover;
+      position: relative;
+    }
+    .shop-info {
+      padding: 20px;
+    }
+    .shop-name {
+      font-size: 1.3em;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #ff0099;
+    }
+    .shop-location {
+      color: #cccccc;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
+    .shop-rating {
+      color: #ffd700;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+    .view-button {
+      background: linear-gradient(135deg, #ff0099 0%, #ff6b6b 100%);
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    .view-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 0, 153, 0.4);
+    }
+    .shop-count {
+      text-align: center;
+      color: #cccccc;
+      margin: 20px 0;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Ink Master Link</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="artists.html">Artists</a>
+      <a href="shops.html">Shops</a>
+      <a href="guestspots.html">Guest Spots</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1 class="page-title">Find Tattoo Shops Near You - 19,268 Locations</h1>
+    <p>Browse verified tattoo shops across all 50 states and major cities.</p>
+  </div>
+
+  <div class="filter-bar">
+    <select class="filter-select" id="stateFilter">
+      <option value="">All States</option>
+    </select>
+    <select class="filter-select" id="cityFilter">
+      <option value="">All Cities</option>
+    </select>
+    <select class="filter-select" id="ratingFilter">
+      <option value="">Any Rating</option>
+      <option value="4.5">4.5+ Stars</option>
+      <option value="4">4+ Stars</option>
+      <option value="3.5">3.5+ Stars</option>
+    </select>
+  </div>
+
+  <div class="shop-count" id="shopCount">Loading shops...</div>
+
+  <div class="shop-grid" id="shopGrid">
+    <!-- Shops will be populated here -->
+  </div>
+
+  <script>
+    // Real shops data from database - FIXED VERSION
+    const shops = [
+      {id: 2188, name: "The Copper Fox Studio", location: {city: "Sayville", state: "NY"}, rating: 50, review_count: 48},
+      {id: 16068, name: "Venom Tattoo Parlor", location: {city: "Cedar City", state: "UT"}, rating: 50, review_count: 51},
+      {id: 12022, name: "Tattoo City by Larry Brogan", location: {city: "Lockport", state: "IL"}, rating: 48, review_count: 32},
+      {id: 9614, name: "The Valparaiso Tattoo Collective", location: {city: "Valparaiso", state: "IN"}, rating: 50, review_count: 25},
+      {id: 9805, name: "Primal Ink Tattoo Studio", location: {city: "Madison", state: "IN"}, rating: 37, review_count: 45},
+      {id: 3560, name: "Art3's", location: {city: "Berwick", state: "PA"}, rating: 49, review_count: 10},
+      {id: 13283, name: "Inked Angels", location: {city: "Bogalusa", state: "LA"}, rating: 50, review_count: 12},
+      {id: 14811, name: "Twisted Tattoo", location: {city: "San Antonio", state: "TX"}, rating: 49, review_count: 35},
+      {id: 9097, name: "Bound For Glory Ink Tattoo Company", location: {city: "Canton", state: "OH"}, rating: 45, review_count: 29},
+      {id: 18710, name: "Lighter shade of grey", location: {city: "Pendleton", state: "OR"}, rating: 41, review_count: 51},
+      {id: 2222, name: "Ransom Tattoo Gallery", location: {city: "Ballston Spa", state: "NY"}, rating: 50, review_count: 23},
+      {id: 7437, name: "Epic ink llc", location: {city: "Haleyville", state: "AL"}, rating: 46, review_count: 54},
+      {id: 6741, name: "Chapel Tattoos Miami", location: {city: "Miami Beach", state: "FL"}, rating: 49, review_count: 15},
+      {id: 13465, name: "Studio 621 Tattoo", location: {city: "Pearcy", state: "AR"}, rating: 49, review_count: 37},
+      {id: 13610, name: "Black Cross Tattoo", location: {city: "Russellville", state: "AR"}, rating: 48, review_count: 5},
+      {id: 18599, name: "Harbor Tattoo Gallery", location: {city: "Brookings", state: "OR"}, rating: 45, review_count: 17},
+      {id: 6441, name: "Ocean Wave Tattoo", location: {city: "Navarre", state: "FL"}, rating: 49, review_count: 42},
+      {id: 10314, name: "Outlaw Tattoo Co", location: {city: "Hastings", state: "MI"}, rating: 45, review_count: 18},
+      {id: 13387, name: "Tattoo Paradise", location: {city: "Shreveport", state: "LA"}, rating: 45, review_count: 46},
+      {id: 1555, name: "Mayan Art Tattoo", location: {city: "Trenton", state: "NJ"}, rating: 50, review_count: 5},
+      {id: 5267, name: "Custom Tattoo Co", location: {city: "Havelock", state: "NC"}, rating: 49, review_count: 33},
+      {id: 1376, name: "Body Art World Tattooing", location: {city: "Long Branch", state: "NJ"}, rating: 44, review_count: 47},
+      {id: 6723, name: "Inkpacto Tattoo Studio", location: {city: "Coral Gables", state: "FL"}, rating: 50, review_count: 50},
+      {id: 3323, name: "Boomtown Tattoo Studio", location: {city: "York", state: "PA"}, rating: 50, review_count: 30},
+      {id: 10290, name: "Cowboys Ta2z", location: {city: "Battle Creek", state: "MI"}, rating: 41, review_count: 9},
+      {id: 16382, name: "BlackGold Tattoo", location: {city: "Prescott", state: "AZ"}, rating: 49, review_count: 50},
+      {id: 10338, name: "Black Pearl Tattoo", location: {city: "Three Rivers", state: "MI"}, rating: 46, review_count: 22},
+      {id: 18092, name: "Tattoo Betty's", location: {city: "Jackson", state: "CA"}, rating: 46, review_count: 52},
+      {id: 17960, name: "Main Street Tattoo and Body Piercing Merced", location: {city: "Merced", state: "CA"}, rating: 44, review_count: 38},
+      {id: 12899, name: "VetInk'd", location: {city: "Forsyth", state: "MO"}, rating: 50, review_count: 52},
+      {id: 11100, name: "Don Sawall's Tattos", location: {city: "Shawano", state: "WI"}, rating: 49, review_count: 20},
+      {id: 15743, name: "SKIN ART Tattoo", location: {city: "American Falls", state: "ID"}, rating: 35, review_count: 46},
+      {id: 16471, name: "Albuquerque Ink Tattoo", location: {city: "Albuquerque", state: "NM"}, rating: 46, review_count: 9},
+      {id: 4883, name: "Sacred Art Tattoo & Body Piercing", location: {city: "Reidsville", state: "NC"}, rating: 47, review_count: 29},
+      {id: 15941, name: "Third Rock Creations", location: {city: "Tooele", state: "UT"}, rating: 48, review_count: 38},
+      {id: 6722, name: "Creative Souls Tattoos & Piercings", location: {city: "Miami", state: "FL"}, rating: 49, review_count: 8},
+      {id: 2057, name: "Big Vibe Ink", location: {city: "Jamaica", state: "NY"}, rating: 50, review_count: 49},
+      {id: 4156, name: "NeverMore Tattoo Studio", location: {city: "Pasadena", state: "MD"}, rating: 47, review_count: 53},
+      {id: 8498, name: "Downtown Classic Tattoo", location: {city: "Paducah", state: "KY"}, rating: 50, review_count: 26},
+      {id: 4555, name: "Sub Rosa Studios", location: {city: "Christiansburg", state: "VA"}, rating: 48, review_count: 43},
+      {id: 18520, name: "Addictions BodyArt Body Piercing & Tattoo", location: {city: "Salem", state: "OR"}, rating: 47, review_count: 42},
+      {id: 19206, name: "Koby Hardy Piercing & Tattoo", location: {city: "Clarkston", state: "WA"}, rating: 48, review_count: 44},
+      {id: 12603, name: "Stattus Error", location: {city: "Palmyra", state: "MO"}, rating: 50, review_count: 11},
+      {id: 11120, name: "Sonic Tattoos", location: {city: "Green Bay", state: "WI"}, rating: 49, review_count: 17},
+      {id: 3058, name: "Liars and Thieves Tattoo and Piercing Lounge", location: {city: "Brockway", state: "PA"}, rating: 50, review_count: 22},
+      {id: 6149, name: "Dreaming Art Tattoos", location: {city: "Jesup", state: "GA"}, rating: 49, review_count: 19},
+      {id: 18823, name: "Obsidian Heart Ink", location: {city: "Burien", state: "WA"}, rating: 49, review_count: 25},
+      {id: 12907, name: "Golden Heart Tattoo", location: {city: "Nixa", state: "MO"}, rating: 49, review_count: 33},
+      {id: 2428, name: "Underground Ink", location: {city: "Auburn", state: "NY"}, rating: 47, review_count: 6},
+      {id: 3699, name: "Inkfest Tattoos LLC", location: {city: "Ridley Park", state: "PA"}, rating: 50, review_count: 42}
+    ];
+
+    let filteredShops = [...shops];
+
+    function createShopCard(shop) {
+      const shopCard = document.createElement('div');
+      shopCard.className = 'shop-card';
+      
+      const displayRating = (shop.rating / 10).toFixed(1);
+      
+      shopCard.innerHTML = `
+        <div class="shop-image"></div>
+        <div class="shop-info">
+          <h3 class="shop-name">${shop.name}</h3>
+          <div class="shop-location">${shop.location.city}, ${shop.location.state}</div>
+          <div class="shop-rating">★ ${displayRating} (${shop.review_count} reviews)</div>
+          <a href="shop-detail.html?id=${shop.id}" class="view-button">View Shop</a>
+        </div>
+      `;
+      
+      return shopCard;
+    }
+
+    function populateShopsGrid(shopsToShow) {
+      const shopGrid = document.getElementById('shopGrid');
+      shopGrid.innerHTML = '';
+      
+      if (shopsToShow.length === 0) {
+        shopGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; margin: 50px 0; color: #cccccc;">No shops found matching your criteria.</p>';
+        return;
+      }
+      
+      document.getElementById('shopCount').textContent = `Showing ${shopsToShow.length} shops`;
+      
+      shopsToShow.forEach(shop => {
+        shopGrid.appendChild(createShopCard(shop));
+      });
+    }
+
+    function populateStatesFilter() {
+      const stateFilter = document.getElementById('stateFilter');
+      const states = [...new Set(shops.map(shop => shop.location.state))].sort();
+      
+      states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state;
+        stateFilter.appendChild(option);
+      });
+    }
+
+    function populateCitiesFilter(selectedState) {
+      const cityFilter = document.getElementById('cityFilter');
+      cityFilter.innerHTML = '<option value="">All Cities</option>';
+      
+      if (!selectedState) return;
+      
+      const cities = [...new Set(
+        shops
+          .filter(shop => shop.location.state === selectedState)
+          .map(shop => shop.location.city)
+      )].sort();
+      
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        cityFilter.appendChild(option);
+      });
+    }
+
+    function filterShops() {
+      const stateValue = document.getElementById('stateFilter').value;
+      const cityValue = document.getElementById('cityFilter').value;
+      const ratingValue = parseFloat(document.getElementById('ratingFilter').value || 0);
+      
+      filteredShops = shops.filter(shop => {
+        if (stateValue && shop.location.state !== stateValue) return false;
+        if (cityValue && shop.location.city !== cityValue) return false;
+        if (ratingValue > 0 && (shop.rating / 10) < ratingValue) return false;
+        return true;
+      });
+      
+      populateShopsGrid(filteredShops);
+    }
+
+    // Event listeners
+    document.getElementById('stateFilter').addEventListener('change', (e) => {
+      populateCitiesFilter(e.target.value);
+      filterShops();
+    });
+
+    document.getElementById('cityFilter').addEventListener('change', filterShops);
+    document.getElementById('ratingFilter').addEventListener('change', filterShops);
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      populateStatesFilter();
+      populateShopsGrid(shops);
+    });
+  </script>
+</body>
+</html>
