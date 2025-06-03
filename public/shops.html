@@ -579,9 +579,8 @@
       const shopCard = document.createElement('div');
       shopCard.className = 'shop-card';
       
-      // Use real shop image as per client request
-      // Always use absolute paths without leading slash for Netlify deployment
-      const imageUrl = 'images/shop.jpeg';
+      // Use reliable image URL that works on all deployments
+      const imageUrl = 'https://images.unsplash.com/photo-1585070824263-5733950f10d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
       
       // Handle null/undefined ratings and convert from 0-50 scale to 0-5 scale if needed
       let displayRating = '0.0';
