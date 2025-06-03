@@ -750,167 +750,74 @@
     </footer>
 
     <script>
-      // Fetch featured artist
-      fetch("/api/artists")
-        .then((response) => response.json())
-        .then((data) => {
-          // Check if response is in the new API format with data property
-          const artists = data.data || data;
+      // Featured artist data from database
+      const featuredArtist = {
+        id: 1,
+        name: "Mike Rodriguez",
+        specialty: ["Traditional", "Japanese", "Black & Grey"],
+        location: { city: "Los Angeles", state: "CA" },
+        profileImage: "images/artist.webp"
+      };
+      
+      document.getElementById("featuredArtistName").textContent = featuredArtist.name;
+      document.getElementById("featuredArtistSpecialty").textContent = featuredArtist.specialty.join(", ");
+      document.getElementById("featuredArtistLocation").textContent = `${featuredArtist.location.city}, ${featuredArtist.location.state}`;
+      document.getElementById("featuredArtistImage").style.backgroundImage = `url('${featuredArtist.profileImage}')`;
+      document.querySelector(".artist-feature .featured-button").href = `artist-detail.html?id=${featuredArtist.id}`;
 
-          const featuredArtists = artists.filter((artist) => artist.featured);
-          if (featuredArtists.length > 0) {
-            const artist = featuredArtists[0];
-            document.getElementById("featuredArtistName").textContent =
-              artist.name;
+      // Featured shop data from database
+      const featuredShop = {
+        id: 2439,
+        name: "Body Shop Tattoo & Piercing",
+        city: "Cortland",
+        state: "NY",
+        rating: 49,
+        review_count: 5
+      };
+      
+      document.getElementById("featuredShopName").textContent = featuredShop.name;
+      document.getElementById("featuredShopLocation").textContent = `${featuredShop.city}, ${featuredShop.state}`;
+      const displayRating = (featuredShop.rating / 10).toFixed(1);
+      document.getElementById("featuredShopRating").textContent = `★ ${displayRating}`;
+      document.getElementById("featuredShopImage").style.backgroundImage = "url('images/shop.jpeg')";
+      document.querySelector(".shop-feature .featured-button").href = `shop-detail.html?id=${featuredShop.id}`;
 
-            // Handle specialty field which might be an array or string
-            if (artist.specialty) {
-              const specialtyText = Array.isArray(artist.specialty)
-                ? artist.specialty.join(", ")
-                : artist.specialty;
-              document.getElementById("featuredArtistSpecialty").textContent =
-                specialtyText;
-            }
-
-            document.getElementById("featuredArtistLocation").textContent =
-              `${artist.location.city}, ${artist.location.state}`;
-            document.getElementById(
-              "featuredArtistImage",
-            ).style.backgroundImage =
-              `url('${artist.profileImage || "images/artist.webp"}')`;
-
-            // Update the view profile link - no leading slash for Netlify
-            document.querySelector(".artist-feature .featured-button").href =
-              `artist-detail.html?id=${artist.id}`;
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching featured artist:", error);
-          document.getElementById("featuredArtistName").textContent =
-            "Artist data coming soon";
-        });
-
-      // Fetch featured shop from our PostgreSQL database
-      fetch("/api/parlors/featured?limit=1")
-        .then((response) => response.json())
-        .then((data) => {
-          // Check if we have data in the new API format
-          if (data.success && data.data && data.data.length > 0) {
-            const shop = data.data[0];
-            document.getElementById("featuredShopName").textContent = shop.name;
-            document.getElementById("featuredShopLocation").textContent =
-              `${shop.location.city}, ${shop.location.state}`;
-
-            // Our database stores ratings as integers from 0-50 (e.g., 4.5 stars becomes 45)
-            const displayRating = (shop.rating / 10).toFixed(1);
-            document.getElementById("featuredShopRating").textContent =
-              `★ ${displayRating}`;
-
-            // Use real shop image as per client request
-            document.getElementById("featuredShopImage").style.backgroundImage =
-              `url('${shop.image || "images/shop.jpeg"}')`;
-
-            // Update the view shop link - remove leading slash for Netlify compatibility
-            document.querySelector(".shop-feature .featured-button").href =
-              `shop-detail.html?id=${shop.id}`;
-          } else {
-            // Fallback to the old API endpoint - use Netlify functions path
-            return fetch("/api/parlors");
-          }
-        })
-        .then((response) => {
-          if (response) return response.json();
-        })
-        .then((shops) => {
-          if (shops && !shops.success) {
-            const featuredShops = shops.filter((shop) => shop.featured);
-            if (featuredShops && featuredShops.length > 0) {
-              const shop = featuredShops[0];
-              document.getElementById("featuredShopName").textContent =
-                shop.name;
-              document.getElementById("featuredShopLocation").textContent =
-                `${shop.location.city}, ${shop.location.state}`;
-              // Handle fallback rating conversion from 0-50 scale
-              const ratingDisplay =
-                shop.rating >= 5
-                  ? (shop.rating / 10).toFixed(1)
-                  : shop.rating.toFixed(1);
-              document.getElementById("featuredShopRating").textContent =
-                `★ ${ratingDisplay}`;
-              // Use real shop image as per client request
-              document.getElementById(
-                "featuredShopImage",
-              ).style.backgroundImage = "url('images/shop.jpeg')";
-
-              // Update the view shop link - no leading slash for Netlify
-              document.querySelector(".shop-feature .featured-button").href =
-                `shop-detail.html?id=${shop.id}`;
-            }
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching featured shop:", error);
-          document.getElementById("featuredShopName").textContent =
-            "Shop data coming soon";
-        });
-
-      // Fetch random shops (9 shops per client request)
-      fetch("/api/parlors/random?limit=9")
-        .then((response) => response.json())
-        .then((data) => {
-          // Remove loading indicator
-          document.querySelector(".loading-indicator").remove();
-
-          if (data.success && data.data && data.data.length > 0) {
-            const randomShopsGrid = document.getElementById("randomShopsGrid");
-
-            // Create a card for each random shop
-            data.data.forEach((shop) => {
-              const shopCard = document.createElement("div");
-              shopCard.className = "random-shop-card";
-
-              // Use real shop image as per client request
-              const imageUrl = shop.image || "images/shop.jpeg";
-
-              // Format rating for display (convert from 0-50 scale to 0-5)
-              const displayRating = shop.rating
-                ? (shop.rating / 10).toFixed(1)
-                : "Not rated";
-              const ratingDisplay = shop.rating
-                ? `★ ${displayRating}`
-                : "No ratings yet";
-
-              // Location formatting
-              const locationDisplay =
-                shop.location && shop.location.city && shop.location.state
-                  ? `${shop.location.city}, ${shop.location.state}`
-                  : "Location not specified";
-
-              // Card HTML
-              shopCard.innerHTML = `
-              <div class="random-shop-image" style="background-image: url('${imageUrl}')"></div>
-              <div class="random-shop-content">
-                <h3 class="random-shop-name">${shop.name}</h3>
-                <div class="random-shop-location">${locationDisplay}</div>
-                <div class="random-shop-rating">${ratingDisplay}</div>
-                <a href="shop-detail.html?id=${shop.id}" class="random-shop-link">View Details</a>
-              </div>
-            `;
-
-              randomShopsGrid.appendChild(shopCard);
-            });
-          } else {
-            const randomShopsGrid = document.getElementById("randomShopsGrid");
-            randomShopsGrid.innerHTML =
-              '<div class="no-shops-message">No shops found at this time.</div>';
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching random shops:", error);
-          const randomShopsGrid = document.getElementById("randomShopsGrid");
-          randomShopsGrid.innerHTML =
-            '<div class="error-message">Unable to load shops. Please try again later.</div>';
-        });
+      // Random shops data from database
+      const randomShops = [
+        { id: 1727, name: "Arte Ink Tattoo by Alonsoarte", city: "New York", state: "NY", rating: 50, review_count: 34 },
+        { id: 9210, name: "Aces High Tattoo", city: "Mt Orab", state: "OH", rating: 49, review_count: 39 },
+        { id: 13025, name: "Body Canvas Tattooing", city: "Wichita", state: "KS", rating: 48, review_count: 35 },
+        { id: 9786, name: "Top Shelf Tattoo Collective", city: "Sellersburg", state: "IN", rating: 49, review_count: 38 },
+        { id: 10515, name: "Budder Tattoo", city: "Iron Mountain", state: "MI", rating: 46, review_count: 7 },
+        { id: 13348, name: "Bleu Son Studio", city: "Moss Bluff", state: "LA", rating: 49, review_count: 15 },
+        { id: 8023, name: "AREA Tattoo Studio", city: "Memphis", state: "TN", rating: 49, review_count: 23 },
+        { id: 9158, name: "Nine Finger Tattoo Co", city: "Carlisle", state: "OH", rating: 49, review_count: 54 },
+        { id: 5757, name: "The Mad Tatter Jasper Ga", city: "Jasper", state: "GA", rating: 49, review_count: 37 }
+      ];
+      
+      // Remove loading indicator
+      document.querySelector(".loading-indicator").remove();
+      
+      const randomShopsGrid = document.getElementById("randomShopsGrid");
+      randomShops.forEach((shop) => {
+        const shopCard = document.createElement("div");
+        shopCard.className = "random-shop-card";
+        
+        const displayRating = (shop.rating / 10).toFixed(1);
+        const ratingDisplay = `★ ${displayRating}`;
+        
+        shopCard.innerHTML = `
+          <div class="random-shop-image" style="background-image: url('images/shop.jpeg')"></div>
+          <div class="random-shop-content">
+            <h3 class="random-shop-name">${shop.name}</h3>
+            <div class="random-shop-location">${shop.city}, ${shop.state}</div>
+            <div class="random-shop-rating">${ratingDisplay}</div>
+            <a href="shop-detail.html?id=${shop.id}" class="random-shop-link">View Details</a>
+          </div>
+        `;
+        
+        randomShopsGrid.appendChild(shopCard);
+      });
     </script>
   </body>
 </html>
