@@ -1,12 +1,10 @@
 // Netlify serverless function to handle API requests
-const { Pool, neonConfig } = require('@neondatabase/serverless');
-
-// Configure Neon for serverless environments
-neonConfig.fetchConnectionCache = true;
+const { Pool } = require('pg');
 
 // Create PostgreSQL connection pool using environment variable from Netlify
 const pool = new Pool({ 
   connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
   max: 1,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
