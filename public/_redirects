@@ -1,1 +1,2 @@
-
+/api/*  /.netlify/functions/parlors/:splat  200
+/*.html /index.html                       200
