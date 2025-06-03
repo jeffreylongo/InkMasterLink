@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1727,
+    "name": "Arte Ink Tattoo by Alonsoarte",
+    "city": "New York",
+    "state": "NY",
+    "rating": 50,
+    "review_count": 34
+  },
+  {
+    "id": 9210,
+    "name": "Aces High Tattoo",
+    "city": "Mt Orab",
+    "state": "OH",
+    "rating": 49,
+    "review_count": 39
+  },
+  {
+    "id": 13025,
+    "name": "Body Canvas Tattooing",
+    "city": "Wichita",
+    "state": "KS",
+    "rating": 48,
+    "review_count": 35
+  },
+  {
+    "id": 9786,
+    "name": "Top Shelf Tattoo Collective",
+    "city": "Sellersburg",
+    "state": "IN",
+    "rating": 49,
+    "review_count": 38
+  },
+  {
+    "id": 10515,
+    "name": "Budder Tattoo",
+    "city": "Iron Mountain",
+    "state": "MI",
+    "rating": 46,
+    "review_count": 7
+  },
+  {
+    "id": 13348,
+    "name": "Bleu Son Studio",
+    "city": "Moss Bluff",
+    "state": "LA",
+    "rating": 49,
+    "review_count": 15
+  },
+  {
+    "id": 8023,
+    "name": "AREA Tattoo Studio",
+    "city": "Memphis",
+    "state": "TN",
+    "rating": 49,
+    "review_count": 23
+  },
+  {
+    "id": 9158,
+    "name": "Nine Finger Tattoo Co",
+    "city": "Carlisle",
+    "state": "OH",
+    "rating": 49,
+    "review_count": 54
+  },
+  {
+    "id": 5757,
+    "name": "The Mad Tatter Jasper Ga",
+    "city": "Jasper",
+    "state": "GA",
+    "rating": 49,
+    "review_count": 37
+  }
+]
