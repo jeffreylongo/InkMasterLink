@@ -1,128 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.inkmasterlink.com/</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com</loc>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://inkmasterlink.com/shops.html</loc>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://inkmasterlink.com/artists.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.inkmasterlink.com/blog.html</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com/guestspots.html</loc>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://inkmasterlink.com/blog.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.inkmasterlink.com/about.html</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com/privacy.html</loc>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://inkmasterlink.com/contact.html</loc>
+    <lastmod>2025-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Location-specific pages for SEO -->
+  <url>
+    <loc>https://inkmasterlink.com/tattoo-shops-california.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.inkmasterlink.com/contact.html</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com/tattoo-shops-los-angeles.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.inkmasterlink.com/privacy-policy.html</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com/tattoo-shops-new-york.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.inkmasterlink.com/blog/tattoo-aftercare.html</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com/tattoo-shops-chicago.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.inkmasterlink.com/blog/first-tattoo-questions.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/blog/tattoo-healing-timeline.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/blog/choose-right-tattoo-shop.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/blog/current-tattoo-trends.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/amherst-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/chicopee-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/easthampton-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/east-longmeadow-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/feeding-hills-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/hadley-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/hatfield-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/holyoke-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/ludlow-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/northampton-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.inkmasterlink.com/city/palmer-ma.html</loc>
-    <lastmod>2025-05-21</lastmod>
+    <loc>https://inkmasterlink.com/tattoo-shops-miami.html</loc>
+    <lastmod>2025-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
