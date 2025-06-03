@@ -6,10 +6,6 @@ command = "npm install"
 directory = "functions"
 node_bundler = "esbuild"
 
-# Plugin to automatically install function dependencies
-[[plugins]]
-package = "@netlify/plugin-functions-install-core"
-
 # Environment variables for production
 [build.environment]
 NODE_VERSION = "18"
@@ -21,8 +17,13 @@ to = "/.netlify/functions/parlors/:splat"
 status = 200
 
 [[redirects]]
-from = "/api/*"
-to = "/.netlify/functions/parlors"
+from = "/api/artists"
+to = "/.netlify/functions/artists"
+status = 200
+
+[[redirects]]
+from = "/api/artists/*"
+to = "/.netlify/functions/artists/:splat"
 status = 200
 
 # SPA fallback for client-side routing
