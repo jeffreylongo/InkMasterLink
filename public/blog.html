@@ -1,70 +1,598 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ink Master Blog</title>
-  <link rel="stylesheet" href="/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Ink Master Link</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 0, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 3em;
+            background: linear-gradient(45deg, #ff0099, #8a2be2, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 0, 153, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.1em;
+            color: #cccccc;
+            font-weight: 300;
+        }
+
+        nav {
+            background-color: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 0;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(45deg, #ff0099, #8a2be2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 153, 0.3);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(45deg, #ff0099, #8a2be2);
+            box-shadow: 0 0 20px rgba(255, 0, 153, 0.4);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .page-title {
+            font-size: 3em;
+            background: linear-gradient(45deg, #ff0099, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .blog-card {
+            background-color: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(255, 0, 153, 0.15);
+            border-color: rgba(255, 0, 153, 0.3);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .blog-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 153, 0.1), rgba(138, 43, 226, 0.1));
+            transition: opacity 0.3s ease;
+        }
+
+        .blog-card:hover .blog-image::before {
+            opacity: 0.7;
+        }
+
+        .blog-content {
+            padding: 25px;
+        }
+
+        .blog-title {
+            color: #ffffff;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            background: linear-gradient(45deg, #ff0099, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .blog-excerpt {
+            color: #cccccc;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .blog-link {
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .blog-link:hover {
+            background: linear-gradient(45deg, #8a2be2, #ff0099);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .article-view {
+            display: none;
+            background-color: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .article-hero-image {
+            width: 100%;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-hero-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 153, 0.2), rgba(138, 43, 226, 0.2));
+        }
+
+        .article-title {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff0099, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .article-date {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+
+        .article-content {
+            color: #e0e0e0;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .article-content h3 {
+            color: #ff0099;
+            margin: 30px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: linear-gradient(45deg, #8a2be2, #ff0099);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px 0;
+            color: #888888;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 2.5em;
+            }
+
+            .nav-links {
+                gap: 15px;
+                justify-content: center;
+            }
+
+            .nav-links a {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+
+            .page-title {
+                font-size: 2.2em;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .article-view {
+                padding: 25px;
+            }
+
+            .article-title {
+                font-size: 2em;
+            }
+
+            .article-content {
+                font-size: 1em;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Ink Master Blog</h1>
-    <nav style="text-align: center; margin-bottom: 1rem;">
-      <a href="/" class="view-all-articles">← Back to Home</a>
-    </nav>
-  </header>
+    <div class="container">
+        <header>
+            <h1 class="logo">Ink Master Link</h1>
+            <p class="tagline">Tattoo Artist & Shop Directory</p>
+        </header>
 
-  <main>
-    <section id="all-articles" class="blog-preview">
-      <h2>All Articles</h2>
-      <div class="blog-grid blog-3-col">
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shops.html">Shops</a></li>
+                <li><a href="artists.html">Artists</a></li>
+                <li><a href="guestspots.html">Guest Spots</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+            </ul>
+        </nav>
 
-        <div class="blog-card">
-          <img src="/blog/images/trends.jpg" alt="Tattoo trends 2025" class="blog-thumbnail" />
-          <div class="blog-content">
-            <h3>Top Tattoo Trends in 2025</h3>
-            <p>Explore the top design styles taking over the tattoo world this year...</p>
-            <a href="/blog/tattoo-trends-2025.html" class="read-more">Read Full Article →</a>
-          </div>
+        <div id="blog-list">
+            <div class="page-header">
+                <h1 class="page-title">All Articles</h1>
+            </div>
+
+            <div class="blog-grid">
+                <article class="blog-card" onclick="showArticle('trends-2025')">
+                    <div class="blog-image" style="background-image: url('images/trends.jpg');"></div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">Top Tattoo Trends in 2025</h3>
+                        <p class="blog-excerpt">Explore the top design styles taking over the tattoo world this year...</p>
+                        <span class="blog-link">Read Full Article →</span>
+                    </div>
+                </article>
+
+                <article class="blog-card" onclick="showArticle('aftercare')">
+                    <div class="blog-image" style="background-image: url('images/aftercare.jpg');"></div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">Tattoo Aftercare: What Pros Recommend</h3>
+                        <p class="blog-excerpt">Learn how to protect your new tattoo and avoid infections...</p>
+                        <span class="blog-link">Read Full Article →</span>
+                    </div>
+                </article>
+
+                <article class="blog-card" onclick="showArticle('first-tattoo')">
+                    <div class="blog-image" style="background-image: url('images/questions.jpg');"></div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">The 5 Questions to Ask Before Your First Tattoo</h3>
+                        <p class="blog-excerpt">Thinking about your first ink? Here's what you should consider first...</p>
+                        <span class="blog-link">Read Full Article →</span>
+                    </div>
+                </article>
+
+                <article class="blog-card" onclick="showArticle('healing-timeline')">
+                    <div class="blog-image" style="background-image: url('images/healing.jpg');"></div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">Tattoo Healing Timeline: What to Expect</h3>
+                        <p class="blog-excerpt">A week-by-week guide to how tattoos heal — from redness to flaking to fully settled ink.</p>
+                        <span class="blog-link">Read Full Article →</span>
+                    </div>
+                </article>
+
+                <article class="blog-card" onclick="showArticle('choosing-shop')">
+                    <div class="blog-image" style="background-image: url('images/shop.jpg');"></div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">How to Choose the Right Tattoo Shop</h3>
+                        <p class="blog-excerpt">From cleanliness to artist portfolios — everything to look for before you sit down for ink.</p>
+                        <span class="blog-link">Read Full Article →</span>
+                    </div>
+                </article>
+            </div>
         </div>
 
-        <div class="blog-card">
-          <img src="/blog/images/aftercare.jpg" alt="Tattoo aftercare" class="blog-thumbnail" />
-          <div class="blog-content">
-            <h3>Tattoo Aftercare: What Pros Recommend</h3>
-            <p>Learn how to protect your new tattoo and avoid infections...</p>
-            <a href="/blog/tattoo-aftercare.html" class="read-more">Read Full Article →</a>
-          </div>
+        <!-- Article Views -->
+        <div id="trends-2025" class="article-view">
+            <div class="article-hero-image" style="background-image: url('images/trends.jpg');"></div>
+            <h1 class="article-title">Top Tattoo Trends in 2025</h1>
+            <div class="article-date">May 20, 2025</div>
+            <div class="article-content">
+                <p>As the tattoo world continues to evolve, new styles and themes dominate studios across the U.S. Here's a look at the hottest tattoo trends emerging in 2025 — and as always, listen to your artist's advice first when considering a design or placement.</p>
+
+                <h3>🌀 1. Fine Line Surrealism</h3>
+                <p>Minimalist surrealist tattoos are trending hard. These designs blend realism and abstraction with delicate, razor-thin line work. Think melting clocks, impossible geometry, or dream-like animal mashups.</p>
+
+                <h3>🌈 2. Soft Pastel Inks</h3>
+                <p>Bright and bold isn't the only way to stand out. Pastel ink palettes, especially purples, pinks, and teals, are gaining popularity for floral work and gentle, whimsical designs.</p>
+
+                <h3>🕊️ 3. Micro Portraits</h3>
+                <p>Micro portraits of loved ones, pets, or pop culture figures are pushing the limits of tattoo realism at small scales. Choose an artist skilled in detail work to avoid blur over time.</p>
+
+                <h3>💬 4. Statement Typography</h3>
+                <p>Bold fonts, serif elegance, or cursive whispers — lettering tattoos with meaningful phrases or dates are still in, but the emphasis is now on artistic layout and unique type styles.</p>
+
+                <h3>🧭 5. Global Influence & Travel Ink</h3>
+                <p>With more artists traveling for guest spots, designs are blending styles from different cultures. Polynesian, Japanese, Nordic runes, and Aztec motifs are seeing creative fusion on skin.</p>
+
+                <p><strong>Final note:</strong> While trends can be fun and inspiring, always pick a design that's meaningful to you and consult with your artist — their insights matter most.</p>
+            </div>
+            <a href="#" class="back-link" onclick="showBlogList()">← Back to all blog articles</a>
         </div>
 
-        <div class="blog-card">
-          <img src="/blog/images/questions.jpg" alt="First tattoo questions" class="blog-thumbnail" />
-          <div class="blog-content">
-            <h3>The 5 Questions to Ask Before Your First Tattoo</h3>
-            <p>Thinking about your first ink? Here's what you should consider first...</p>
-            <a href="/blog/first-tattoo-questions.html" class="read-more">Read Full Article →</a>
-          </div>
+        <div id="aftercare" class="article-view">
+            <div class="article-hero-image" style="background-image: url('images/aftercare.jpg');"></div>
+            <h1 class="article-title">Tattoo Aftercare Tips</h1>
+            <div class="article-content">
+                <p><strong>Note:</strong> Always follow the aftercare instructions provided by your own tattoo artist. Every artist has their own techniques and preferences that are tailored to the style of work they've done on your skin.</p>
+
+                <h3>Day 1: The Wrap</h3>
+                <p>Once your tattoo is finished, your artist will usually wrap it in plastic or a bandage. This protects it from bacteria and friction while you leave the shop. Follow their guidance on how long to leave it wrapped — typically between 1 and 24 hours.</p>
+
+                <h3>First Wash</h3>
+                <p>After removing the wrap, gently wash the area with lukewarm water and fragrance-free soap. Pat it dry with a clean paper towel or let it air dry. Do not scrub or use a washcloth. Again, follow your artist's timeline for when to do this.</p>
+
+                <h3>Moisturizing</h3>
+                <p>Use an unscented lotion or tattoo-specific aftercare balm to keep the skin hydrated. Don't overapply — your tattoo needs to breathe. Your artist might recommend a specific brand or method — always defer to them.</p>
+
+                <h3>What to Avoid</h3>
+                <p>No scratching or picking, even if it itches or flakes.<br>
+                Avoid soaking (no baths, swimming, or hot tubs) until it's fully healed.<br>
+                Keep it out of the sun — UV exposure can damage and fade the ink.</p>
+
+                <p><strong>Reminder:</strong> These tips are general guidelines. Tattoo aftercare is not one-size-fits-all. Your artist knows your tattoo best — listen to their instructions, even if it differs slightly from what you read online.</p>
+
+                <h3>Signs to Watch</h3>
+                <p>Redness, warmth, and slight oozing are normal in the first 24–48 hours. However, if you notice excessive swelling, pus, or prolonged pain, contact your artist or a medical professional.</p>
+
+                <h3>Final Thoughts</h3>
+                <p>A properly healed tattoo starts with proper care. Stay clean, moisturized, and most importantly: follow your artist's aftercare routine. When in doubt, reach out to them directly — they want your tattoo to look as good as you do.</p>
+            </div>
+            <a href="#" class="back-link" onclick="showBlogList()">← Back to all blog articles</a>
         </div>
 
-        <div class="blog-card">
-          <img src="/blog/images/healing.jpg" alt="Tattoo healing timeline" class="blog-thumbnail" />
-          <div class="blog-content">
-            <h3>Tattoo Healing Timeline: What to Expect</h3>
-            <p>A week-by-week guide to how tattoos heal — from redness to flaking to fully settled ink.</p>
-            <a href="/blog/tattoo-healing-timeline.html" class="read-more">Read Full Article →</a>
-          </div>
+        <div id="first-tattoo" class="article-view">
+            <div class="article-hero-image" style="background-image: url('images/questions.jpg');"></div>
+            <h1 class="article-title">Top 5 Questions</h1>
+            <div class="article-content">
+                <p>Getting your first tattoo can be an exciting and meaningful experience — but it's also permanent. Before you commit, ask yourself these five essential questions. And as always, talk to your tattoo artist during the consultation. They can offer specific advice based on your idea and your body.</p>
+
+                <h3>1. Why Do I Want This Tattoo?</h3>
+                <p>Make sure your tattoo has meaning to you — whether personal, symbolic, or simply aesthetic. Regret often stems from rushed decisions or peer pressure. A design you're confident in today is more likely to stand the test of time.</p>
+
+                <h3>2. Who Is the Artist?</h3>
+                <p>Do your research. Look at portfolios, check social media, and read reviews. Every artist has a style — make sure it matches what you're looking for. A great artist will also be open to consultations and talk you through the process.</p>
+
+                <h3>3. Where Do I Want It?</h3>
+                <p>Placement affects visibility, pain level, and how your tattoo may age. Spots like ribs, feet, or inner biceps can be more painful. Consider how often you want it seen — and how it may stretch or fade over time.</p>
+
+                <h3>4. Do I Know the Aftercare?</h3>
+                <p>Ask your artist for their aftercare instructions. Healing can take weeks, and proper care prevents infection and keeps the tattoo looking sharp. You'll find plenty of generic advice online, but listen to your artist — they know their ink and how they apply it.</p>
+
+                <h3>5. Am I Prepared for the Commitment?</h3>
+                <p>Tattoos are permanent. Even small pieces can take hours to complete, and removal is costly and painful. If you're unsure, wait. Good tattoos are worth planning for — and saving for.</p>
+
+                <h3>Final Advice</h3>
+                <p>Your artist is your partner in this process. Don't hesitate to ask questions, share ideas, and express any concerns. Most importantly, trust their guidance when it comes to design, placement, and aftercare.</p>
+            </div>
+            <a href="#" class="back-link" onclick="showBlogList()">← Back to all blog articles</a>
         </div>
 
-        <div class="blog-card">
-          <img src="/blog/images/shop.jpg" alt="Choosing a tattoo shop" class="blog-thumbnail" />
-          <div class="blog-content">
-            <h3>How to Choose the Right Tattoo Shop</h3>
-            <p>From cleanliness to artist portfolios — everything to look for before you sit down for ink.</p>
-            <a href="/blog/choose-right-tattoo-shop.html" class="read-more">Read Full Article →</a>
-          </div>
+        <div id="healing-timeline" class="article-view">
+            <div class="article-hero-image" style="background-image: url('images/healing.jpg');"></div>
+            <h1 class="article-title">Healing Timeline</h1>
+            <div class="article-content">
+                <p><strong>Reminder:</strong> Every artist has their own recommendations based on your tattoo's style, size, and location. Always follow the specific aftercare advice given by your artist.</p>
+
+                <h3>Week 1: The Raw Stage</h3>
+                <p>Your tattoo will likely feel like a fresh scrape or sunburn. It may ooze plasma or ink, and redness is normal. Gently wash and moisturize as directed by your artist. Avoid touching it or exposing it to direct sunlight.</p>
+
+                <h3>Week 2: The Peeling Begins</h3>
+                <p>Flaking and scabbing will start. This is when the itching can become intense — resist the urge to scratch! Apply a thin layer of fragrance-free lotion and let flakes fall off naturally.</p>
+
+                <h3>Week 3: Things Settle Down</h3>
+                <p>Scabs will be gone or mostly gone. Your skin might appear shiny or slightly dull. It's still healing underneath, so continue to moisturize and be gentle with it.</p>
+
+                <h3>Week 4 and Beyond: Final Stages</h3>
+                <p>The outer skin is mostly healed, but deeper layers may still be repairing. Your tattoo will begin to show its true clarity and detail. You can resume normal activities, but keep it protected in sun or rough environments.</p>
+
+                <p>Healing times vary based on body part, design complexity, and skin type. When in doubt, contact your artist — they'll know how your tattoo should be progressing.</p>
+            </div>
+            <a href="#" class="back-link" onclick="showBlogList()">← Back to all blog articles</a>
         </div>
-      </div>
-    </section>
-  </main>
+
+        <div id="choosing-shop" class="article-view">
+            <div class="article-hero-image" style="background-image: url('images/shop.jpg');"></div>
+            <h1 class="article-title">Choosing a Tattoo Shop</h1>
+            <div class="article-content">
+                <p>Choosing where to get tattooed is just as important as the design itself. A clean, professional environment and a great artist can make all the difference. Here's what to look for when picking a tattoo shop — and remember, your artist's advice always comes first.</p>
+
+                <h3>1. Cleanliness and Safety</h3>
+                <p>The shop should look and smell clean. Artists should wear gloves, use disposable needles, and open fresh ink in front of you. Don't be afraid to ask about sterilization practices.</p>
+
+                <h3>2. Portfolios and Style</h3>
+                <p>Every artist has a unique style. Look through their past work (on the walls or Instagram) to make sure their strengths align with what you want. Don't assume all artists do all styles equally well.</p>
+
+                <h3>3. Vibe and Professionalism</h3>
+                <p>You should feel comfortable asking questions and discussing your idea. A good shop is welcoming, not intimidating. Trust your gut — if something feels off, it's okay to walk away.</p>
+
+                <h3>4. Reviews and Recommendations</h3>
+                <p>Word of mouth matters. Ask friends, check Google, Yelp, and Instagram comments. Look for consistent praise, especially about cleanliness, friendliness, and professionalism.</p>
+
+                <h3>5. Artist Consultations</h3>
+                <p>Many artists offer free or low-cost consultations. Use this time to ask about aftercare, pain expectations, and healing. It's also your chance to get a sense of whether you click with them.</p>
+
+                <p><strong>Final tip:</strong> Listen to the artist once you've chosen them. They want your tattoo to heal well and look great long-term, so follow their preferences over generic internet advice.</p>
+            </div>
+            <a href="#" class="back-link" onclick="showBlogList()">← Back to all blog articles</a>
+        </div>
+
+        <footer>
+            &copy; 2025 Ink Master Link - Tattoo Artist & Shop Directory
+        </footer>
+    </div>
+
+    <script>
+        function showArticle(articleId) {
+            // Hide blog list
+            document.getElementById('blog-list').style.display = 'none';
+            
+            // Hide all articles
+            const articles = document.querySelectorAll('.article-view');
+            articles.forEach(article => article.style.display = 'none');
+            
+            // Show selected article
+            document.getElementById(articleId).style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Update URL hash
+            window.location.hash = articleId;
+        }
+
+        function showBlogList() {
+            // Hide all articles
+            const articles = document.querySelectorAll('.article-view');
+            articles.forEach(article => article.style.display = 'none');
+            
+            // Show blog list
+            document.getElementById('blog-list').style.display = 'block';
+            
+            // Clear URL hash
+            window.location.hash = '';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Handle initial page load with hash
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showArticle(hash);
+            }
+        });
+
+        // Handle back/forward navigation
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showArticle(hash);
+            } else {
+                showBlogList();
+            }
+        });
+    </script>
 </body>
 </html>
