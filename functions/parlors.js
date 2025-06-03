@@ -211,7 +211,7 @@ exports.handler = async function(event, context) {
     
     // Default to getting all parlors with pagination
     if (path === '' || path === '/') {
-      const highLimit = 5000; // Load large number of shops for proper filtering
+      const highLimit = 19268; // Load ALL shops from database
       const { rows } = await pool.query(
         `SELECT id, name, 
                 location->>'city' as city, 
