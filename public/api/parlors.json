@@ -1,0 +1,45 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 2439,
+      "name": "Body Shop Tattoo & Piercing",
+      "city": "Cortland",
+      "state": "NY",
+      "featured": true,
+      "sponsored": false,
+      "rating": 49,
+      "review_count": 5
+    },
+    {
+      "id": 12139,
+      "name": "Stencils Art Tattoos",
+      "city": "Chicago",
+      "state": "IL",
+      "featured": true,
+      "sponsored": false,
+      "rating": 49,
+      "review_count": 53
+    },
+    {
+      "id": 10152,
+      "name": "Hive Tattoo Studio",
+      "city": "Flint",
+      "state": "MI",
+      "featured": true,
+      "sponsored": false,
+      "rating": 49,
+      "review_count": 30
+    },
+    {
+      "id": 1053,
+      "name": "Phoenix Ink Tattoo",
+      "city": "Plantsville",
+      "state": "CT",
+      "featured": true,
+      "sponsored": true,
+      "rating": 49,
+      "review_count": 33
+    }
+  ]
+}
