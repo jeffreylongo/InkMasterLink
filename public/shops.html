@@ -779,21 +779,21 @@
       
       // If we have state, city, or search selected, use the DB filtering which is much more efficient
       if (stateValue || cityValue || searchValue) {
-        let apiUrl = '/api/parlors';
+        let apiUrl = '/.netlify/functions/parlors';
         
         // Use specific endpoints for state and city filtering
         if (stateValue) {
           // Use state endpoint, add city if selected
-          apiUrl = `/api/parlors?state=${encodeURIComponent(stateValue)}`;
+          apiUrl = `/.netlify/functions/parlors?state=${encodeURIComponent(stateValue)}`;
           if (cityValue) {
             apiUrl += `&city=${encodeURIComponent(cityValue)}`;
           }
         } else if (cityValue) {
           // City only filtering
-          apiUrl = `/api/parlors?city=${encodeURIComponent(cityValue)}`;
+          apiUrl = `/.netlify/functions/parlors?city=${encodeURIComponent(cityValue)}`;
         } else if (searchValue) {
           // If we have a search term
-          apiUrl = `/api/parlors/search?q=${encodeURIComponent(searchValue)}`;
+          apiUrl = `/.netlify/functions/parlors?search=${encodeURIComponent(searchValue)}`;
         }
         
         // Optimize with pagination - load 50 shops at a time
