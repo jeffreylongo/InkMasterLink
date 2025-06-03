@@ -211,19 +211,27 @@ exports.handler = async function(event, context) {
     
     // Default to getting all parlors with pagination
     if (path === '' || path === '/') {
+      const highLimit = 5000; // Load large number of shops for proper filtering
       const { rows } = await pool.query(
-        'SELECT * FROM parlors ORDER BY rating DESC NULLS LAST LIMIT $1 OFFSET $2', 
-        [limit, offset]
+        `SELECT id, name, 
+                location->>'city' as city, 
+                location->>'state' as state,
+                rating, review_count, 
+                contact->>'phone' as phone,
+                location->>'address' as address,
+                hours, 
+                contact->>'website' as website,
+                featured, sponsored 
+         FROM parlors 
+         ORDER BY rating DESC NULLS LAST 
+         LIMIT $1 OFFSET $2`, 
+        [highLimit, offset]
       );
       
       return {
         statusCode: 200,
         headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          success: true,
-          count: rows.length,
-          data: rows
-        })
+        body: JSON.stringify(rows) // Return array directly for easier frontend handling
       };
     }
     
