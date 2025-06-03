@@ -1,0 +1,13 @@
+{
+  "name": "ink-master-link",
+  "version": "1.0.0",
+  "description": "Comprehensive tattoo directory with 19,268 shops and Netlify deployment",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Static build complete - no build step required'",
+    "start": "echo 'Production deployment ready'"
+  },
+  "keywords": ["tattoo", "directory", "shops", "artists"],
+  "author": "Jeffrey Longo",
+  "license": "MIT"
+}
