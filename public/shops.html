@@ -202,7 +202,7 @@
     // Load shops from database
     async function loadShopsFromDatabase() {
       try {
-        const response = await fetch('/api/parlors');
+        const response = await fetch('/.netlify/functions/parlors');
         if (!response.ok) throw new Error('Failed to load shops');
         
         const data = await response.json();
