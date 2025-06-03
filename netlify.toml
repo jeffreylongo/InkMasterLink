@@ -10,20 +10,30 @@ node_bundler = "esbuild"
 [build.environment]
 NODE_VERSION = "18"
 
-# API redirects
+# API redirects to static JSON files
 [[redirects]]
-from = "/api/parlors/*"
-to = "/.netlify/functions/parlors/:splat"
+from = "/api/parlors/random"
+to = "/api/parlors/random.json"
+status = 200
+
+[[redirects]]
+from = "/api/parlors/featured"
+to = "/api/parlors/featured.json"
+status = 200
+
+[[redirects]]
+from = "/api/parlors/states"
+to = "/api/parlors/states.json"
+status = 200
+
+[[redirects]]
+from = "/api/parlors"
+to = "/api/parlors.json"
 status = 200
 
 [[redirects]]
 from = "/api/artists"
-to = "/.netlify/functions/artists"
-status = 200
-
-[[redirects]]
-from = "/api/artists/*"
-to = "/.netlify/functions/artists/:splat"
+to = "/api/artists.json"
 status = 200
 
 # SPA fallback for client-side routing
