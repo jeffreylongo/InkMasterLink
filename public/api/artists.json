@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Test Artist",
+    "bio": "This is a test artist for the scheduling system",
+    "specialty": ["Traditional", "Japanese"],
+    "featured": true,
+    "sponsored": false,
+    "rating": 45,
+    "review_count": 10
+  }
+]
