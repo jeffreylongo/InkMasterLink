@@ -816,6 +816,14 @@
           </div>
         `;
         
+        // Make entire card clickable to shop details
+        shopCard.style.cursor = 'pointer';
+        shopCard.addEventListener('click', function(e) {
+          if (!e.target.classList.contains('random-shop-link')) {
+            window.location.href = `shop-detail.html?id=${shop.id}`;
+          }
+        });
+        
         randomShopsGrid.appendChild(shopCard);
       });
     </script>
