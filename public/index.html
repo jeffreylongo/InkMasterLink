@@ -691,7 +691,7 @@
       
       <div class="blog-grid">
         <article class="blog-card">
-          <div class="blog-image" style="background-image: url('./images/trends.jpg');"></div>
+          <div class="blog-image" style="background-image: url('images/trends.jpg');"></div>
           <div class="blog-content">
             <h3 class="blog-title">Top Tattoo Trends in 2025</h3>
             <p class="blog-excerpt">Explore the top design styles taking over the tattoo world this year...</p>
@@ -700,7 +700,7 @@
         </article>
 
         <article class="blog-card">
-          <div class="blog-image" style="background-image: url('./images/aftercare.jpg');"></div>
+          <div class="blog-image" style="background-image: url('images/aftercare.jpg');"></div>
           <div class="blog-content">
             <h3 class="blog-title">Tattoo Aftercare: What Pros Recommend</h3>
             <p class="blog-excerpt">Learn how to protect your new tattoo and avoid infections...</p>
@@ -709,7 +709,7 @@
         </article>
 
         <article class="blog-card">
-          <div class="blog-image" style="background-image: url('./images/questions.jpg');"></div>
+          <div class="blog-image" style="background-image: url('images/questions.jpg');"></div>
           <div class="blog-content">
             <h3 class="blog-title">The 5 Questions to Ask Before Your First Tattoo</h3>
             <p class="blog-excerpt">Thinking about your first ink? Here's what you should consider first...</p>
@@ -718,7 +718,7 @@
         </article>
 
         <article class="blog-card">
-          <div class="blog-image" style="background-image: url('./images/healing.jpg');"></div>
+          <div class="blog-image" style="background-image: url('images/healing.jpg');"></div>
           <div class="blog-content">
             <h3 class="blog-title">Tattoo Healing Timeline: What to Expect</h3>
             <p class="blog-excerpt">A week-by-week guide to how tattoos heal — from redness to flaking to fully settled ink.</p>
@@ -777,7 +777,7 @@
             document.getElementById(
               "featuredArtistImage",
             ).style.backgroundImage =
-              `url('${artist.profileImage || "./images/artist.webp"}')`;
+              `url('${artist.profileImage || "images/artist.webp"}')`;
 
             // Update the view profile link - no leading slash for Netlify
             document.querySelector(".artist-feature .featured-button").href =
@@ -808,7 +808,7 @@
 
             // Use real shop image as per client request
             document.getElementById("featuredShopImage").style.backgroundImage =
-              `url('${shop.image || "./images/shop.jpeg"}')`;
+              `url('${shop.image || "images/shop.jpeg"}')`;
 
             // Update the view shop link - remove leading slash for Netlify compatibility
             document.querySelector(".shop-feature .featured-button").href =
@@ -840,7 +840,7 @@
               // Use real shop image as per client request
               document.getElementById(
                 "featuredShopImage",
-              ).style.backgroundImage = "url('./images/shop.jpeg')";
+              ).style.backgroundImage = "url('images/shop.jpeg')";
 
               // Update the view shop link - no leading slash for Netlify
               document.querySelector(".shop-feature .featured-button").href =
@@ -870,7 +870,7 @@
               shopCard.className = "random-shop-card";
 
               // Use real shop image as per client request
-              const imageUrl = shop.image || "./images/shop.jpeg";
+              const imageUrl = shop.image || "images/shop.jpeg";
 
               // Format rating for display (convert from 0-50 scale to 0-5)
               const displayRating = shop.rating
