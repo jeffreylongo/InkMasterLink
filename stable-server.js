@@ -195,16 +195,29 @@ async function handleApiRequest(req, res) {
     
     // Get all shops with pagination (exact match for /api/parlors)
     if (req.url === '/api/parlors' || (req.url.startsWith('/api/parlors?') && !params.has('state') && !params.has('city'))) {
-      const limit = parseInt(params.get('limit') || '50');
+      const limit = parseInt(params.get('limit') || '5000'); // Increased to load more shops
       const offset = parseInt(params.get('offset') || '0');
       
       const { rows } = await pool.query(
-        'SELECT * FROM parlors ORDER BY rating DESC NULLS LAST LIMIT $1 OFFSET $2', 
+        `SELECT id, name, 
+                location->>'city' as city, 
+                location->>'state' as state,
+                rating, review_count, 
+                contact->>'phone' as phone,
+                location->>'address' as address,
+                hours, 
+                contact->>'website' as website,
+                featured, sponsored 
+         FROM parlors 
+         ORDER BY rating DESC NULLS LAST 
+         LIMIT $1 OFFSET $2`, 
         [limit, offset]
       );
       
+      console.log(`Serving ${rows.length} shops from database`);
+      
       res.writeHead(200);
-      res.end(JSON.stringify({ success: true, count: rows.length, data: rows }));
+      res.end(JSON.stringify(rows)); // Return array directly, not wrapped object
       return;
     }
     
