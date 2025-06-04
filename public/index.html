@@ -779,7 +779,7 @@
       document.getElementById("featuredShopLocation").textContent = `${featuredShop.city}, ${featuredShop.state}`;
       const displayRating = (featuredShop.rating / 10).toFixed(1);
       document.getElementById("featuredShopRating").textContent = `★ ${displayRating}`;
-      document.getElementById("featuredShopImage").style.backgroundImage = "url('images/shop.jpeg')";
+      document.getElementById("featuredShopImage").style.backgroundImage = "url('shop.jpeg')";
       document.querySelector(".shop-feature .featured-button").href = `shop-detail.html?id=${featuredShop.id}`;
 
       // Random shops data from database
@@ -807,7 +807,7 @@
         const ratingDisplay = `★ ${displayRating}`;
         
         shopCard.innerHTML = `
-          <div class="random-shop-image" style="background-image: url('images/shop.jpeg')"></div>
+          <div class="random-shop-image" style="background-image: url('shop.jpeg')"></div>
           <div class="random-shop-content">
             <h3 class="random-shop-name">${shop.name}</h3>
             <div class="random-shop-location">${shop.city}, ${shop.state}</div>
