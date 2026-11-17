@@ -1,2 +1,17 @@
-/api/*  /.netlify/functions/parlors/:splat  200
-/*.html /index.html                       200
+# This site is retired. Every path permanently redirects to https://inkmasterlink.com.
+# Rules are forced (!) so no old file is served, and the first match wins.
+
+# Shop directory pages
+/shops.html       https://inkmasterlink.com/directory  301!
+/shops            https://inkmasterlink.com/directory  301!
+/shop-detail.html https://inkmasterlink.com/directory  301!
+
+# Main pages
+/index.html       https://inkmasterlink.com/           301!
+/about.html       https://inkmasterlink.com/about      301!
+/contact.html     https://inkmasterlink.com/contact    301!
+/privacy.html     https://inkmasterlink.com/privacy    301!
+/blog.html        https://inkmasterlink.com/blog       301!
+
+# Catch-all for any other path
+/*  https://inkmasterlink.com/  301!
